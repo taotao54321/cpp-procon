@@ -73,17 +73,18 @@ void RD(vector<T>& v, int n) {
 }
 
 template<typename T>
-void PRINT(const T& x) {
-    cout << x;
+ostream& operator<<(ostream& out, const vector<T>& v) {
+    for(auto first = begin(v), it = first; it != end(v); ++it) {
+        if(it != first)
+            out << ' ';
+        out << *it;
+    }
+    return out;
 }
 
 template<typename T>
-void PRINT(const vector<T>& v) {
-    for(auto first = begin(v), it = first; it != end(v); ++it) {
-        if(it != first)
-            cout << ' ';
-        cout << *it;
-    }
+void PRINT(const T& x) {
+    cout << x;
 }
 
 template<typename T>
