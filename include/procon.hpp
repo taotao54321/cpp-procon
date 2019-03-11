@@ -108,3 +108,21 @@ void DBG_IMPL(i64 line, const char* expr, const T& value) {
 
 #define DBG(expr) DBG_IMPL(__LINE__, #expr, (expr))
 // }}}
+
+// {{{ init
+struct ProconInit {
+    static constexpr int IOS_PREC = 15;
+    static constexpr bool AUTOFLUSH = false;
+
+    ProconInit() {
+        cin.tie(nullptr);
+        ios::sync_with_stdio(false);
+        cout << fixed << setprecision(IOS_PREC);
+#ifdef PROCON_LOCAL
+        cerr << fixed << setprecision(IOS_PREC);
+#endif
+        if(AUTOFLUSH)
+            cout << unitbuf;
+    }
+};
+// }}}
