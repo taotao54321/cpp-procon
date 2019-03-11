@@ -28,7 +28,7 @@ constexpr f64 EPS = 1e-12;
 constexpr f64 PI = 3.14159265358979323846;
 
 // {{{ util
-#define FOR(i, start, end) for(i64 i = (start); i < (end); ++i)
+#define FOR(i, start, end) for(i64 i = (start), i##_end=(end); i < i##_end; ++i)
 #define REP(i, n) FOR(i, 0, n)
 
 #define ALL(f,c,...) (([&](decltype((c)) cc) { return (f)(begin(cc), end(cc), ## __VA_ARGS__); })(c))
