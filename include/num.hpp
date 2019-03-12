@@ -17,4 +17,24 @@ i64 lcm(i64 a, i64 b) {
     return a / gcd_impl(a,b) * b;
 }
 
+// 事前条件: a >= 0, b >= 0
+i64 extgcd_impl(i64 a, i64 b, i64& x, i64& y) {
+    if(b == 0) {
+        x = 1; y = 0;
+        return a;
+    }
+    i64 g = extgcd_impl(b, a%b, y, x);
+    y -= a/b * x;
+    return g;
+}
 
+// g=gcd(a,b), および ax+by=g の整数解 (x0,y0) を求める
+// (g,x0,y0) を返す
+// g!=0 のとき、一般解は (x,y) = (x0+m*b/g, y0-m*a/g) で与えられる(mは整数)
+tuple<i64,i64,i64> extgcd(i64 a, i64 b) {
+    i64 x, y;
+    i64 g = extgcd_impl(abs(a), abs(b), x, y);
+    x *= sgn(a);
+    y *= sgn(b);
+    return make_tuple(g, x, y);
+}
