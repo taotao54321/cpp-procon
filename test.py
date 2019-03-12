@@ -7,6 +7,7 @@ from subprocess import DEVNULL
 import sys
 
 import colorama
+from colorama import Fore, Style
 
 def get_cases():
     return tuple(filter(Path.is_dir, Path('test/').iterdir()))
@@ -43,13 +44,12 @@ def main():
 
     n_ok = 0
     for case in cases:
-        print(f"{case}: ", end="")
         if exec_case(case):
-            print(colorama.Fore.GREEN + "OK")
+            print(f"[{Fore.GREEN}OK{Style.RESET_ALL}] ", end="")
             n_ok += 1
         else:
-            print(colorama.Fore.RED + "NG")
-        print(colorama.Style.RESET_ALL, end="")
+            print(f"[{Fore.RED}NG{Style.RESET_ALL}] ", end="")
+        print(case)
 
     print()
     print(f"test passed: {n_ok}/{len(cases)}")
