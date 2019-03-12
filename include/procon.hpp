@@ -32,6 +32,11 @@ constexpr f64 PI = 3.14159265358979323846;
 #define REP(i, n) FOR(i, 0, n)
 
 #define ALL(f,c,...) (([&](decltype((c)) cccc) { return (f)(begin(cccc), end(cccc), ## __VA_ARGS__); })(c))
+#define SLICE(f,c,l,r,...) (([&](decltype((c)) cccc, decltype((l)) llll, decltype((r)) rrrr) {\
+    auto iiii = llll <= rrrr ? begin(cccc)+llll : end(cccc);\
+    auto jjjj = llll <= rrrr ? begin(cccc)+rrrr : end(cccc);\
+    return (f)(iiii, jjjj, ## __VA_ARGS__);\
+})(c,l,r))
 
 bool is_odd (i64 x) { return x % 2 != 0; }
 bool is_even(i64 x) { return x % 2 == 0; }
