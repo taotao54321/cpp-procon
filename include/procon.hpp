@@ -33,6 +33,12 @@ constexpr f64 PI = 3.14159265358979323846;
 
 #define ALL(f,c,...) (([&](decltype((c)) cc) { return (f)(begin(cc), end(cc), ## __VA_ARGS__); })(c))
 
+bool is_odd (i64 x) { return x % 2 != 0; }
+bool is_even(i64 x) { return x % 2 == 0; }
+
+template<typename T> i64 cmp(T x, T y) { return (y<x) - (x<y); }
+template<typename T> i64 sgn(T x) { return cmp(x, T(0)); }
+
 template<typename T, typename U>
 bool chmax(T& xmax, const U& x) {
     if(xmax < x) {
