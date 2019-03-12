@@ -31,7 +31,7 @@ constexpr f64 PI = 3.14159265358979323846;
 #define FOR(i, start, end) for(i64 i = (start), i##_end=(end); i < i##_end; ++i)
 #define REP(i, n) FOR(i, 0, n)
 
-#define ALL(f,c,...) (([&](decltype((c)) cc) { return (f)(begin(cc), end(cc), ## __VA_ARGS__); })(c))
+#define ALL(f,c,...) (([&](decltype((c)) cccc) { return (f)(begin(cccc), end(cccc), ## __VA_ARGS__); })(c))
 
 bool is_odd (i64 x) { return x % 2 != 0; }
 bool is_even(i64 x) { return x % 2 == 0; }
