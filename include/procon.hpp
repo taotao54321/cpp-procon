@@ -66,6 +66,17 @@ bool chmin(T& xmin, const U& x) {
     }
 }
 
+template<typename InputIt>
+auto SUM(InputIt first, InputIt last) {
+    using T = typename iterator_traits<InputIt>::value_type;
+    return accumulate(first, last, T());
+}
+
+template<typename ForwardIt, typename UnaryOperation>
+ForwardIt transform_self(ForwardIt first, ForwardIt last, UnaryOperation op) {
+    return transform(first, last, first, op);
+}
+
 template<typename T>
 void RD(T& x) {
     cin >> x;
