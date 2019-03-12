@@ -93,14 +93,20 @@ ostream& operator<<(ostream& out, const pair<T1,T2>& p) {
     return out << '(' << p.first << ',' << p.second << ')';
 }
 
-template<typename T>
-void PRINT(const T& x) {
+void PRINT() {}
+
+template<typename T, typename... TS>
+void PRINT(const T& x, const TS& ...args) {
     cout << x;
+    if(sizeof...(args)) {
+        cout << ' ';
+        PRINT(args...);
+    }
 }
 
-template<typename T>
-void PRINTLN(const T& x) {
-    PRINT(x);
+template<typename... TS>
+void PRINTLN(const TS& ...args) {
+    PRINT(args...);
     cout << '\n';
 }
 

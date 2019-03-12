@@ -6,9 +6,7 @@ signed main() {
 
     i64 x,y; tie(ignore,x,y) = extgcd(a,b);
 
-    PRINT(x);
-    PRINT(' ');
-    PRINTLN(y);
+    PRINTLN(x, y);
 
     return 0;
 }
