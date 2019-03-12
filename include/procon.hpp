@@ -44,6 +44,33 @@ bool is_even(i64 x) { return x % 2 == 0; }
 template<typename T> i64 cmp(T x, T y) { return (y<x) - (x<y); }
 template<typename T> i64 sgn(T x) { return cmp(x, T(0)); }
 
+// Haskell の divMod と同じ
+pair<i64,i64> divmod(i64 a, i64 b) {
+    i64 q = a / b;
+    i64 r = a % b;
+    if((b>0 && r<0) || (b<0 && r>0)) {
+        --q;
+        r += b;
+    }
+    return make_pair(q,r);
+}
+
+i64 div_ceil(i64 a, i64 b) {
+    i64 q = a / b;
+    i64 r = a % b;
+    if((b>0 && r>0) || (b<0 && r<0))
+        ++q;
+    return q;
+}
+
+i64 div_floor(i64 a, i64 b) {
+    return divmod(a,b).first;
+}
+
+i64 modulo(i64 a, i64 b) {
+    return divmod(a,b).second;
+}
+
 template<typename T, typename U>
 bool chmax(T& xmax, const U& x) {
     if(xmax < x) {
