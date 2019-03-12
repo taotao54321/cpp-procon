@@ -64,7 +64,7 @@ void RD(T& x) {
 }
 
 template<typename T>
-void RD(vector<T>& v, int n) {
+void RD(vector<T>& v, i64 n) {
     v.reserve(n);
     REP(_, n) {
         T e; RD(e);
