@@ -38,6 +38,8 @@ constexpr f64 PI = 3.14159265358979323846;
     return (f)(iiii, jjjj, ## __VA_ARGS__);\
 })(c,l,r))
 
+#define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(forward<decltype(args)>(args)...); })
+
 bool is_odd (i64 x) { return x % 2 != 0; }
 bool is_even(i64 x) { return x % 2 == 0; }
 
@@ -102,6 +104,13 @@ auto SUM(InputIt first, InputIt last) {
 template<typename ForwardIt, typename UnaryOperation>
 ForwardIt transform_self(ForwardIt first, ForwardIt last, UnaryOperation op) {
     return transform(first, last, first, op);
+}
+
+template<typename BinaryFunc, typename UnaryFunc>
+auto ON(BinaryFunc bf, UnaryFunc uf) {
+    return [bf,uf](const auto& x, const auto& y) {
+        return bf(uf(x), uf(y));
+    };
 }
 
 template<typename T>
