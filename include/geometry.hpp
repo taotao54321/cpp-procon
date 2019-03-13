@@ -62,22 +62,32 @@ Vector geo_project(const Line& line, const Vector& p) {
     return line.p1 + r*v;
 }
 
-enum class ABC {
-    CCW,
-    CW,
-    ON_BACK,
-    ON_FRONT,
-    ON_SEGMENT,
+enum ABC {
+    ABC_CCW        =  1,
+    ABC_CW         = -1,
+    ABC_ON_BACK    =  2,
+    ABC_ON_FRONT   = -2,
+    ABC_ON_SEGMENT =  0,
 };
 
 ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
     Vector x = b - a;
     Vector y = c - a;
     f64 cross = geo_cross(x,y);
-    if(cross > 0) return ABC::CCW;
-    if(cross < 0) return ABC::CW;
+    if(cross > 0) return ABC_CCW;
+    if(cross < 0) return ABC_CW;
     f64 dot = geo_dot(x,y);
-    if(dot < 0) return ABC::ON_BACK;
-    if(x.norm() < y.norm()) return ABC::ON_FRONT;
-    return ABC::ON_SEGMENT;
+    if(dot < 0) return ABC_ON_BACK;
+    if(x.norm() < y.norm()) return ABC_ON_FRONT;
+    return ABC_ON_SEGMENT;
+}
+
+bool geo_intersect(const Vector& p1, const Vector& p2, const Vector& p3, const Vector& p4) {
+    return geo_abc(p1,p2,p3) * geo_abc(p1,p2,p4) <= 0 &&
+           geo_abc(p3,p4,p1) * geo_abc(p3,p4,p2) <= 0;
+}
+
+void RD(Vector& v) {
+    RD(v.x);
+    RD(v.y);
 }

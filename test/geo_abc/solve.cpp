@@ -13,11 +13,11 @@ signed main() {
         Vector p2(x2,y2);
         ABC ans = geo_abc(p0,p1,p2);
         switch(ans) {
-        case ABC::CCW:        PRINTLN("COUNTER_CLOCKWISE"); break;
-        case ABC::CW:         PRINTLN("CLOCKWISE");         break;
-        case ABC::ON_BACK:    PRINTLN("ONLINE_BACK");       break;
-        case ABC::ON_FRONT:   PRINTLN("ONLINE_FRONT");      break;
-        case ABC::ON_SEGMENT: PRINTLN("ON_SEGMENT");        break;
+        case ABC_CCW:        PRINTLN("COUNTER_CLOCKWISE"); break;
+        case ABC_CW:         PRINTLN("CLOCKWISE");         break;
+        case ABC_ON_BACK:    PRINTLN("ONLINE_BACK");       break;
+        case ABC_ON_FRONT:   PRINTLN("ONLINE_FRONT");      break;
+        case ABC_ON_SEGMENT: PRINTLN("ON_SEGMENT");        break;
         }
     }
 
