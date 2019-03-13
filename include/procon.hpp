@@ -79,6 +79,10 @@ i64 modulo(i64 a, i64 b) {
     return divmod(a,b).second;
 }
 
+bool feq(f64 x, f64 y, f64 eps=EPS) {
+    return fabs(x-y) < eps;
+}
+
 template<typename T, typename U>
 bool chmax(T& xmax, const U& x) {
     if(xmax < x) {
