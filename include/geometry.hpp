@@ -52,8 +52,32 @@ f64 geo_dot(const Vector& lhs, const Vector& rhs) {
     return lhs.x*rhs.x + lhs.y*rhs.y;
 }
 
+f64 geo_cross(const Vector& lhs, const Vector& rhs) {
+    return lhs.x*rhs.y - lhs.y*rhs.x;
+}
+
 Vector geo_project(const Line& line, const Vector& p) {
     Vector v = line.vec();
     f64 r = geo_dot(p-line.p1, v) / v.norm();
     return line.p1 + r*v;
+}
+
+enum class ABC {
+    CCW,
+    CW,
+    ON_BACK,
+    ON_FRONT,
+    ON_SEGMENT,
+};
+
+ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
+    Vector x = b - a;
+    Vector y = c - a;
+    f64 cross = geo_cross(x,y);
+    if(cross > 0) return ABC::CCW;
+    if(cross < 0) return ABC::CW;
+    f64 dot = geo_dot(x,y);
+    if(dot < 0) return ABC::ON_BACK;
+    if(x.norm() < y.norm()) return ABC::ON_FRONT;
+    return ABC::ON_SEGMENT;
 }
