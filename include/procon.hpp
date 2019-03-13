@@ -40,6 +40,12 @@ constexpr f64 PI = 3.14159265358979323846;
 
 #define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(forward<decltype(args)>(args)...); })
 
+template<typename C>
+i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }
+
+template<typename T, size_t N>
+i64 SIZE(const T (&)[N]) { return static_cast<i64>(N); }
+
 bool is_odd (i64 x) { return x % 2 != 0; }
 bool is_even(i64 x) { return x % 2 == 0; }
 
@@ -104,6 +110,11 @@ auto SUM(InputIt first, InputIt last) {
 template<typename ForwardIt, typename UnaryOperation>
 ForwardIt transform_self(ForwardIt first, ForwardIt last, UnaryOperation op) {
     return transform(first, last, first, op);
+}
+
+template<typename C>
+void UNIQ(C& c) {
+    c.erase(ALL(unique,c), end(c));
 }
 
 template<typename BinaryFunc, typename UnaryFunc>
