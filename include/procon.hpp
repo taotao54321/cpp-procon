@@ -165,7 +165,7 @@ void PRINTLN(const TS& ...args) {
 template<typename T>
 void DBG_IMPL(i64 line, const char* expr, const T& value) {
 #ifdef PROCON_LOCAL
-    cerr << "[LINE " << line << "]: ";
+    cerr << "[L " << line << "]: ";
     cerr << expr << " = " << value << "\n";
 #endif
 }
