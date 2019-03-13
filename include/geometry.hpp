@@ -1,0 +1,59 @@
+struct Vector {
+    f64 x, y;
+
+    Vector() : Vector(0.0,0.0) {}
+    Vector(f64 xx, f64 yy) : x(xx), y(yy) {}
+
+    Vector& operator+=(const Vector& rhs) {
+        x += rhs.x;
+        y += rhs.y;
+        return *this;
+    }
+    Vector& operator-=(const Vector& rhs) {
+        x -= rhs.x;
+        y -= rhs.y;
+        return *this;
+    }
+    Vector& operator*=(f64 rhs) {
+        x *= rhs;
+        y *= rhs;
+        return *this;
+    }
+    Vector& operator/=(f64 rhs) {
+        x /= rhs;
+        y /= rhs;
+        return *this;
+    }
+
+    f64 norm() const { return x*x + y*y; }
+    f64 abs() const { return sqrt(norm()); }
+};
+
+const Vector operator+(const Vector& lhs, const Vector& rhs) { return Vector(lhs) += rhs; }
+const Vector operator-(const Vector& lhs, const Vector& rhs) { return Vector(lhs) -= rhs; }
+const Vector operator*(const Vector& lhs, f64 rhs) { return Vector(lhs) *= rhs; }
+const Vector operator*(f64 lhs, const Vector& rhs) { return Vector(rhs) *= lhs; }
+const Vector operator/(const Vector& lhs, f64 rhs) { return Vector(lhs) /= rhs; }
+
+bool operator==(const Vector& lhs, const Vector& rhs) {
+    return feq(lhs.x,rhs.x) && feq(lhs.y,rhs.y);
+}
+
+struct Line {
+    Vector p1, p2;
+
+    Line(const Vector& pp1, const Vector& pp2) : p1(pp1), p2(pp2) {}
+    Line(f64 x1, f64 y1, f64 x2, f64 y2) : p1(Vector(x1,y1)), p2(Vector(x2,y2)) {}
+
+    Vector vec() const { return p2 - p1; }
+};
+
+f64 geo_dot(const Vector& lhs, const Vector& rhs) {
+    return lhs.x*rhs.x + lhs.y*rhs.y;
+}
+
+Vector geo_project(const Line& line, const Vector& p) {
+    Vector v = line.vec();
+    f64 r = geo_dot(p-line.p1, v) / v.norm();
+    return line.p1 + r*v;
+}
