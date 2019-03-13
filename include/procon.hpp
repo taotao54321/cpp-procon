@@ -199,5 +199,5 @@ struct ProconInit {
         if(AUTOFLUSH)
             cout << unitbuf;
     }
-};
+} PROCON_INIT;
 // }}}
