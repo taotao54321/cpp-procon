@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import argparse
+from pathlib import Path
+
+def parse_args():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("name")
+    return ap.parse_args()
+
+def main():
+    args = parse_args()
+
+    target = Path("test") / args.name
+    target.mkdir()
+
+    readme = target / "README.md"
+    open(readme, "x").write("""\
+# 
+
+
+""")
+
+    t = target / "t"
+    open(t, "x").write("""\
+#!/bin/sh
+
+oj t
+""")
+    t.chmod(0o755)
+
+    solve_cpp = target / "solve.cpp"
+    open(solve_cpp, "x").write("""\
+#include "procon.hpp"
+
+signed main() {
+    
+
+    return 0;
+}
+""")
+
+if __name__ == "__main__": main()
