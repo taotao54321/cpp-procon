@@ -44,6 +44,18 @@ bool operator==(const Vector& lhs, const Vector& rhs) {
     return feq(lhs.x,rhs.x) && feq(lhs.y,rhs.y);
 }
 
+f64 geo_dot(const Vector& lhs, const Vector& rhs) {
+    return lhs.x*rhs.x + lhs.y*rhs.y;
+}
+
+f64 geo_cross(const Vector& lhs, const Vector& rhs) {
+    return lhs.x*rhs.y - lhs.y*rhs.x;
+}
+
+Vector geo_rotate(const Vector& v, f64 t) {
+    return Vector(v.x*cos(t)-v.y*sin(t), v.x*sin(t)+v.y*cos(t));
+}
+
 ostream& operator<<(ostream& out, const Vector& v) {
     return out << "Vector(" << v.x << "," << v.y << ")";
 }
@@ -104,16 +116,34 @@ ostream& operator<<(ostream& out, const Circle& cir) {
     return out;
 }
 
-f64 geo_dot(const Vector& lhs, const Vector& rhs) {
-    return lhs.x*rhs.x + lhs.y*rhs.y;
-}
+struct Polygon {
+    vector<Vector> ps;
 
-f64 geo_cross(const Vector& lhs, const Vector& rhs) {
-    return lhs.x*rhs.y - lhs.y*rhs.x;
-}
+    explicit Polygon(const vector<Vector>& ps_arg) : ps(ps_arg) {}
 
-Vector geo_rotate(const Vector& v, f64 t) {
-    return Vector(v.x*cos(t)-v.y*sin(t), v.x*sin(t)+v.y*cos(t));
+    f64 area_2x() const {
+        i64 n = SIZE(ps);
+        if(n < 3) return 0;
+        f64 res = geo_cross(ps.back(), ps.front());
+        REP(i, n-1) {
+            res += geo_cross(ps[i], ps[i+1]);
+        }
+        return res;
+    }
+    f64 area() const { return area_2x() / 2; }
+};
+
+ostream& operator<<(ostream& out, const Polygon& poly) {
+    out << "Polygon(";
+    i64 n = SIZE(poly.ps);
+    REP(i, n) {
+        const Vector& p = poly.ps[i];
+        out << "(" << p.x << "," << p.y << ")";
+        if(i != n-1)
+            out << ",";
+    }
+    out << ")";
+    return out;
 }
 
 Vector geo_project(const Line& line, const Vector& p) {
