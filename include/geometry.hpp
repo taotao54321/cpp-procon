@@ -130,6 +130,22 @@ f64 geo_distance(const Line& line, const Vector& p) {
     return fabs(geo_cross(v,p-line.p1)) / v.abs();
 }
 
+f64 geo_distance(const Segment& seg, const Vector& p) {
+    if(geo_dot( seg.vec(), p-seg.p1) < 0) return (p-seg.p1).abs();
+    if(geo_dot(-seg.vec(), p-seg.p2) < 0) return (p-seg.p2).abs();
+    return geo_distance(Line(seg), p);
+}
+
+f64 geo_distance(const Segment& seg1, const Segment& seg2) {
+    if(geo_intersect(seg1,seg2)) return 0;
+    return min({
+        geo_distance(seg1, seg2.p1),
+        geo_distance(seg1, seg2.p2),
+        geo_distance(seg2, seg1.p1),
+        geo_distance(seg2, seg1.p2),
+    });
+}
+
 Vector geo_crosspoint(const Segment& x, const Segment& y) {
     Line ly = Line(y);
     f64 d1 = geo_distance(ly, x.p1);
