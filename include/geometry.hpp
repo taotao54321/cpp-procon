@@ -154,7 +154,7 @@ struct Polygon {
 
     // 凸性判定(全ての内角が180度以下)
     // 3点が同一直線上にあるケースは許容する(この辺ちょっと怪しい)
-    // 点の数が3未満なら false
+    // 2角形以下の場合 false を返す
     bool is_convex() const {
         i64 n = SIZE(ps);
         if(n < 3) return false;
