@@ -124,11 +124,11 @@ struct Polygon {
     f64 area_2x() const {
         i64 n = SIZE(ps);
         if(n < 3) return 0;
-        f64 res = geo_cross(ps.back(), ps.front());
+        f64 sum = geo_cross(ps.back(), ps.front());
         REP(i, n-1) {
-            res += geo_cross(ps[i], ps[i+1]);
+            sum += geo_cross(ps[i], ps[i+1]);
         }
-        return res;
+        return fabs(sum);
     }
     f64 area() const { return area_2x() / 2; }
 };
