@@ -60,7 +60,7 @@ pair<i64,i64> divmod(i64 a, i64 b) {
         --q;
         r += b;
     }
-    return make_pair(q,r);
+    return {q,r};
 }
 
 i64 div_ceil(i64 a, i64 b) {
