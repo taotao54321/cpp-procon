@@ -112,6 +112,10 @@ f64 geo_cross(const Vector& lhs, const Vector& rhs) {
     return lhs.x*rhs.y - lhs.y*rhs.x;
 }
 
+Vector geo_rotate(const Vector& v, f64 t) {
+    return Vector(v.x*cos(t)-v.y*sin(t), v.x*sin(t)+v.y*cos(t));
+}
+
 Vector geo_project(const Line& line, const Vector& p) {
     Vector v = line.vec();
     f64 r = geo_dot(p-line.p1, v) / v.norm();
@@ -141,6 +145,10 @@ ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
 bool geo_intersect(const Segment& x, const Segment& y) {
     return geo_abc(x.p1,x.p2,y.p1) * geo_abc(x.p1,x.p2,y.p2) <= 0 &&
            geo_abc(y.p1,y.p2,x.p1) * geo_abc(y.p1,y.p2,x.p2) <= 0;
+}
+
+bool geo_intersect(const Circle& cir1, const Circle& cir2) {
+    return (cir1.c-cir2.c).norm() <= pow(cir1.r+cir2.r,2);
 }
 
 f64 geo_distance(const Line& line, const Vector& p) {
@@ -182,6 +190,18 @@ vector<Vector> geo_crosspoints(const Circle& cir, const Line& line) {
     Vector e = line.vec().unit();
     f64 t = sqrt(cir.r*cir.r - (p-cir.c).norm());
     return { p+t*e, p-t*e };
+}
+
+// 接する場合も同じ座標2つを返す
+vector<Vector> geo_crosspoints(const Circle& cir1, const Circle& cir2) {
+    if(!geo_intersect(cir1,cir2)) return {};
+    Vector v = cir2.c - cir1.c;
+    f64 d = v.abs();
+    f64 t = acos((cir1.r*cir1.r + d*d - cir2.r*cir2.r) / (2*cir1.r*d));
+    return {
+        cir1.c + geo_rotate(v, t) / d * cir1.r,
+        cir1.c + geo_rotate(v,-t) / d * cir1.r,
+    };
 }
 
 void RD(Vector& v) {
