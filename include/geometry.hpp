@@ -124,13 +124,17 @@ struct Polygon {
     f64 area_2x() const {
         i64 n = SIZE(ps);
         if(n < 3) return 0;
-        f64 sum = geo_cross(ps.back(), ps.front());
-        REP(i, n-1) {
-            sum += geo_cross(ps[i], ps[i+1]);
+        f64 sum = 0;
+        REP(i, n) {
+            sum += geo_cross(cur(i), nex(i));
         }
         return fabs(sum);
     }
     f64 area() const { return area_2x() / 2; }
+
+    Vector cur(i64 i) const { return ps[i]; }
+    Vector pre(i64 i) const { return ps[modulo(i-1,SIZE(ps))]; }
+    Vector nex(i64 i) const { return ps[modulo(i+1,SIZE(ps))]; }
 };
 
 ostream& operator<<(ostream& out, const Polygon& poly) {
