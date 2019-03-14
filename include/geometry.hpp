@@ -56,6 +56,26 @@ Vector geo_rotate(const Vector& v, f64 t) {
     return Vector(v.x*cos(t)-v.y*sin(t), v.x*sin(t)+v.y*cos(t));
 }
 
+enum ABC {
+    ABC_CCW        =  1,
+    ABC_CW         = -1,
+    ABC_ON_BACK    =  2,
+    ABC_ON_FRONT   = -2,
+    ABC_ON_SEGMENT =  0,
+};
+
+ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
+    Vector x = b - a;
+    Vector y = c - a;
+    f64 cross = geo_cross(x,y);
+    if(cross > 0) return ABC_CCW;
+    if(cross < 0) return ABC_CW;
+    f64 dot = geo_dot(x,y);
+    if(dot < 0) return ABC_ON_BACK;
+    if(x.norm() < y.norm()) return ABC_ON_FRONT;
+    return ABC_ON_SEGMENT;
+}
+
 ostream& operator<<(ostream& out, const Vector& v) {
     return out << "Vector(" << v.x << "," << v.y << ")";
 }
@@ -132,6 +152,22 @@ struct Polygon {
     }
     f64 area() const { return area_2x() / 2; }
 
+    // 凸性判定(全ての内角が180度以下)
+    // 3点が同一直線上にあるケースは許容する(この辺ちょっと怪しい)
+    // 点の数が3未満なら false
+    bool is_convex() const {
+        i64 n = SIZE(ps);
+        if(n < 3) return false;
+        i64 abc = 0;
+        REP(i, n) {
+            ABC abc_cur = geo_abc(pre(i), cur(i), nex(i));
+            if(abc_cur != ABC_CCW && abc_cur != ABC_CW) continue;
+            if(abc_cur*abc == -1) return false;
+            abc = abc_cur;
+        }
+        return true;
+    }
+
     Vector cur(i64 i) const { return ps[i]; }
     Vector pre(i64 i) const { return ps[modulo(i-1,SIZE(ps))]; }
     Vector nex(i64 i) const { return ps[modulo(i+1,SIZE(ps))]; }
@@ -154,26 +190,6 @@ Vector geo_project(const Line& line, const Vector& p) {
     Vector v = line.vec();
     f64 r = geo_dot(p-line.p1, v) / v.norm();
     return line.p1 + r*v;
-}
-
-enum ABC {
-    ABC_CCW        =  1,
-    ABC_CW         = -1,
-    ABC_ON_BACK    =  2,
-    ABC_ON_FRONT   = -2,
-    ABC_ON_SEGMENT =  0,
-};
-
-ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
-    Vector x = b - a;
-    Vector y = c - a;
-    f64 cross = geo_cross(x,y);
-    if(cross > 0) return ABC_CCW;
-    if(cross < 0) return ABC_CW;
-    f64 dot = geo_dot(x,y);
-    if(dot < 0) return ABC_ON_BACK;
-    if(x.norm() < y.norm()) return ABC_ON_FRONT;
-    return ABC_ON_SEGMENT;
 }
 
 bool geo_intersect(const Segment& x, const Segment& y) {
