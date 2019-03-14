@@ -164,6 +164,10 @@ f64 geo_distance(const Segment& seg1, const Segment& seg2) {
     });
 }
 
+bool geo_intersect(const Circle& cir, const Line& line) {
+    return geo_distance(line, cir.c) <= cir.r;
+}
+
 Vector geo_crosspoint(const Segment& x, const Segment& y) {
     Line ly = Line(y);
     f64 d1 = geo_distance(ly, x.p1);
@@ -173,10 +177,11 @@ Vector geo_crosspoint(const Segment& x, const Segment& y) {
 
 // 接する場合も同じ座標2つを返す
 vector<Vector> geo_crosspoints(const Circle& cir, const Line& line) {
+    if(!geo_intersect(cir,line)) return {};
     Vector p = geo_project(line, cir.c);
     Vector e = line.vec().unit();
     f64 t = sqrt(cir.r*cir.r - (p-cir.c).norm());
-    return vector<Vector> { p+t*e, p-t*e };
+    return { p+t*e, p-t*e };
 }
 
 void RD(Vector& v) {
