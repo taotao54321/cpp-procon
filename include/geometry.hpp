@@ -1,9 +1,12 @@
 struct Vector {
     f64 x, y;
 
-    Vector() : Vector(0.0,0.0) {}
+    Vector() : Vector(0,0) {}
     Vector(f64 xx, f64 yy) : x(xx), y(yy) {}
 
+    const Vector operator-() const {
+        return Vector(-x,-y);
+    }
     Vector& operator+=(const Vector& rhs) {
         x += rhs.x;
         y += rhs.y;
