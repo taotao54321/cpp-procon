@@ -76,6 +76,12 @@ ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
     return ABC_ON_SEGMENT;
 }
 
+enum Containment {
+    CONT_IN,
+    CONT_ON,
+    CONT_OUT,
+};
+
 ostream& operator<<(ostream& out, const Vector& v) {
     return out << "Vector(" << v.x << "," << v.y << ")";
 }
@@ -166,6 +172,22 @@ struct Polygon {
             abc = abc_cur;
         }
         return true;
+    }
+
+    // 点の包含判定
+    // 2角形以下の場合 CONT_OUT を返す
+    Containment containment(const Vector& p) const {
+        i64 n = SIZE(ps);
+        if(n < 3) return CONT_OUT;
+        i64 cnt = 0;
+        REP(i, n) {
+            Vector a = cur(i) - p;
+            Vector b = nex(i) - p;
+            if(feq(geo_cross(a,b),0) && geo_dot(a,b) <= 0) return CONT_ON;
+            if(a.y > b.y) swap(a,b);
+            if(a.y <= 0 && b.y > 0 && geo_cross(a,b) > 0) ++cnt;
+        }
+        return is_odd(cnt) ? CONT_IN : CONT_OUT;
     }
 
     Vector cur(i64 i) const { return ps[i]; }
