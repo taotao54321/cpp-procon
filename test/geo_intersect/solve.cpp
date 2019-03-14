@@ -8,7 +8,7 @@ signed main() {
         Vector p1; RD(p1);
         Vector p2; RD(p2);
         Vector p3; RD(p3);
-        bool ans = geo_intersect(p0,p1,p2,p3);
+        bool ans = geo_intersect(Segment(p0,p1), Segment(p2,p3));
         PRINTLN(ans ? 1 : 0);
     }
 }

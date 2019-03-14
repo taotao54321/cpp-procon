@@ -48,6 +48,18 @@ struct Line {
     Vector vec() const { return p2 - p1; }
 };
 
+struct Segment {
+    Vector p1, p2;
+
+    Segment(const Vector& pp1, const Vector& pp2) : p1(pp1), p2(pp2) {}
+    Segment(f64 x1, f64 y1, f64 x2, f64 y2) : p1(Vector(x1,y1)), p2(Vector(x2,y2)) {}
+
+    Vector vec() const { return p2 - p1; }
+
+    f64 norm() const { return vec().norm(); }
+    f64 abs() const { return vec().abs(); }
+};
+
 f64 geo_dot(const Vector& lhs, const Vector& rhs) {
     return lhs.x*rhs.x + lhs.y*rhs.y;
 }
@@ -82,9 +94,9 @@ ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
     return ABC_ON_SEGMENT;
 }
 
-bool geo_intersect(const Vector& p1, const Vector& p2, const Vector& p3, const Vector& p4) {
-    return geo_abc(p1,p2,p3) * geo_abc(p1,p2,p4) <= 0 &&
-           geo_abc(p3,p4,p1) * geo_abc(p3,p4,p2) <= 0;
+bool geo_intersect(const Segment& x, const Segment& y) {
+    return geo_abc(x.p1,x.p2,y.p1) * geo_abc(x.p1,x.p2,y.p2) <= 0 &&
+           geo_abc(y.p1,y.p2,x.p1) * geo_abc(y.p1,y.p2,x.p2) <= 0;
 }
 
 void RD(Vector& v) {
