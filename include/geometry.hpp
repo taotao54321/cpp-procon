@@ -39,14 +39,9 @@ bool operator==(const Vector& lhs, const Vector& rhs) {
     return feq(lhs.x,rhs.x) && feq(lhs.y,rhs.y);
 }
 
-struct Line {
-    Vector p1, p2;
-
-    Line(const Vector& pp1, const Vector& pp2) : p1(pp1), p2(pp2) {}
-    Line(f64 x1, f64 y1, f64 x2, f64 y2) : p1(Vector(x1,y1)), p2(Vector(x2,y2)) {}
-
-    Vector vec() const { return p2 - p1; }
-};
+ostream& operator<<(ostream& out, const Vector& v) {
+    return out << "Vector(" << v.x << "," << v.y << ")";
+}
 
 struct Segment {
     Vector p1, p2;
@@ -59,6 +54,34 @@ struct Segment {
     f64 norm() const { return vec().norm(); }
     f64 abs() const { return vec().abs(); }
 };
+
+ostream& operator<<(ostream& out, const Segment& seg) {
+    out << "Segment(";
+    out << "(" << seg.p1.x << "," << seg.p1.y << ")";
+    out << ",";
+    out << "(" << seg.p2.x << "," << seg.p2.y << ")";
+    out << ")";
+    return out;
+}
+
+struct Line {
+    Vector p1, p2;
+
+    Line(const Vector& pp1, const Vector& pp2) : p1(pp1), p2(pp2) {}
+    Line(f64 x1, f64 y1, f64 x2, f64 y2) : p1(Vector(x1,y1)), p2(Vector(x2,y2)) {}
+    Line(const Segment& seg) : p1(seg.p1), p2(seg.p2) {}
+
+    Vector vec() const { return p2 - p1; }
+};
+
+ostream& operator<<(ostream& out, const Line& line) {
+    out << "Line(";
+    out << "(" << line.p1.x << "," << line.p1.y << ")";
+    out << ",";
+    out << "(" << line.p2.x << "," << line.p2.y << ")";
+    out << ")";
+    return out;
+}
 
 f64 geo_dot(const Vector& lhs, const Vector& rhs) {
     return lhs.x*rhs.x + lhs.y*rhs.y;
@@ -97,6 +120,18 @@ ABC geo_abc(const Vector& a, const Vector& b, const Vector& c) {
 bool geo_intersect(const Segment& x, const Segment& y) {
     return geo_abc(x.p1,x.p2,y.p1) * geo_abc(x.p1,x.p2,y.p2) <= 0 &&
            geo_abc(y.p1,y.p2,x.p1) * geo_abc(y.p1,y.p2,x.p2) <= 0;
+}
+
+f64 geo_distance(const Line& line, const Vector& p) {
+    Vector v = line.vec();
+    return fabs(geo_cross(v,p-line.p1)) / v.abs();
+}
+
+Vector geo_crosspoint(const Segment& x, const Segment& y) {
+    Line ly = Line(y);
+    f64 d1 = geo_distance(ly, x.p1);
+    f64 d2 = geo_distance(ly, x.p2);
+    return x.p1 + (d1/(d1+d2))*x.vec();
 }
 
 void RD(Vector& v) {
