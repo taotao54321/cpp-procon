@@ -30,6 +30,8 @@ struct Vector {
 
     f64 norm() const { return x*x + y*y; }
     f64 abs() const { return sqrt(norm()); }
+
+    Vector unit() const { return Vector(*this) /= this->abs(); }
 };
 
 const Vector operator+(const Vector& lhs, const Vector& rhs) { return Vector(lhs) += rhs; }
@@ -82,6 +84,22 @@ ostream& operator<<(ostream& out, const Line& line) {
     out << "(" << line.p1.x << "," << line.p1.y << ")";
     out << ",";
     out << "(" << line.p2.x << "," << line.p2.y << ")";
+    out << ")";
+    return out;
+}
+
+struct Circle {
+    Vector c;
+    f64 r;
+
+    Circle(const Vector& cc, f64 rr) : c(cc), r(rr) {}
+};
+
+ostream& operator<<(ostream& out, const Circle& cir) {
+    out << "Circle(";
+    out << "(" << cir.c.x << "," << cir.c.y << ")";
+    out << ",";
+    out << cir.r;
     out << ")";
     return out;
 }
@@ -151,6 +169,14 @@ Vector geo_crosspoint(const Segment& x, const Segment& y) {
     f64 d1 = geo_distance(ly, x.p1);
     f64 d2 = geo_distance(ly, x.p2);
     return x.p1 + (d1/(d1+d2))*x.vec();
+}
+
+// 接する場合も同じ座標2つを返す
+vector<Vector> geo_crosspoints(const Circle& cir, const Line& line) {
+    Vector p = geo_project(line, cir.c);
+    Vector e = line.vec().unit();
+    f64 t = sqrt(cir.r*cir.r - (p-cir.c).norm());
+    return vector<Vector> { p+t*e, p-t*e };
 }
 
 void RD(Vector& v) {
