@@ -4,14 +4,20 @@ CXX := g++
 CXXFLAGS := \
     -std=c++14 \
     -Wall -Wextra \
+    -Wconditionally-supported \
     -Wconversion \
     -Wduplicated-cond \
     -Wduplicated-branches \
+    -Wextra-semi \
+    -Wfloat-equal \
     -Wformat=2 \
     -Wlogical-op \
     -Wnull-dereference \
     -Wold-style-cast \
     -Wshadow \
+    -Wundef \
+    -Wuseless-cast \
+    -Wvla \
     -Wzero-as-null-pointer-constant \
     -DPROCON_LOCAL
 
