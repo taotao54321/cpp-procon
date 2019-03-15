@@ -276,6 +276,44 @@ vector<Vector> geo_crosspoints(const Circle& cir1, const Circle& cir2) {
     };
 }
 
+// 凸包
+//
+// * 始点はy座標最小のもののうちx座標最小のもの
+// * 反時計回り
+// * 辺上の点を含む
+Polygon geo_convex_hull(vector<Vector> ps) {
+    i64 n = SIZE(ps);
+    assert(n >= 3);
+
+    vector<Vector> res;
+    res.reserve(n);
+
+    ALL(sort, ps, ON(less<>(), [](const Vector& p) { return make_pair(p.y,p.x); }));
+
+    auto step = [&res](const Vector& p) {
+        while(SIZE(res) >= 2) {
+            i64 k = SIZE(res);
+            // 辺上の点を含めたくなければ "!= ABC_CW" を "== ABC_CCW" に変える
+            if(geo_abc(res[k-2],res[k-1],p) != ABC_CW) break;
+            res.pop_back();
+        }
+        res.emplace_back(p);
+    };
+
+    // lower hull
+    for(i64 i = 0; i < n; ++i) {
+        step(ps[i]);
+    }
+    // upper hull
+    for(i64 i = n-2; i >= 0; --i) {
+        step(ps[i]);
+    }
+    // 始点が重複するので削除
+    res.pop_back();
+
+    return Polygon(res);
+}
+
 void RD(Vector& v) {
     RD(v.x);
     RD(v.y);
