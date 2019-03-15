@@ -276,7 +276,7 @@ vector<Vector> geo_crosspoints(const Circle& cir1, const Circle& cir2) {
     };
 }
 
-// 凸包
+// 凸包 (Andrew's Monotone Chain)
 //
 // * 始点はy座標最小のもののうちx座標最小のもの
 // * 反時計回り
