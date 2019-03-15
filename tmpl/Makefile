@@ -1,7 +1,19 @@
 .PHONY: all clean
 
 CXX := g++
-CXXFLAGS := -std=c++14 -Wall -Wextra -Wconversion -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference -Wold-style-cast -Wshadow -Wformat=2 -DPROCON_LOCAL
+CXXFLAGS := \
+    -std=c++14 \
+    -Wall -Wextra \
+    -Wconversion \
+    -Wduplicated-cond \
+    -Wduplicated-branches \
+    -Wformat=2 \
+    -Wlogical-op \
+    -Wnull-dereference \
+    -Wold-style-cast \
+    -Wshadow \
+    -Wzero-as-null-pointer-constant \
+    -DPROCON_LOCAL
 
 ifdef OPTIMIZE
     CXXFLAGS += -O2
