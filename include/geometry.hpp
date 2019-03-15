@@ -249,12 +249,12 @@ bool geo_intersect(const Circle& cir, const Line& line) {
 }
 
 // 交差判定は既に行われているとする
-// FIXME: 線分が重なる場合を考慮してない
-Vector geo_crosspoint(const Segment& x, const Segment& y) {
-    Vector v = y.vec();
-    f64 d1 = fabs(geo_cross(v, x.p1-y.p1));
-    f64 d2 = fabs(geo_cross(v, x.p2-y.p1));
-    return x.p1 + (d1/(d1+d2))*x.vec();
+// FIXME: 2線分が重なる場合を考慮してない
+Vector geo_crosspoint(const Segment& seg1, const Segment& seg2) {
+    Vector v = seg2.vec();
+    f64 d1 = fabs(geo_cross(v, seg1.p1-seg2.p1));
+    f64 d2 = fabs(geo_cross(v, seg1.p2-seg2.p1));
+    return seg1.p1 + (d1/(d1+d2))*seg1.vec();
 }
 
 // 接する場合も同じ座標2つを返す
