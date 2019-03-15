@@ -314,6 +314,40 @@ Polygon geo_convex_hull(vector<Vector> ps) {
     return Polygon(res);
 }
 
+// 凸多角形の直径 (Rotating Calipers)
+//
+// (直径の2乗, index_端点1, index_端点2) を返す
+// convex は凸多角形でなければならない
+tuple<f64,i64,i64> geo_convex_diameter_sq(const Polygon& convex) {
+    const auto& ps = convex.ps;
+    i64 n = SIZE(ps);
+
+    auto cmp_y = ON(less<>(), [](const Vector& p) { return p.y; });
+    i64 istart = ALL(max_element, ps, cmp_y) - begin(ps);
+    i64 jstart = ALL(min_element, ps, cmp_y) - begin(ps);
+
+    auto nex = [n](i64 i) { return modulo(i+1,n); };
+
+    f64 d2max = (ps[istart]-ps[jstart]).norm();
+    i64 i, imax, j, jmax;
+    i = imax = istart;
+    j = jmax = jstart;
+    do {
+        Vector vi = ps[nex(i)] - ps[i];
+        Vector vj = ps[nex(j)] - ps[j];
+        if(geo_cross(vi,vj) >= 0)
+            j = nex(j);
+        else
+            i = nex(i);
+        if(chmax(d2max, (ps[i]-ps[j]).norm())) {
+            imax = i;
+            jmax = j;
+        }
+    } while(i != istart || j != jstart);
+
+    return { d2max, imax, jmax };
+}
+
 void RD(Vector& v) {
     RD(v.x);
     RD(v.y);
