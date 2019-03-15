@@ -348,6 +348,8 @@ tuple<f64,i64,i64> geo_convex_diameter_sq(const Polygon& convex) {
     } while(i != istart || j != jstart);
 
     return { d2max, imax, jmax };
+    // AOJの場合はこっち
+    //return make_tuple(d2max, imax, jmax);
 }
 
 void RD(Vector& v) {
