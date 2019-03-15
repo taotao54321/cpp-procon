@@ -42,7 +42,7 @@ struct WeightedUnionFind {
     // x に対する y の重みを d とする
     // 併合できたかどうかを返す
     // x, y が元々同一集合に属する場合、d の値によっては矛盾が生じて併合不能
-    bool unite(i64 x, i64 y, i64 d) {
+    [[nodiscard]] bool unite(i64 x, i64 y, i64 d) {
         i64 rx, ry, wx, wy;
         tie(rx,wx) = compress(x);
         tie(ry,wy) = compress(y);
