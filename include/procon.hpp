@@ -89,9 +89,7 @@ bool chmax(T& xmax, const U& x) {
         xmax = x;
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 template<typename T, typename U>
@@ -100,9 +98,7 @@ bool chmin(T& xmin, const U& x) {
         xmin = x;
         return true;
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 template<typename InputIt>

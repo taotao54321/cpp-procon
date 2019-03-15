@@ -112,7 +112,7 @@ struct Line {
 
     Line(const Vector& pp1, const Vector& pp2) : p1(pp1), p2(pp2) {}
     Line(f64 x1, f64 y1, f64 x2, f64 y2) : p1(Vector(x1,y1)), p2(Vector(x2,y2)) {}
-    Line(const Segment& seg) : p1(seg.p1), p2(seg.p2) {}
+    explicit Line(const Segment& seg) : p1(seg.p1), p2(seg.p2) {}
 
     Vector vec() const { return p2 - p1; }
 };
