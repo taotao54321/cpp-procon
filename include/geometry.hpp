@@ -257,6 +257,20 @@ Vector geo_crosspoint(const Segment& seg1, const Segment& seg2) {
     return seg1.p1 + (d1/(d1+d2))*seg1.vec();
 }
 
+// 2直線が重なる場合、la.p1 を返す
+// 2直線が平行かつ重ならない場合エラー(先に交差判定すること)
+Vector geo_crosspoint(const Line& la, const Line& lb) {
+    Vector a = la.vec();
+    Vector b = lb.vec();
+    f64 d1 = geo_cross(b, lb.p1-la.p1);
+    f64 d2 = geo_cross(b, a);
+    if(feq(d2, 0)) {  // 2直線が平行
+        if(feq(d1, 0)) return la.p1;  // 2直線が重なっている
+        assert(false);
+    }
+    return la.p1 + d1/d2*a;
+}
+
 // 接する場合も同じ座標2つを返す
 vector<Vector> geo_crosspoints(const Circle& cir, const Line& line) {
     if(!geo_intersect(cir,line)) return {};
@@ -350,6 +364,28 @@ tuple<f64,i64,i64> geo_convex_diameter_sq(const Polygon& convex) {
     return { d2max, imax, jmax };
     // AOJの場合はこっち
     //return make_tuple(d2max, imax, jmax);
+}
+
+// 凸多角形の切断
+//
+// convex は凸多角形でなければならない
+Polygon geo_convex_cut(const Polygon& convex, const Line& line) {
+    const vector<Vector>& ps = convex.ps;
+    i64 n = SIZE(ps);
+    auto nex = [n](i64 i) { return modulo(i+1,n); };
+
+    vector<Vector> res;
+    REP(i, n) {
+        // ps[i] が直線より左または直線上なら ps[i] を追加
+        ABC abc_a = geo_abc(line.p1, line.p2, ps[i]);
+        if(abc_a != ABC_CW)
+            res.emplace_back(ps[i]);
+        // ps[i] が直線より左、かつ ps[i+1] が直線より右なら交点を追加
+        ABC abc_b = geo_abc(line.p1, line.p2, ps[nex(i)]);
+        if(abc_a*abc_b < 0)
+            res.emplace_back(geo_crosspoint(line, Line(ps[i],ps[nex(i)])));
+    }
+    return Polygon(res);
 }
 
 void RD(Vector& v) {
