@@ -388,6 +388,59 @@ Polygon geo_convex_cut(const Polygon& convex, const Line& line) {
     return Polygon(res);
 }
 
+// geo_closest_pair() 下請け
+// [first,last) はx座標に関してソート済であること
+template<typename RandomIt>
+tuple<f64,RandomIt,RandomIt> geo_closest_pair_sq_impl(RandomIt first, RandomIt last) {
+    i64 n = last - first;
+    if(n <= 1)
+        return { DBL_MAX, last, last };
+        // AOJの場合はこっち
+        //return make_tuple(DBL_MAX, last, last);
+
+    auto mid = first + n/2;
+    f64 x = mid->x;
+    auto res = min(geo_closest_pair_sq_impl(first,mid), geo_closest_pair_sq_impl(mid,last));
+    inplace_merge(first, mid, last, LT_ON([](const Vector& p) { return p.y; }));
+
+    vector<RandomIt> around;
+    for(auto i = first; i != last; ++i) {
+        f64 d = x - i->x;
+        if(d*d >= get<0>(res)) continue;
+        for(auto j = around.rbegin(); j != around.rend(); ++j) {
+            f64 dx = i->x - (*j)->x;
+            f64 dy = i->y - (*j)->y;
+            if(dy*dy >= get<0>(res)) break;
+            f64 cur = dx*dx + dy*dy;
+            if(cur < get<0>(res))
+                res = { cur, i, *j };
+                // AOJの場合はこっち
+                //res = make_tuple(cur, i, *j);
+        }
+        around.emplace_back(i);
+    }
+
+    return res;
+}
+
+// 最近点対
+//
+// (距離の2乗, index_端点1, index_端点2) を返す
+// SIZE(ps) < 2 ならエラー
+// O(nlogn)
+tuple<f64,i64,i64> geo_closest_pair_sq(vector<Vector> ps) {
+    assert(SIZE(ps) >= 2);
+
+    ALL(sort, ps, LT_ON([](const Vector& p) { return p.x; }));
+
+    auto res = ALL(geo_closest_pair_sq_impl, ps);
+    auto i = get<1>(res) - begin(ps);
+    auto j = get<2>(res) - begin(ps);
+    return { get<0>(res), i, j };
+    // AOJの場合はこっち
+    //return make_tuple(get<0>(res), i, j);
+}
+
 void RD(Vector& v) {
     RD(v.x);
     RD(v.y);
