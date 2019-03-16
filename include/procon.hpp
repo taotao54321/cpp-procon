@@ -124,6 +124,12 @@ auto ON(BinaryFunc bf, UnaryFunc uf) {
     };
 }
 
+template<typename F>
+auto LT_ON(F f) { return ON(less<>(), f); }
+
+template<typename F>
+auto GT_ON(F f) { return ON(greater<>(), f); }
+
 template<typename T>
 void RD(T& x) {
     cin >> x;
