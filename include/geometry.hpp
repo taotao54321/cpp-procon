@@ -142,6 +142,36 @@ ostream& operator<<(ostream& out, const Circle& cir) {
     return out;
 }
 
+enum CircleRelation {
+    CIRS_IN        = 0,
+    CIRS_TOUCH_IN  = 1,
+    CIRS_CROSS     = 2,
+    CIRS_TOUCH_OUT = 3,
+    CIRS_OUT       = 4,
+    CIRS_SAME      = 5,
+};
+
+CircleRelation geo_circle_relation(const Circle& cir1, const Circle& cir2) {
+    f64 d = (cir2.c-cir1.c).norm();
+    f64 a = pow(cir1.r+cir2.r, 2);
+    f64 b = pow(cir1.r-cir2.r, 2);
+    if(feq(d, a)) {
+        return CIRS_TOUCH_OUT;
+    }
+    else if(feq(d, b)) {
+        return feq(d,0) ? CIRS_SAME : CIRS_TOUCH_IN;
+    }
+    else if(a < d) {
+        return CIRS_OUT;
+    }
+    else if(b < d && d < a) {
+        return CIRS_CROSS;
+    }
+    else {  // d < b
+        return CIRS_IN;
+    }
+}
+
 struct Polygon {
     vector<Vector> ps;
 
