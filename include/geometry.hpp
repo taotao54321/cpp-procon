@@ -471,6 +471,35 @@ tuple<f64,i64,i64> geo_closest_pair_sq(vector<Vector> ps) {
     //return make_tuple(get<0>(res), i, j);
 }
 
+// p を通る cir の接線 ([0,2] 個)
+// 各 Line の p2 が接点となる
+vector<Line> geo_tangent(const Circle& cir, const Vector& p) {
+    Vector v = cir.c - p;
+    f64 d1_sq = v.norm();
+    f64 d2_sq = d1_sq - cir.r*cir.r;
+    if(d2_sq < 0) return {};
+
+    f64 d1 = sqrt(d1_sq);
+    f64 d2 = sqrt(d2_sq);
+    f64 cos_a = d2 / d1;
+    f64 sin_a = cir.r / d1;
+
+    vector<Line> res;
+    Vector w1 {
+         v.x*cos_a + v.y*sin_a,
+        -v.x*sin_a + v.y*cos_a,
+    };
+    res.emplace_back(Line(p, p + d2/d1*w1));
+    if(feq(d2, 0)) return res;
+    Vector w2 {
+        v.x*cos_a - v.y*sin_a,
+        v.x*sin_a + v.y*cos_a,
+    };
+    res.emplace_back(Line(p, p + d2/d1*w2));
+
+    return res;
+}
+
 void RD(Vector& v) {
     RD(v.x);
     RD(v.y);
