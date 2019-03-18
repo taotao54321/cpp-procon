@@ -65,4 +65,87 @@ vector<pair<i64,i64>> factorize(i64 n) {
     return res;
 }
 
+// 二分累乗
+template<typename Monoid>
+Monoid pow_binary(Monoid x, i64 e) {
+    assert(e >= 0);
+
+    Monoid res(1);  // 行列などの場合はここを適当に変える
+    Monoid cur = x;
+    while(e > 0) {
+        if(e & 1)
+            res *= cur;
+        cur *= cur;
+        e >>= 1;
+    }
+    return res;
+}
+
+// mod m での a の逆元
+// a ⊥ m でなければならない
+i64 inv_mod(i64 a, i64 m) {
+    i64 g,x0; tie(g,x0,ignore) = extgcd(a, m);
+    assert(g == 1);
+    return modulo(x0, m);
+}
+
+template<i64 P>
+struct ModPT {
+    static_assert(P >= 2, "P must be a prime");
+    i64 v_;  // [0,P)
+
+    ModPT() : v_(0) {}
+    ModPT(i64 v) : v_(modulo(v,P)) {}
+
+    const ModPT operator-() const {
+        return ModPT(-v_);
+    }
+    ModPT& operator+=(ModPT rhs) {
+        v_ += rhs.v_;
+        v_ %= P;
+        return *this;
+    }
+    ModPT& operator-=(ModPT rhs) {
+        v_ += P;
+        v_ -= rhs.v_;
+        v_ %= P;
+        return *this;
+    }
+    ModPT& operator*=(ModPT rhs) {
+        v_ *= rhs.v_;
+        v_ %= P;
+        return *this;
+    }
+
+    ModPT inv() const {
+        return ModPT(inv_mod(v_,P));
+    }
+};
+
+template<i64 P>
+const ModPT<P> operator+(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) += rhs; }
+template<i64 P>
+const ModPT<P> operator+(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) += rhs; }
+template<i64 P>
+const ModPT<P> operator+(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) += lhs; }
+template<i64 P>
+const ModPT<P> operator-(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) -= rhs; }
+template<i64 P>
+const ModPT<P> operator-(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) -= rhs; }
+template<i64 P>
+const ModPT<P> operator-(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) -= lhs; }
+template<i64 P>
+const ModPT<P> operator*(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) *= rhs; }
+template<i64 P>
+const ModPT<P> operator*(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) *= rhs; }
+template<i64 P>
+const ModPT<P> operator*(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) *= lhs; }
+
+template<i64 P>
+ostream& operator<<(ostream& out, ModPT<P> x) {
+    return out << x.v_;
+}
+
+using ModP = ModPT<MOD>;
+
 // }}}
