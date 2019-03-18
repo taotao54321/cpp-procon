@@ -38,3 +38,27 @@ tuple<i64,i64,i64> extgcd(i64 a, i64 b) {
     y *= sgn(b);
     return { g, x, y };
 }
+
+// 素因数分解
+// (素因数,指数) のリストを返す
+vector<pair<i64,i64>> factorize(i64 n) {
+    assert(n >= 2);
+
+    vector<pair<i64,i64>> res;
+
+    i64 m = n;
+    for(i64 i = 2; i*i <= n; ++i) {
+        if(m == 1) break;
+        i64 e = 0;
+        while(m % i == 0) {
+            ++e;
+            m /= i;
+        }
+        if(e) res.emplace_back(i, e);
+    }
+    if(m > 1) res.emplace_back(m, 1);
+
+    return res;
+}
+
+
