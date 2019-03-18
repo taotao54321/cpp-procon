@@ -135,6 +135,30 @@ template<typename F>
 auto GT_ON(F f) { return ON(greater<>(), f); }
 
 template<typename T>
+void FROM_STRING(const string& s, T& x) {
+    istringstream in(s);
+    in >> x;
+}
+
+template<typename T>
+string TO_STRING(const T& x) {
+    ostringstream out;
+    out << x;
+    return out.str();
+}
+
+template<typename InputIt>
+string JOIN(InputIt first, InputIt last, const string& sep) {
+    ostringstream out;
+    while(first != last) {
+        out << *first++;
+        if(first != last)
+            out << sep;
+    }
+    return out.str();
+}
+
+template<typename T>
 void RD(T& x) {
     cin >> x;
 #ifdef PROCON_LOCAL
