@@ -19,8 +19,31 @@ void test_map() {
     }
 }
 
+void test_multiset() {
+    {
+        multiset<i64> m { 1, 1, 2, 2, 2, 3 };
+        assert(m.count(2) == 3);
+        assert(!multiset_erase_one(m, 4));
+        assert(multiset_erase_one(m, 2));
+        assert(m.count(2) == 2);
+        assert(multiset_erase_one(m, 3));
+        assert(m.count(3) == 0);
+    }
+
+    {
+        unordered_multiset<i64> m { 1, 1, 2, 2, 2, 3 };
+        assert(m.count(2) == 3);
+        assert(!multiset_erase_one(m, 4));
+        assert(multiset_erase_one(m, 2));
+        assert(m.count(2) == 2);
+        assert(multiset_erase_one(m, 3));
+        assert(m.count(3) == 0);
+    }
+}
+
 signed main() {
     test_map();
+    test_multiset();
 
     return 0;
 }
