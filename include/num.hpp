@@ -1,3 +1,5 @@
+// {{{ num
+
 // 事前条件: a >= 0, b >= 0
 i64 gcd_impl(i64 a, i64 b) {
     if(b == 0) return a;
@@ -61,4 +63,4 @@ vector<pair<i64,i64>> factorize(i64 n) {
     return res;
 }
 
-
+// }}}

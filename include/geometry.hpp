@@ -1,3 +1,5 @@
+// {{{ geometry
+
 struct Vector {
     f64 x, y;
 
@@ -504,3 +506,5 @@ void RD(Vector& v) {
     RD(v.x);
     RD(v.y);
 }
+
+// }}}
