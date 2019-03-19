@@ -161,6 +161,22 @@ i64 digit_ord(char c) {
     return c - '0';
 }
 
+char lower_chr(i64 n) {
+    return static_cast<char>('a' + n);
+}
+
+i64 lower_ord(char c) {
+    return c - 'a';
+}
+
+char upper_chr(i64 n) {
+    return static_cast<char>('A' + n);
+}
+
+i64 upper_ord(char c) {
+    return c - 'A';
+}
+
 template<typename T>
 void FROM_STRING(const string& s, T& x) {
     istringstream in(s);
