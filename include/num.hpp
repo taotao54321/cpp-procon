@@ -38,9 +38,7 @@ tuple<i64,i64,i64> extgcd(i64 a, i64 b) {
     i64 g = extgcd_impl(abs(a), abs(b), x, y);
     x *= sgn(a);
     y *= sgn(b);
-    return { g, x, y };
-    // AOJの場合はこっち
-    //return make_tuple(g, x, y);
+    return make_tuple(g, x, y);
 }
 
 // 素因数分解

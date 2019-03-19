@@ -73,7 +73,7 @@ struct WeightedUnionFind {
         i64 r,d; tie(r,d) = compress(p);
         ps_[x]  = r;
         ws_[x] += d;
-        return { r, ws_[x] };
+        return make_tuple(r, ws_[x]);
     }
 };
 

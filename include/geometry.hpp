@@ -393,9 +393,7 @@ tuple<f64,i64,i64> geo_convex_diameter_sq(const Polygon& convex) {
         }
     } while(i != istart || j != jstart);
 
-    return { d2max, imax, jmax };
-    // AOJの場合はこっち
-    //return make_tuple(d2max, imax, jmax);
+    return make_tuple(d2max, imax, jmax);
 }
 
 // 凸多角形の切断
@@ -426,9 +424,7 @@ template<typename RandomIt>
 tuple<f64,RandomIt,RandomIt> geo_closest_pair_sq_impl(RandomIt first, RandomIt last) {
     i64 n = last - first;
     if(n <= 1)
-        return { DBL_MAX, last, last };
-        // AOJの場合はこっち
-        //return make_tuple(DBL_MAX, last, last);
+        return make_tuple(DBL_MAX, last, last);
 
     auto mid = first + n/2;
     f64 x = mid->x;
@@ -445,9 +441,7 @@ tuple<f64,RandomIt,RandomIt> geo_closest_pair_sq_impl(RandomIt first, RandomIt l
             if(dy*dy >= get<0>(res)) break;
             f64 cur = dx*dx + dy*dy;
             if(cur < get<0>(res))
-                res = { cur, i, *j };
-                // AOJの場合はこっち
-                //res = make_tuple(cur, i, *j);
+                res = make_tuple(cur, i, *j);
         }
         around.emplace_back(i);
     }
@@ -468,9 +462,7 @@ tuple<f64,i64,i64> geo_closest_pair_sq(vector<Vector> ps) {
     auto res = ALL(geo_closest_pair_sq_impl, ps);
     auto i = get<1>(res) - begin(ps);
     auto j = get<2>(res) - begin(ps);
-    return { get<0>(res), i, j };
-    // AOJの場合はこっち
-    //return make_tuple(get<0>(res), i, j);
+    return make_tuple(get<0>(res), i, j);
 }
 
 // p を通る cir の接線 ([0,2] 個)
