@@ -146,4 +146,20 @@ ostream& operator<<(ostream& out, ModPT<P> x) {
 
 using ModP = ModPT<MOD>;
 
+// F(0) = 0
+// F(1) = 1
+// F(n) = F(n-1) + F(n-2)
+template<size_t N>
+ModP* fibonacci() {
+    static_assert(N >= 2, "");
+    static ModP fib[N];
+
+    fib[0] = 0;
+    fib[1] = 1;
+    FOR(i, 2, N) {
+        fib[i] = fib[i-1] + fib[i-2];
+    }
+    return fib;
+}
+
 // }}}
