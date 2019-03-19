@@ -153,6 +153,14 @@ auto LT_ON(F f) { return ON(less<>(), f); }
 template<typename F>
 auto GT_ON(F f) { return ON(greater<>(), f); }
 
+char digit_chr(i64 n) {
+    return static_cast<char>('0' + n);
+}
+
+i64 digit_ord(char c) {
+    return c - '0';
+}
+
 template<typename T>
 void FROM_STRING(const string& s, T& x) {
     istringstream in(s);
