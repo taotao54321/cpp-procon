@@ -44,6 +44,25 @@ constexpr f64 PI = 3.14159265358979323846;
 
 #define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(forward<decltype(args)>(args)...); })
 
+template<typename F>
+class FixPoint {
+public:
+    explicit constexpr FixPoint(F&& f) : f_(forward<F>(f)) {}
+
+    template<typename... Args>
+    constexpr decltype(auto) operator()(Args&&... args) const {
+        return f_(*this, forward<Args>(args)...);
+    }
+
+private:
+    const F f_;
+};
+
+template<typename F>
+decltype(auto) FIX(F&& f) {
+    return FixPoint<F>(forward<F>(f));
+}
+
 template<typename C>
 i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }
 
