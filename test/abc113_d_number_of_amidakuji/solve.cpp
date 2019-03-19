@@ -6,7 +6,8 @@ signed main() {
     i64 H, W; RD(H); RD(W);
     i64 K; RD(K); --K;  // 0-based
 
-    const ModP* fib = fibonacci<1000>();
+    decltype(auto) fib = fibonacci<1000>();
+    assert(SIZE(fib) == 1000);
 
     auto m = Matrix<ModP>::zeros(W);
     // 左

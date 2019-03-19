@@ -149,8 +149,11 @@ using ModP = ModPT<MOD>;
 // F(0) = 0
 // F(1) = 1
 // F(n) = F(n-1) + F(n-2)
+//
+// // decltype(auto) で受けると SIZE() が使える (auto だとポインタになってしまう)
+// decltype(auto) fib = fibonacci<1000>();
 template<size_t N>
-ModP* fibonacci() {
+ModP (&fibonacci())[N] {
     static_assert(N >= 2, "");
     static ModP fib[N];
 
