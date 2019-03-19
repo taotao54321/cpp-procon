@@ -27,12 +27,19 @@ else
     CXXFLAGS += -g -fsanitize=undefined -D_GLIBCXX_DEBUG
 endif
 
-TARGET := a.out
+SRC_SOLVE := solve.cpp
+SRCS := $(filter-out $(SRC_SOLVE),$(wildcard *.cpp))
+
+TARGET := a.out $(addprefix bin/,$(basename $(SRCS)))
 
 all: $(TARGET)
 
-$(TARGET) : solve.cpp
+a.out: $(SRC_SOLVE)
 	$(CXX) $(CXXFLAGS) $<
+
+bin/%: %.cpp
+	mkdir -p -v bin
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
 clean:
 	-$(RM) $(TARGET)
