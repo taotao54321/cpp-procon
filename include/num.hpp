@@ -142,6 +142,19 @@ template<i64 P>
 ModPT<P> operator*(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) *= lhs; }
 
 template<i64 P>
+bool operator==(ModPT<P> lhs, ModPT<P> rhs) { return lhs.v_ == rhs.v_; }
+template<i64 P>
+bool operator==(ModPT<P> lhs, i64 rhs) { return lhs == ModPT<P>(rhs); }
+template<i64 P>
+bool operator==(i64 lhs, ModPT<P> rhs) { return ModPT<P>(lhs) == rhs; }
+template<i64 P>
+bool operator!=(ModPT<P> lhs, ModPT<P> rhs) { return !(lhs == rhs); }
+template<i64 P>
+bool operator!=(ModPT<P> lhs, i64 rhs) { return !(lhs == rhs); }
+template<i64 P>
+bool operator!=(i64 lhs, ModPT<P> rhs) { return !(lhs == rhs); }
+
+template<i64 P>
 istream& operator>>(istream& in, ModPT<P>& x) {
     return in >> x.v_;
 }
