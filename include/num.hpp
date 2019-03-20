@@ -142,6 +142,11 @@ template<i64 P>
 const ModPT<P> operator*(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) *= lhs; }
 
 template<i64 P>
+istream& operator>>(istream& in, ModPT<P>& x) {
+    return in >> x.v_;
+}
+
+template<i64 P>
 ostream& operator<<(ostream& out, ModPT<P> x) {
     return out << x.v_;
 }
