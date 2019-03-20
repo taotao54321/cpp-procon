@@ -10,7 +10,7 @@ import colorama
 from colorama import Fore, Style
 
 def get_cases():
-    return tuple(filter(Path.is_dir, Path('test/').iterdir()))
+    return sorted(filter(Path.is_dir, Path('test/').iterdir()))
 
 def build_case(case):
     cmdline = (
