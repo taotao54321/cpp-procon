@@ -216,14 +216,12 @@ ModP (&ifactorial())[N] {
     return ifac;
 }
 
-template<size_t N>
-ModP permutation_count(i64 n, i64 r, const ModP (&fac)[N], const ModP (&ifac)[N]) {
+ModP permutation_count(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[n-r];
 }
 
-template<size_t N>
-ModP combination_count(i64 n, i64 r, const ModP (&fac)[N], const ModP (&ifac)[N]) {
+ModP combination_count(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[r] * ifac[n-r];
 }
