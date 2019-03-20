@@ -187,4 +187,33 @@ ModP (&fibonacci())[N] {
     return fib;
 }
 
+template<size_t N>
+ModP (&factorial())[N] {
+    static_assert(N >= 1, "");
+    static ModP fac[N] {};
+
+    if(fac[0] != 1) {
+        fac[0] = 1;
+        FOR(i, 1, N) {
+            fac[i] = i * fac[i-1];
+        }
+    }
+    return fac;
+}
+
+template<size_t N>
+ModP (&ifactorial())[N] {
+    static_assert(N >= 1, "");
+    static ModP ifac[N] {};
+
+    if(ifac[0] != 1) {
+        decltype(auto) fac = factorial<N>();
+        ifac[N-1] = fac[N-1].inv();
+        for(i64 i = N-2; i >= 0; --i) {
+            ifac[i] = (i+1) * ifac[i+1];
+        }
+    }
+    return ifac;
+}
+
 // }}}
