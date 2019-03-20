@@ -30,7 +30,10 @@ endif
 SRC_SOLVE := solve.cpp
 SRCS := $(filter-out $(SRC_SOLVE),$(wildcard *.cpp))
 
-TARGET := a.out $(addprefix bin/,$(basename $(SRCS)))
+TARGET := $(addprefix bin/,$(basename $(SRCS)))
+ifneq ("$(wildcard $(SRC_SOLVE))","")
+    TARGET += a.out
+endif
 
 all: $(TARGET)
 
