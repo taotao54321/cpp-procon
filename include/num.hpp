@@ -43,8 +43,10 @@ tuple<i64,i64,i64> extgcd(i64 a, i64 b) {
 
 // 素因数分解
 // (素因数,指数) のリストを返す
+// n >= 1 でなければならない
+// n == 1 の場合、空リストを返す
 vector<pair<i64,i64>> factorize(i64 n) {
-    assert(n >= 2);
+    assert(n >= 1);
 
     vector<pair<i64,i64>> res;
 
