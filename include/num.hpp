@@ -222,4 +222,10 @@ ModP permutation_count(i64 n, i64 r, const ModP (&fac)[N], const ModP (&ifac)[N]
     return fac[n] * ifac[n-r];
 }
 
+template<size_t N>
+ModP combination_count(i64 n, i64 r, const ModP (&fac)[N], const ModP (&ifac)[N]) {
+    if(n < r) return 0;
+    return fac[n] * ifac[r] * ifac[n-r];
+}
+
 // }}}
