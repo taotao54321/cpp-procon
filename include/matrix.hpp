@@ -26,7 +26,7 @@ public:
     T&       at(i64 r, i64 c)       { return mat_[r][c]; }
     const T& at(i64 r, i64 c) const { return mat_[r][c]; }
 
-    const Matrix operator-() const {
+    Matrix operator-() const {
         REP(r, nrow()) REP(c, ncol()) {
             at(r,c) = -at(r,c);
         }
@@ -85,32 +85,32 @@ public:
 };
 
 template<typename T>
-const Matrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+Matrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     return Matrix<T>(lhs) += rhs;
 }
 
 template<typename T>
-const Matrix<T> operator-(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+Matrix<T> operator-(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     return Matrix<T>(lhs) -= rhs;
 }
 
 template<typename T>
-const Matrix<T> operator*(const Matrix<T>& lhs, T rhs) {
+Matrix<T> operator*(const Matrix<T>& lhs, T rhs) {
     return Matrix<T>(lhs) *= rhs;
 }
 
 template<typename T>
-const Matrix<T> operator*(T lhs, const Matrix<T>& rhs) {
+Matrix<T> operator*(T lhs, const Matrix<T>& rhs) {
     return Matrix<T>(rhs) *= lhs;
 }
 
 template<typename T>
-const Matrix<T> operator/(const Matrix<T>& lhs, T rhs) {
+Matrix<T> operator/(const Matrix<T>& lhs, T rhs) {
     return Matrix<T>(lhs) /= rhs;
 }
 
 template<typename T>
-const Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs) {
+Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     i64 nr = lhs.nrow();
     i64 nc = rhs.ncol();
     i64 m  = lhs.ncol();
@@ -124,7 +124,7 @@ const Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs) {
 }
 
 template<typename T>
-const vector<T> operator*(const Matrix<T>& lhs, const vector<T>& rhs) {
+vector<T> operator*(const Matrix<T>& lhs, const vector<T>& rhs) {
     i64 nr = lhs.nrow();
     i64 m  = lhs.ncol();
     vector<T> res(m, T(0));

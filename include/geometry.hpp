@@ -6,7 +6,7 @@ struct Vector {
     Vector() : Vector(0,0) {}
     Vector(f64 xx, f64 yy) : x(xx), y(yy) {}
 
-    const Vector operator-() const {
+    Vector operator-() const {
         return Vector(-x,-y);
     }
     Vector& operator+=(const Vector& rhs) {
@@ -36,11 +36,11 @@ struct Vector {
     Vector unit() const { return Vector(*this) /= this->abs(); }
 };
 
-const Vector operator+(const Vector& lhs, const Vector& rhs) { return Vector(lhs) += rhs; }
-const Vector operator-(const Vector& lhs, const Vector& rhs) { return Vector(lhs) -= rhs; }
-const Vector operator*(const Vector& lhs, f64 rhs) { return Vector(lhs) *= rhs; }
-const Vector operator*(f64 lhs, const Vector& rhs) { return Vector(rhs) *= lhs; }
-const Vector operator/(const Vector& lhs, f64 rhs) { return Vector(lhs) /= rhs; }
+Vector operator+(const Vector& lhs, const Vector& rhs) { return Vector(lhs) += rhs; }
+Vector operator-(const Vector& lhs, const Vector& rhs) { return Vector(lhs) -= rhs; }
+Vector operator*(const Vector& lhs, f64 rhs) { return Vector(lhs) *= rhs; }
+Vector operator*(f64 lhs, const Vector& rhs) { return Vector(rhs) *= lhs; }
+Vector operator/(const Vector& lhs, f64 rhs) { return Vector(lhs) /= rhs; }
 
 bool operator==(const Vector& lhs, const Vector& rhs) {
     return feq(lhs.x,rhs.x) && feq(lhs.y,rhs.y);
