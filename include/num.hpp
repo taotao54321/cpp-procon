@@ -175,12 +175,14 @@ using ModP = ModPT<MOD>;
 template<size_t N>
 ModP (&fibonacci())[N] {
     static_assert(N >= 2, "");
-    static ModP fib[N];
+    static ModP fib[N] {};
 
-    fib[0] = 0;
-    fib[1] = 1;
-    FOR(i, 2, N) {
-        fib[i] = fib[i-1] + fib[i-2];
+    if(fib[1] != 1) {
+        fib[0] = 0;
+        fib[1] = 1;
+        FOR(i, 2, N) {
+            fib[i] = fib[i-1] + fib[i-2];
+        }
     }
     return fib;
 }
