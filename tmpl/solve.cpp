@@ -17,5 +17,5 @@ signed main() {
 
     solve();
 
-    return 0;
+    EXIT();
 }

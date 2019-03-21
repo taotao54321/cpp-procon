@@ -368,6 +368,14 @@ void PRINTLN(const TS& ...args) {
     cout << '\n';
 }
 
+[[noreturn]] void EXIT() {
+#ifdef PROCON_LOCAL
+    cerr.flush();
+#endif
+    cout.flush();
+    _Exit(0);
+}
+
 template<typename T>
 void DBG_IMPL(i64 line, const char* expr, const T& value) {
 #ifdef PROCON_LOCAL
