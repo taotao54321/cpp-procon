@@ -161,6 +161,17 @@ T POP(priority_queue<T,C,Comp>& que) {
     return x;
 }
 
+template<typename T, size_t N>
+struct Formatter<array<T,N>> {
+    static ostream& write_str(ostream& out, const array<T,N>& a) {
+        return WRITE_RANGE_STR(out, begin(a), end(a));
+    }
+    static ostream& write_repr(ostream& out, const array<T,N>& a) {
+        out << "array";
+        return WRITE_RANGE_REPR(out, begin(a), end(a));
+    }
+};
+
 template<typename T>
 struct Formatter<deque<T>> {
     static ostream& write_str(ostream& out, const deque<T>& deq) {
@@ -169,6 +180,160 @@ struct Formatter<deque<T>> {
     static ostream& write_repr(ostream& out, const deque<T>& deq) {
         out << "deque";
         return WRITE_RANGE_REPR(out, begin(deq), end(deq));
+    }
+};
+
+template<typename T>
+struct Formatter<forward_list<T>> {
+    static ostream& write_str(ostream& out, const forward_list<T>& ls) {
+        return WRITE_RANGE_STR(out, begin(ls), end(ls));
+    }
+    static ostream& write_repr(ostream& out, const forward_list<T>& ls) {
+        out << "forward_list";
+        return WRITE_RANGE_REPR(out, begin(ls), end(ls));
+    }
+};
+
+template<typename T>
+struct Formatter<list<T>> {
+    static ostream& write_str(ostream& out, const list<T>& ls) {
+        return WRITE_RANGE_STR(out, begin(ls), end(ls));
+    }
+    static ostream& write_repr(ostream& out, const list<T>& ls) {
+        out << "list";
+        return WRITE_RANGE_REPR(out, begin(ls), end(ls));
+    }
+};
+
+template<typename T, typename Comp>
+struct Formatter<set<T,Comp>> {
+    static ostream& write_str(ostream& out, const set<T,Comp>& s) {
+        return WRITE_RANGE_STR(out, begin(s), end(s));
+    }
+    static ostream& write_repr(ostream& out, const set<T,Comp>& s) {
+        out << "set";
+        return WRITE_RANGE_REPR(out, begin(s), end(s));
+    }
+};
+
+template<typename T, typename Comp>
+struct Formatter<multiset<T,Comp>> {
+    static ostream& write_str(ostream& out, const multiset<T,Comp>& s) {
+        return WRITE_RANGE_STR(out, begin(s), end(s));
+    }
+    static ostream& write_repr(ostream& out, const multiset<T,Comp>& s) {
+        out << "multiset";
+        return WRITE_RANGE_REPR(out, begin(s), end(s));
+    }
+};
+
+template<typename T, typename Hash, typename Eq>
+struct Formatter<unordered_set<T,Hash,Eq>> {
+    static ostream& write_str(ostream& out, const unordered_set<T,Hash,Eq>& s) {
+        return WRITE_RANGE_STR(out, begin(s), end(s));
+    }
+    static ostream& write_repr(ostream& out, const unordered_set<T,Hash,Eq>& s) {
+        out << "unordered_set";
+        return WRITE_RANGE_REPR(out, begin(s), end(s));
+    }
+};
+
+template<typename T, typename Hash, typename Eq>
+struct Formatter<unordered_multiset<T,Hash,Eq>> {
+    static ostream& write_str(ostream& out, const unordered_multiset<T,Hash,Eq>& s) {
+        return WRITE_RANGE_STR(out, begin(s), end(s));
+    }
+    static ostream& write_repr(ostream& out, const unordered_multiset<T,Hash,Eq>& s) {
+        out << "unordered_multiset";
+        return WRITE_RANGE_REPR(out, begin(s), end(s));
+    }
+};
+
+template<typename K, typename V, typename Comp>
+struct Formatter<map<K,V,Comp>> {
+    static ostream& write_str(ostream& out, const map<K,V,Comp>& m) {
+        return WRITE_RANGE_STR(out, begin(m), end(m));
+    }
+    static ostream& write_repr(ostream& out, const map<K,V,Comp>& m) {
+        out << "map";
+        return WRITE_RANGE_REPR(out, begin(m), end(m));
+    }
+};
+
+template<typename K, typename V, typename Comp>
+struct Formatter<multimap<K,V,Comp>> {
+    static ostream& write_str(ostream& out, const multimap<K,V,Comp>& m) {
+        return WRITE_RANGE_STR(out, begin(m), end(m));
+    }
+    static ostream& write_repr(ostream& out, const multimap<K,V,Comp>& m) {
+        out << "multimap";
+        return WRITE_RANGE_REPR(out, begin(m), end(m));
+    }
+};
+
+template<typename K, typename V, typename Hash, typename Eq>
+struct Formatter<unordered_map<K,V,Hash,Eq>> {
+    static ostream& write_str(ostream& out, const unordered_map<K,V,Hash,Eq>& m) {
+        return WRITE_RANGE_STR(out, begin(m), end(m));
+    }
+    static ostream& write_repr(ostream& out, const unordered_map<K,V,Hash,Eq>& m) {
+        out << "unordered_map";
+        return WRITE_RANGE_REPR(out, begin(m), end(m));
+    }
+};
+
+template<typename K, typename V, typename Hash, typename Eq>
+struct Formatter<unordered_multimap<K,V,Hash,Eq>> {
+    static ostream& write_str(ostream& out, const unordered_multimap<K,V,Hash,Eq>& m) {
+        return WRITE_RANGE_STR(out, begin(m), end(m));
+    }
+    static ostream& write_repr(ostream& out, const unordered_multimap<K,V,Hash,Eq>& m) {
+        out << "unordered_multimap";
+        return WRITE_RANGE_REPR(out, begin(m), end(m));
+    }
+};
+
+template<typename T, typename C>
+struct Formatter<stack<T,C>> {
+    static ostream& write_str(ostream& out, const stack<T,C>& orig) {
+        stack<T,C> stk(orig);
+        while(!stk.empty()) {
+            WRITE_STR(out, stk.top()); stk.pop();
+            if(!stk.empty()) out << ' ';
+        }
+        return out;
+    }
+    static ostream& write_repr(ostream& out, const stack<T,C>& orig) {
+        stack<T,C> stk(orig);
+        out << "stack[";
+        while(!stk.empty()) {
+            WRITE_REPR(out, stk.top()); stk.pop();
+            if(!stk.empty()) out << ", ";
+        }
+        out << "]";
+        return out;
+    }
+};
+
+template<typename T, typename C>
+struct Formatter<queue<T,C>> {
+    static ostream& write_str(ostream& out, const queue<T,C>& orig) {
+        queue<T,C> que(orig);
+        while(!que.empty()) {
+            WRITE_STR(out, que.front()); que.pop();
+            if(!que.empty()) out << ' ';
+        }
+        return out;
+    }
+    static ostream& write_repr(ostream& out, const queue<T,C>& orig) {
+        queue<T,C> que(orig);
+        out << "queue[";
+        while(!que.empty()) {
+            WRITE_REPR(out, que.front()); que.pop();
+            if(!que.empty()) out << ", ";
+        }
+        out << "]";
+        return out;
     }
 };
 

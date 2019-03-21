@@ -82,9 +82,64 @@ void test_multiset() {
 
 void test_fmt() {
     {
+        array<i64,5> a { 4, 2, 5, 4, 2 };
+        assert(TO_STR(a) == "4 2 5 4 2");
+        assert(TO_REPR(a) == "array[4, 2, 5, 4, 2]");
+    }
+    {
         deque<i64> deq { 2, 4, 1, 5, 3 };
         assert(TO_STR(deq) == "2 4 1 5 3");
         assert(TO_REPR(deq) == "deque[2, 4, 1, 5, 3]");
+    }
+    {
+        forward_list<i64> ls { 2, 4, 1, 5, 3 };
+        assert(TO_STR(ls) == "2 4 1 5 3");
+        assert(TO_REPR(ls) == "forward_list[2, 4, 1, 5, 3]");
+    }
+    {
+        list<i64> ls { 2, 4, 1, 5, 3 };
+        assert(TO_STR(ls) == "2 4 1 5 3");
+        assert(TO_REPR(ls) == "list[2, 4, 1, 5, 3]");
+    }
+    {
+        set<i64> s { 2, 4, 1, 5, 3 };
+        assert(TO_STR(s) == "1 2 3 4 5");
+        assert(TO_REPR(s) == "set[1, 2, 3, 4, 5]");
+    }
+    {
+        multiset<i64> s { 2, 4, 2, 1, 3, 5, 3 };
+        assert(TO_STR(s) == "1 2 2 3 3 4 5");
+        assert(TO_REPR(s) == "multiset[1, 2, 2, 3, 3, 4, 5]");
+    }
+    {
+        map<i64,i64> m { {4,40}, {2,20}, {3,30}, {1,10} };
+        assert(TO_REPR(m) == "map[(1,10), (2,20), (3,30), (4,40)]");
+    }
+    {
+        // キーが等しいものは挿入順に並ぶ
+        // 参考: https://en.cppreference.com/w/cpp/container/multimap
+        multimap<i64,i64> m { {4,40}, {2,20}, {3,30}, {1,10}, {2,5} };
+        assert(TO_REPR(m) == "multimap[(1,10), (2,20), (2,5), (3,30), (4,40)]");
+    }
+    {
+        stack<i64> stk;
+        stk.emplace(5);
+        stk.emplace(3);
+        stk.emplace(4);
+        stk.emplace(2);
+        stk.emplace(1);
+        assert(TO_STR(stk) == "1 2 4 3 5");
+        assert(TO_REPR(stk) == "stack[1, 2, 4, 3, 5]");
+    }
+    {
+        queue<i64> que;
+        que.emplace(5);
+        que.emplace(3);
+        que.emplace(4);
+        que.emplace(2);
+        que.emplace(1);
+        assert(TO_STR(que) == "5 3 4 2 1");
+        assert(TO_REPR(que) == "queue[5, 3, 4, 2, 1]");
     }
     {
         vector<i64> v { 5, 3, 4, 2, 1 };
