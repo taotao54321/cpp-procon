@@ -53,7 +53,7 @@ void test_upper_conv() {
 
 void test_fmt() {
     {
-        vector<i64> v { 3, 1, 5, 4, 2};
+        vector<i64> v { 3, 1, 5, 4, 2 };
         assert(TO_STR(v) == "3 1 5 4 2");
         assert(TO_REPR(v) == "vector[3, 1, 5, 4, 2]");
     }
