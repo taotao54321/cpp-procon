@@ -151,6 +151,17 @@ bool multiset_erase_one(unordered_multiset<K,Hash,Eq>& m, const typename unorder
 }
 
 template<typename T>
+using MaxHeap = priority_queue<T, vector<T>, less<T>>;
+template<typename T>
+using MinHeap = priority_queue<T, vector<T>, greater<T>>;
+
+template<typename T, typename C, typename Comp>
+T POP(priority_queue<T,C,Comp>& que) {
+    T x = que.top(); que.pop();
+    return x;
+}
+
+template<typename T>
 struct Formatter<deque<T>> {
     static ostream& write_str(ostream& out, const deque<T>& deq) {
         return WRITE_RANGE_STR(out, begin(deq), end(deq));
@@ -158,6 +169,28 @@ struct Formatter<deque<T>> {
     static ostream& write_repr(ostream& out, const deque<T>& deq) {
         out << "deque";
         return WRITE_RANGE_REPR(out, begin(deq), end(deq));
+    }
+};
+
+template<typename T, typename C, typename Comp>
+struct Formatter<priority_queue<T,C,Comp>> {
+    static ostream& write_str(ostream& out, const priority_queue<T,C,Comp>& orig) {
+        priority_queue<T,C,Comp> que(orig);
+        while(!que.empty()) {
+            WRITE_STR(out, que.top()); que.pop();
+            if(!que.empty()) out << ' ';
+        }
+        return out;
+    }
+    static ostream& write_repr(ostream& out, const priority_queue<T,C,Comp>& orig) {
+        priority_queue<T,C,Comp> que(orig);
+        out << "priority_queue[";
+        while(!que.empty()) {
+            WRITE_REPR(out, que.top()); que.pop();
+            if(!que.empty()) out << ", ";
+        }
+        out << "]";
+        return out;
     }
 };
 

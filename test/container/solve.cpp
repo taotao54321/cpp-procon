@@ -87,6 +87,12 @@ void test_fmt() {
         assert(TO_REPR(deq) == "deque[2, 4, 1, 5, 3]");
     }
     {
+        vector<i64> v { 5, 3, 4, 2, 1 };
+        MinHeap<i64> que(begin(v), end(v));
+        assert(TO_STR(que) == "1 2 3 4 5");
+        assert(TO_REPR(que) == "priority_queue[1, 2, 3, 4, 5]");
+    }
+    {
         BoolArray a { false, true, true, false, false };
         assert(TO_STR(a) == "0 1 1 0 0");
         assert(TO_REPR(a) == "BoolArray[0, 1, 1, 0, 0]");
