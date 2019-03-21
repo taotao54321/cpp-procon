@@ -18,5 +18,5 @@ signed main() {
         PRINTLN(ans[0].x, ans[0].y, ans[1].x, ans[1].y);
     }
 
-    return 0;
+    EXIT();
 }

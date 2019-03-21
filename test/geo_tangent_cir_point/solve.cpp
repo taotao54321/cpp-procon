@@ -17,5 +17,5 @@ signed main() {
         PRINTLN(q.x, q.y);
     }
 
-    return 0;
+    EXIT();
 }

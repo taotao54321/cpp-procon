@@ -34,4 +34,6 @@ signed main() {
             assert(false);
         }
     }
+
+    EXIT();
 }

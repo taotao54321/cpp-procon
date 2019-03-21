@@ -24,5 +24,5 @@ signed main() {
             PRINTLN(d[i]);
     }
 
-    return 0;
+    EXIT();
 }

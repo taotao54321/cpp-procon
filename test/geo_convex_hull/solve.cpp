@@ -14,5 +14,5 @@ signed main() {
         PRINTLN(x, y);
     }
 
-    return 0;
+    EXIT();
 }

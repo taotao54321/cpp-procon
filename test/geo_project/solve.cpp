@@ -13,4 +13,6 @@ signed main() {
         Vector ans = geo_project(line, p);
         PRINTLN(ans.x, ans.y);
     }
+
+    EXIT();
 }

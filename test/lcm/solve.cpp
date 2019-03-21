@@ -11,4 +11,6 @@ signed main() {
     i64 ans = ALL(accumulate, A, 1, lcm);
 
     PRINTLN(ans);
+
+    EXIT();
 }

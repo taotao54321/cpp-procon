@@ -7,4 +7,6 @@ signed main() {
     i64 ans = gcd(x,y);
 
     PRINTLN(ans);
+
+    EXIT();
 }

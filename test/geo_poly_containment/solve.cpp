@@ -19,5 +19,5 @@ signed main() {
         }
     }
 
-    return 0;
+    EXIT();
 }

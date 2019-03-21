@@ -11,4 +11,6 @@ signed main() {
         bool ans = geo_intersect(Segment(p0,p1), Segment(p2,p3));
         PRINTLN(ans ? 1 : 0);
     }
+
+    EXIT();
 }

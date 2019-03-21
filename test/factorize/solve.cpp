@@ -15,5 +15,5 @@ signed main() {
     PRINT(": ");
     PRINTLN(ans);
 
-    return 0;
+    EXIT();
 }

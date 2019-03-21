@@ -14,4 +14,6 @@ signed main() {
         Vector ans = geo_crosspoint(seg1, seg2);
         PRINTLN(ans.x, ans.y);
     }
+
+    EXIT();
 }

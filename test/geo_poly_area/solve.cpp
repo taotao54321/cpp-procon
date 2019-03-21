@@ -11,5 +11,5 @@ signed main() {
     cout << fixed << setprecision(1);
     PRINTLN(ans);
 
-    return 0;
+    EXIT();
 }

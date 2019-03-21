@@ -9,5 +9,5 @@ signed main() {
 
     PRINTLN(ans);
 
-    return 0;
+    EXIT();
 }

@@ -14,4 +14,6 @@ signed main() {
         f64 ans = geo_distance(seg1, seg2);
         PRINTLN(ans);
     }
+
+    EXIT();
 }

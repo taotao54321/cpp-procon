@@ -222,5 +222,5 @@ signed main() {
 
     test_fmt();
 
-    return 0;
+    EXIT();
 }
