@@ -290,6 +290,42 @@ struct Formatter<pair<T1,T2>> {
     }
 };
 
+template<typename... TS>
+struct Formatter<tuple<TS...>> {
+    template<size_t I=0, enable_if_t<I == sizeof...(TS), nullptr_t> = nullptr>
+    static ostream& write_str_impl(ostream& out, const tuple<TS...>&) {
+        return out;
+    }
+    template<size_t I=0, enable_if_t<I < sizeof...(TS), nullptr_t> = nullptr>
+    static ostream& write_str_impl(ostream& out, const tuple<TS...>& t) {
+        if(I != 0) out << ' ';
+        WRITE_STR(out, get<I>(t));
+        return write_str_impl<I+1>(out, t);
+    }
+
+    template<size_t I=0, enable_if_t<I == sizeof...(TS), nullptr_t> = nullptr>
+    static ostream& write_repr_impl(ostream& out, const tuple<TS...>&) {
+        if(sizeof...(TS) == 0) out << "(";
+        return out << ")";
+    }
+    template<size_t I=0, enable_if_t<I < sizeof...(TS), nullptr_t> = nullptr>
+    static ostream& write_repr_impl(ostream& out, const tuple<TS...>& t) {
+        if(I == 0)
+            out << "(";
+        else
+            out << ",";
+        WRITE_REPR(out, get<I>(t));
+        return write_repr_impl<I+1>(out, t);
+    }
+
+    static ostream& write_str(ostream& out, const tuple<TS...>& t) {
+        return write_str_impl(out, t);
+    }
+    static ostream& write_repr(ostream& out, const tuple<TS...>& t) {
+        return write_repr_impl(out, t);
+    }
+};
+
 template<typename T>
 void RD(T& x) {
     cin >> x;
