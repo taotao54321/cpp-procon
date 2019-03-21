@@ -155,6 +155,7 @@ using MaxHeap = priority_queue<T, vector<T>, less<T>>;
 template<typename T>
 using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
+// {{{ POP() 系
 // 効率は悪い
 template<typename T>
 T POP_FRONT(vector<T>& v) {
@@ -215,7 +216,9 @@ T POP(priority_queue<T,C,Comp>& que) {
     T x = que.top(); que.pop();
     return x;
 }
+// }}}
 
+// {{{ Formatter
 template<typename T, size_t N>
 struct Formatter<array<T,N>> {
     static ostream& write_str(ostream& out, const array<T,N>& a) {
@@ -424,5 +427,6 @@ struct Formatter<BoolArray> {
         return WRITE_RANGE_REPR(out, begin(a), end(a));
     }
 };
+// }}}
 
 // }}}
