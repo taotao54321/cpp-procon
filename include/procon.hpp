@@ -283,10 +283,18 @@ struct Formatter<vector<T>> {
 template<typename T1, typename T2>
 struct Formatter<pair<T1,T2>> {
     static ostream& write_str(ostream& out, const pair<T1,T2>& p) {
-        return out << p.first << ' ' << p.second;
+        WRITE_STR(out, p.first);
+        out << ' ';
+        WRITE_STR(out, p.second);
+        return out;
     }
     static ostream& write_repr(ostream& out, const pair<T1,T2>& p) {
-        return out << "(" << p.first << "," << p.second << ")";
+        out << "(";
+        WRITE_REPR(out, p.first);
+        out << ",";
+        WRITE_REPR(out, p.second);
+        out << ")";
+        return out;
     }
 };
 

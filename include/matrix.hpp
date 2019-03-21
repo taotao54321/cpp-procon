@@ -71,8 +71,6 @@ public:
         }
         return res;
     }
-
-    friend struct Formatter<Matrix<T>>;
 };
 
 template<typename T>
@@ -135,9 +133,13 @@ struct Formatter<Matrix<T>> {
     static ostream& write_repr(ostream& out, const Matrix<T>& m) {
         out << "Matrix[";
         REP(r, m.nrow()) {
-            if(r != 0)
-                out << ",";
-            out << "[" << m.mat_[r] << "]";
+            if(r != 0) out << ",";
+            out << "[";
+            REP(c, m.ncol()) {
+                if(c != 0) out << ",";
+                WRITE_REPR(out, m.at(r,c));
+            }
+            out << "]";
         }
         out << "]";
         return out;

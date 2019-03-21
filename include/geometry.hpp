@@ -87,10 +87,18 @@ enum Containment {
 template<>
 struct Formatter<Vector> {
     static ostream& write_str(ostream& out, const Vector& v) {
-        return out << v.x << ' ' << v.y;
+        WRITE_STR(out, v.x);
+        out << ' ';
+        WRITE_STR(out, v.y);
+        return out;
     }
     static ostream& write_repr(ostream& out, const Vector& v) {
-        return out << "Vector(" << v.x << "," << v.y << ")";
+        out << "Vector(";
+        WRITE_REPR(out, v.x);
+        out << ",";
+        WRITE_REPR(out, v.y);
+        out << ")";
+        return out;
     }
 };
 
@@ -109,14 +117,25 @@ struct Segment {
 template<>
 struct Formatter<Segment> {
     static ostream& write_str(ostream& out, const Segment& seg) {
-        return out << seg.p1.x << ' ' << seg.p1.y << ' '
-                   << seg.p2.x << ' ' << seg.p2.y;
+        WRITE_STR(out, seg.p1.x);
+        out << ' ';
+        WRITE_STR(out, seg.p1.y);
+        out << ' ';
+        WRITE_STR(out, seg.p2.x);
+        out << ' ';
+        WRITE_STR(out, seg.p2.y);
+        return out;
     }
     static ostream& write_repr(ostream& out, const Segment& seg) {
         out << "Segment(";
-        out << "(" << seg.p1.x << "," << seg.p1.y << ")";
+        out << "(";
+        WRITE_REPR(out, seg.p1.x);
         out << ",";
-        out << "(" << seg.p2.x << "," << seg.p2.y << ")";
+        WRITE_REPR(out, seg.p1.y);
+        out << "),(";
+        WRITE_REPR(out, seg.p2.x);
+        out << ",";
+        WRITE_REPR(out, seg.p2.y);
         out << ")";
         return out;
     }
@@ -135,14 +154,25 @@ struct Line {
 template<>
 struct Formatter<Line> {
     static ostream& write_str(ostream& out, const Line& line) {
-        return out << line.p1.x << ' ' << line.p1.y << ' '
-                   << line.p2.x << ' ' << line.p2.y;
+        WRITE_STR(out, line.p1.x);
+        out << ' ';
+        WRITE_STR(out, line.p1.y);
+        out << ' ';
+        WRITE_STR(out, line.p2.x);
+        out << ' ';
+        WRITE_STR(out, line.p2.y);
+        return out;
     }
     static ostream& write_repr(ostream& out, const Line& line) {
         out << "Line(";
-        out << "(" << line.p1.x << "," << line.p1.y << ")";
+        out << "(";
+        WRITE_REPR(out, line.p1.x);
         out << ",";
-        out << "(" << line.p2.x << "," << line.p2.y << ")";
+        WRITE_REPR(out, line.p1.y);
+        out << "),(";
+        WRITE_REPR(out, line.p2.x);
+        out << ",";
+        WRITE_REPR(out, line.p2.y);
         out << ")";
         return out;
     }
@@ -158,13 +188,21 @@ struct Circle {
 template<>
 struct Formatter<Circle> {
     static ostream& write_str(ostream& out, const Circle& cir) {
-        return out << cir.c.x << ' ' << cir.c.y << ' ' << cir.r;
+        WRITE_STR(out, cir.c.x);
+        out << ' ';
+        WRITE_STR(out, cir.c.y);
+        out << ' ';
+        WRITE_STR(out, cir.r);
+        return out;
     }
     static ostream& write_repr(ostream& out, const Circle& cir) {
         out << "Circle(";
-        out << "(" << cir.c.x << "," << cir.c.y << ")";
+        out << "(";
+        WRITE_REPR(out, cir.c.x);
         out << ",";
-        out << cir.r;
+        WRITE_REPR(out, cir.c.y);
+        out << "),";
+        WRITE_REPR(out, cir.r);
         out << ")";
         return out;
     }
@@ -259,7 +297,9 @@ struct Formatter<Polygon> {
         i64 n = SIZE(poly.ps);
         REP(i, n) {
             const Vector& p = poly.ps[i];
-            out << p.x << ' ' << p.y;
+            WRITE_STR(out, p.x);
+            out << ' ';
+            WRITE_STR(out, p.y);
             if(i != n-1)
                 out << ' ';
         }
@@ -270,7 +310,11 @@ struct Formatter<Polygon> {
         i64 n = SIZE(poly.ps);
         REP(i, n) {
             const Vector& p = poly.ps[i];
-            out << "(" << p.x << "," << p.y << ")";
+            out << "(";
+            WRITE_REPR(out, p.x);
+            out << ",";
+            WRITE_REPR(out, p.y);
+            out << ")";
             if(i != n-1)
                 out << ",";
         }

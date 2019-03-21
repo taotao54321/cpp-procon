@@ -162,10 +162,10 @@ istream& operator>>(istream& in, ModPT<P>& x) {
 template<i64 P>
 struct Formatter<ModPT<P>> {
     static ostream& write_str(ostream& out, ModPT<P> x) {
-        return out << x.v_;
+        return WRITE_STR(out, x.v_);
     }
     static ostream& write_repr(ostream& out, ModPT<P> x) {
-        return out << x.v_;
+        return WRITE_REPR(out, x.v_);
     }
 };
 
