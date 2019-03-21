@@ -41,9 +41,19 @@ void test_multiset() {
     }
 }
 
+void test_fmt() {
+    {
+        deque<i64> deq { 2, 4, 1, 5, 3 };
+        assert(TO_STR(deq) == "2 4 1 5 3");
+        assert(TO_REPR(deq) == "deque[2, 4, 1, 5, 3]");
+    }
+}
+
 signed main() {
     test_map();
     test_multiset();
+
+    test_fmt();
 
     return 0;
 }
