@@ -386,7 +386,29 @@ void DBG_IMPL(i64 line, const char* expr, const T& value) {
 #endif
 }
 
+template<typename T, size_t N>
+void DBG_ARRAY_IMPL(i64 line, const char* expr, const T (&ary)[N]) {
+#ifdef PROCON_LOCAL
+    cerr << "[L " << line << "]: ";
+    cerr << expr << " = ";
+    WRITE_RANGE_REPR(cerr, begin(ary), end(ary));
+    cerr << "\n";
+#endif
+}
+
+template<typename InputIt>
+void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt first, InputIt last) {
+#ifdef PROCON_LOCAL
+    cerr << "[L " << line << "]: ";
+    cerr << expr1 << "," << expr2 << " = ";
+    WRITE_RANGE_REPR(cerr, first, last);
+    cerr << "\n";
+#endif
+}
+
 #define DBG(expr) DBG_IMPL(__LINE__, #expr, (expr))
+#define DBG_ARRAY(expr) DBG_ARRAY_IMPL(__LINE__, #expr, (expr))
+#define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, #first, #last, (first), (last))
 // }}}
 
 // {{{ init
