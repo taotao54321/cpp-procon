@@ -72,16 +72,7 @@ public:
         return res;
     }
 
-    friend ostream& operator<<(ostream& out, const Matrix& m) {
-        out << '[';
-        REP(r, m.nrow()) {
-            if(r != 0)
-                out << ',';
-            out << '[' << m.mat_[r] << ']';
-        }
-        out << ']';
-        return out;
-    }
+    friend struct Formatter<Matrix<T>>;
 };
 
 template<typename T>
@@ -135,5 +126,22 @@ vector<T> operator*(const Matrix<T>& lhs, const vector<T>& rhs) {
     }
     return res;
 }
+
+template<typename T>
+struct Formatter<Matrix<T>> {
+    static ostream& write_str(ostream& out, const Matrix<T>& m) {
+        return write_repr(out, m);
+    }
+    static ostream& write_repr(ostream& out, const Matrix<T>& m) {
+        out << "Matrix[";
+        REP(r, m.nrow()) {
+            if(r != 0)
+                out << ",";
+            out << "[" << m.mat_[r] << "]";
+        }
+        out << "]";
+        return out;
+    }
+};
 
 // }}}

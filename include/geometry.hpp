@@ -84,9 +84,15 @@ enum Containment {
     CONT_OUT,
 };
 
-ostream& operator<<(ostream& out, const Vector& v) {
-    return out << "Vector(" << v.x << "," << v.y << ")";
-}
+template<>
+struct Formatter<Vector> {
+    static ostream& write_str(ostream& out, const Vector& v) {
+        return out << v.x << ' ' << v.y;
+    }
+    static ostream& write_repr(ostream& out, const Vector& v) {
+        return out << "Vector(" << v.x << "," << v.y << ")";
+    }
+};
 
 struct Segment {
     Vector p1, p2;
@@ -100,14 +106,21 @@ struct Segment {
     f64 abs() const { return vec().abs(); }
 };
 
-ostream& operator<<(ostream& out, const Segment& seg) {
-    out << "Segment(";
-    out << "(" << seg.p1.x << "," << seg.p1.y << ")";
-    out << ",";
-    out << "(" << seg.p2.x << "," << seg.p2.y << ")";
-    out << ")";
-    return out;
-}
+template<>
+struct Formatter<Segment> {
+    static ostream& write_str(ostream& out, const Segment& seg) {
+        return out << seg.p1.x << ' ' << seg.p1.y << ' '
+                   << seg.p2.x << ' ' << seg.p2.y;
+    }
+    static ostream& write_repr(ostream& out, const Segment& seg) {
+        out << "Segment(";
+        out << "(" << seg.p1.x << "," << seg.p1.y << ")";
+        out << ",";
+        out << "(" << seg.p2.x << "," << seg.p2.y << ")";
+        out << ")";
+        return out;
+    }
+};
 
 struct Line {
     Vector p1, p2;
@@ -119,14 +132,21 @@ struct Line {
     Vector vec() const { return p2 - p1; }
 };
 
-ostream& operator<<(ostream& out, const Line& line) {
-    out << "Line(";
-    out << "(" << line.p1.x << "," << line.p1.y << ")";
-    out << ",";
-    out << "(" << line.p2.x << "," << line.p2.y << ")";
-    out << ")";
-    return out;
-}
+template<>
+struct Formatter<Line> {
+    static ostream& write_str(ostream& out, const Line& line) {
+        return out << line.p1.x << ' ' << line.p1.y << ' '
+                   << line.p2.x << ' ' << line.p2.y;
+    }
+    static ostream& write_repr(ostream& out, const Line& line) {
+        out << "Line(";
+        out << "(" << line.p1.x << "," << line.p1.y << ")";
+        out << ",";
+        out << "(" << line.p2.x << "," << line.p2.y << ")";
+        out << ")";
+        return out;
+    }
+};
 
 struct Circle {
     Vector c;
@@ -135,14 +155,20 @@ struct Circle {
     Circle(const Vector& cc, f64 rr) : c(cc), r(rr) {}
 };
 
-ostream& operator<<(ostream& out, const Circle& cir) {
-    out << "Circle(";
-    out << "(" << cir.c.x << "," << cir.c.y << ")";
-    out << ",";
-    out << cir.r;
-    out << ")";
-    return out;
-}
+template<>
+struct Formatter<Circle> {
+    static ostream& write_str(ostream& out, const Circle& cir) {
+        return out << cir.c.x << ' ' << cir.c.y << ' ' << cir.r;
+    }
+    static ostream& write_repr(ostream& out, const Circle& cir) {
+        out << "Circle(";
+        out << "(" << cir.c.x << "," << cir.c.y << ")";
+        out << ",";
+        out << cir.r;
+        out << ")";
+        return out;
+    }
+};
 
 enum CircleRelation {
     CIRS_IN        = 0,
@@ -227,18 +253,31 @@ struct Polygon {
     Vector nex(i64 i) const { return ps[modulo(i+1,SIZE(ps))]; }
 };
 
-ostream& operator<<(ostream& out, const Polygon& poly) {
-    out << "Polygon(";
-    i64 n = SIZE(poly.ps);
-    REP(i, n) {
-        const Vector& p = poly.ps[i];
-        out << "(" << p.x << "," << p.y << ")";
-        if(i != n-1)
-            out << ",";
+template<>
+struct Formatter<Polygon> {
+    static ostream& write_str(ostream& out, const Polygon& poly) {
+        i64 n = SIZE(poly.ps);
+        REP(i, n) {
+            const Vector& p = poly.ps[i];
+            out << p.x << ' ' << p.y;
+            if(i != n-1)
+                out << ' ';
+        }
+        return out;
     }
-    out << ")";
-    return out;
-}
+    static ostream& write_repr(ostream& out, const Polygon& poly) {
+        out << "Polygon(";
+        i64 n = SIZE(poly.ps);
+        REP(i, n) {
+            const Vector& p = poly.ps[i];
+            out << "(" << p.x << "," << p.y << ")";
+            if(i != n-1)
+                out << ",";
+        }
+        out << ")";
+        return out;
+    }
+};
 
 Vector geo_project(const Line& line, const Vector& p) {
     Vector v = line.vec();
