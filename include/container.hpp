@@ -155,6 +155,61 @@ using MaxHeap = priority_queue<T, vector<T>, less<T>>;
 template<typename T>
 using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
+// 効率は悪い
+template<typename T>
+T POP_FRONT(vector<T>& v) {
+    T x = v.front(); v.erase(begin(v));
+    return x;
+}
+
+template<typename T>
+T POP_BACK(vector<T>& v) {
+    T x = v.back(); v.pop_back();
+    return x;
+}
+
+template<typename T>
+T POP_FRONT(deque<T>& v) {
+    T x = v.front(); v.pop_front();
+    return x;
+}
+
+template<typename T>
+T POP_BACK(deque<T>& v) {
+    T x = v.back(); v.pop_back();
+    return x;
+}
+
+template<typename T>
+T POP_FRONT(forward_list<T>& ls) {
+    T x = ls.front(); ls.pop_front();
+    return x;
+}
+
+template<typename T>
+T POP_FRONT(list<T>& ls) {
+    T x = ls.front(); ls.pop_front();
+    return x;
+}
+
+template<typename T>
+T POP_BACK(list<T>& ls) {
+    T x = ls.back(); ls.pop_back();
+    return x;
+}
+
+template<typename T, typename C>
+T POP(stack<T,C>& stk) {
+    T x = stk.top(); stk.pop();
+    return x;
+}
+
+template<typename T, typename C>
+T POP(queue<T,C>& que) {
+    T x = que.front(); que.pop();
+    return x;
+}
+
 template<typename T, typename C, typename Comp>
 T POP(priority_queue<T,C,Comp>& que) {
     T x = que.top(); que.pop();

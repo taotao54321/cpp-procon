@@ -80,6 +80,65 @@ void test_multiset() {
     }
 }
 
+void test_pop() {
+    {
+        vector<i64> v { 5, 3, 4 };
+        assert(POP_FRONT(v) == 5);
+        assert(POP_BACK(v) == 4);
+        assert(POP_BACK(v) == 3);
+        assert(v.empty());
+    }
+    {
+        deque<i64> deq { 5, 3, 4 };
+        assert(POP_FRONT(deq) == 5);
+        assert(POP_BACK(deq) == 4);
+        assert(POP_BACK(deq) == 3);
+        assert(deq.empty());
+    }
+    {
+        forward_list<i64> ls { 5, 3, 4 };
+        assert(POP_FRONT(ls) == 5);
+        assert(POP_FRONT(ls) == 3);
+        assert(POP_FRONT(ls) == 4);
+        assert(ls.empty());
+    }
+    {
+        list<i64> ls { 5, 3, 4 };
+        assert(POP_FRONT(ls) == 5);
+        assert(POP_BACK(ls) == 4);
+        assert(POP_BACK(ls) == 3);
+        assert(ls.empty());
+    }
+    {
+        stack<i64> stk;
+        stk.emplace(5);
+        stk.emplace(3);
+        stk.emplace(4);
+        assert(POP(stk) == 4);
+        assert(POP(stk) == 3);
+        assert(POP(stk) == 5);
+        assert(stk.empty());
+    }
+    {
+        queue<i64> que;
+        que.emplace(5);
+        que.emplace(3);
+        que.emplace(4);
+        assert(POP(que) == 5);
+        assert(POP(que) == 3);
+        assert(POP(que) == 4);
+        assert(que.empty());
+    }
+    {
+        vector<i64> v { 5, 3, 4 };
+        MinHeap<i64> que(begin(v), end(v));
+        assert(POP(que) == 3);
+        assert(POP(que) == 4);
+        assert(POP(que) == 5);
+        assert(que.empty());
+    }
+}
+
 void test_fmt() {
     {
         array<i64,5> a { 4, 2, 5, 4, 2 };
@@ -156,9 +215,10 @@ void test_fmt() {
 
 signed main() {
     test_bool_array();
-
     test_map();
     test_multiset();
+
+    test_pop();
 
     test_fmt();
 
