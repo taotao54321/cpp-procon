@@ -51,13 +51,23 @@ void test_upper_conv() {
     }
 }
 
-void test_tuple_fmt() {
-    assert(TO_STR(make_tuple()) == "");
-    assert(TO_REPR(make_tuple()) == "()");
+void test_fmt() {
+    {
+        vector<i64> v { 3, 1, 5, 4, 2};
+        assert(TO_STR(v) == "3 1 5 4 2");
+        assert(TO_REPR(v) == "vector[3, 1, 5, 4, 2]");
+    }
 
-    auto t = make_tuple(1, "foo", make_pair(3,4));
-    assert(TO_STR(t) == "1 foo 3 4");
-    assert(TO_REPR(t) == "(1,foo,(3,4))");
+    {
+        assert(TO_STR(make_tuple()) == "");
+        assert(TO_REPR(make_tuple()) == "()");
+    }
+
+    {
+        auto t = make_tuple(1, "foo", make_pair(3,4));
+        assert(TO_STR(t) == "1 foo 3 4");
+        assert(TO_REPR(t) == "(1,foo,(3,4))");
+    }
 }
 
 signed main() {
@@ -65,7 +75,7 @@ signed main() {
     test_lower_conv();
     test_upper_conv();
 
-    test_tuple_fmt();
+    test_fmt();
 
     return 0;
 }
