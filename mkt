@@ -16,8 +16,8 @@ def main():
     target.mkdir()
 
     readme = target / "README.md"
-    open(readme, "x").write("""\
-# 
+    open(readme, "x").write(f"""\
+# {target.name}
 
 
 """)
@@ -37,7 +37,7 @@ oj t
 signed main() {
     
 
-    return 0;
+    EXIT();
 }
 """)
 
