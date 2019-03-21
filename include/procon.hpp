@@ -177,6 +177,57 @@ i64 upper_ord(char c) {
     return c - 'A';
 }
 
+// 出力は operator<< を直接使わず、このテンプレート経由で行う
+// 提出用出力とデバッグ用出力を分けるため
+template<typename T>
+struct Formatter {
+    static ostream& write_str(ostream& out, const T& x)  { return out << x; }
+    static ostream& write_repr(ostream& out, const T& x) { return out << x; }
+};
+
+template<typename T>
+ostream& WRITE_STR(ostream& out, const T& x) {
+    return Formatter<T>::write_str(out, x);
+}
+
+template<typename T>
+ostream& WRITE_REPR(ostream& out, const T& x) {
+    return Formatter<T>::write_repr(out, x);
+}
+
+template<typename InputIt>
+ostream& WRITE_JOIN_STR(ostream& out, InputIt first, InputIt last, const string& sep) {
+    while(first != last) {
+        WRITE_STR(out, *first++);
+        if(first != last)
+            out << sep;
+    }
+    return out;
+}
+
+template<typename InputIt>
+ostream& WRITE_JOIN_REPR(ostream& out, InputIt first, InputIt last, const string& sep) {
+    while(first != last) {
+        WRITE_REPR(out, *first++);
+        if(first != last)
+            out << sep;
+    }
+    return out;
+}
+
+template<typename InputIt>
+ostream& WRITE_RANGE_STR(ostream& out, InputIt first, InputIt last) {
+    return WRITE_JOIN_STR(out, first, last, " ");
+}
+
+template<typename InputIt>
+ostream& WRITE_RANGE_REPR(ostream& out, InputIt first, InputIt last) {
+    out << "[";
+    WRITE_JOIN_REPR(out, first, last, ", ");
+    out << "]";
+    return out;
+}
+
 template<typename T>
 void FROM_STR(const string& s, T& x) {
     istringstream in(s);
@@ -186,20 +237,58 @@ void FROM_STR(const string& s, T& x) {
 template<typename T>
 string TO_STR(const T& x) {
     ostringstream out;
-    out << x;
+    WRITE_STR(out, x);
+    return out.str();
+}
+
+template<typename T>
+string TO_REPR(const T& x) {
+    ostringstream out;
+    WRITE_REPR(out, x);
+    return out.str();
+}
+
+template<typename InputIt>
+string RANGE_TO_STR(InputIt first, InputIt last) {
+    ostringstream out;
+    WRITE_RANGE_STR(out, first, last);
+    return out.str();
+}
+
+template<typename InputIt>
+string RANGE_TO_REPR(InputIt first, InputIt last) {
+    ostringstream out;
+    WRITE_RANGE_REPR(out, first, last);
     return out.str();
 }
 
 template<typename InputIt>
 string JOIN(InputIt first, InputIt last, const string& sep) {
     ostringstream out;
-    while(first != last) {
-        out << *first++;
-        if(first != last)
-            out << sep;
-    }
+    WRITE_JOIN_STR(out, first, last, sep);
     return out.str();
 }
+
+template<typename T>
+struct Formatter<vector<T>> {
+    static ostream& write_str(ostream& out, const vector<T>& v) {
+        return WRITE_RANGE_STR(out, begin(v), end(v));
+    }
+    static ostream& write_repr(ostream& out, const vector<T>& v) {
+        out << "vector";
+        return WRITE_RANGE_REPR(out, begin(v), end(v));
+    }
+};
+
+template<typename T1, typename T2>
+struct Formatter<pair<T1,T2>> {
+    static ostream& write_str(ostream& out, const pair<T1,T2>& p) {
+        return out << p.first << ' ' << p.second;
+    }
+    static ostream& write_repr(ostream& out, const pair<T1,T2>& p) {
+        return out << "(" << p.first << "," << p.second << ")";
+    }
+};
 
 template<typename T>
 void RD(T& x) {
@@ -218,26 +307,11 @@ void RD(vector<T>& v, i64 n) {
     }
 }
 
-template<typename T>
-ostream& operator<<(ostream& out, const vector<T>& v) {
-    for(auto first = begin(v), it = first; it != end(v); ++it) {
-        if(it != first)
-            out << ' ';
-        out << *it;
-    }
-    return out;
-}
-
-template<typename T1, typename T2>
-ostream& operator<<(ostream& out, const pair<T1,T2>& p) {
-    return out << '(' << p.first << ',' << p.second << ')';
-}
-
 void PRINT() {}
 
 template<typename T, typename... TS>
 void PRINT(const T& x, const TS& ...args) {
-    cout << x;
+    WRITE_STR(cout, x);
     if(sizeof...(args)) {
         cout << ' ';
         PRINT(args...);
@@ -254,7 +328,9 @@ template<typename T>
 void DBG_IMPL(i64 line, const char* expr, const T& value) {
 #ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
-    cerr << expr << " = " << value << "\n";
+    cerr << expr << " = ";
+    WRITE_REPR(cerr, value);
+    cerr << "\n";
 #endif
 }
 
