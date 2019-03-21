@@ -178,13 +178,13 @@ i64 upper_ord(char c) {
 }
 
 template<typename T>
-void FROM_STRING(const string& s, T& x) {
+void FROM_STR(const string& s, T& x) {
     istringstream in(s);
     in >> x;
 }
 
 template<typename T>
-string TO_STRING(const T& x) {
+string TO_STR(const T& x) {
     ostringstream out;
     out << x;
     return out.str();
