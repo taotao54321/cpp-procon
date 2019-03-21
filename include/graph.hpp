@@ -36,4 +36,28 @@ pair<vector<i64>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,i64>>>
     return { d, parent };
 }
 
+pair<bool,vector<vector<i64>>> graph_floyd(vector<vector<i64>>& g) {
+    i64 n = SIZE(g);
+    vector<vector<i64>> nex(n, vector<i64>(n,-1));
+    REP(i, n) REP(j, n) {
+        if(g[i][j] != INF)
+            nex[i][j] = j;
+    }
+
+    REP(k, n) {
+        REP(i, n) {
+            if(g[i][k] == INF) continue;
+            REP(j, n) {
+                if(g[k][j] == INF) continue;
+                if(chmin(g[i][j], g[i][k] + g[k][j])) {
+                    nex[i][j] = nex[i][k];
+                }
+                if(i == j && g[i][j] < 0) return { false, nex };
+            }
+        }
+    }
+
+    return { true, nex };
+}
+
 // }}}
