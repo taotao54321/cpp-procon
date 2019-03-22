@@ -80,7 +80,7 @@ public:
 
     bool      empty()    const noexcept { return size_ == 0; }
     size_type size()     const noexcept { return size_; }
-    size_type max_size() const noexcept { return INF; }
+    size_type max_size() const noexcept { return 1'010'000'000; }
 
     iterator       begin()        noexcept { return data_; }
     const_iterator begin()  const noexcept { return data_; }
