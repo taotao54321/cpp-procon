@@ -285,6 +285,31 @@ string JOIN(InputIt first, InputIt last, const string& sep) {
     return out.str();
 }
 
+template<>
+struct Formatter<i64> {
+    static ostream& write_str(ostream& out, i64 x) {
+        return out << x;
+    }
+    static ostream& write_repr(ostream& out, i64 x) {
+        if(x == INF) return out << "INF";
+        return out << x;
+    }
+};
+
+template<>
+struct Formatter<f64> {
+    static ostream& write_str(ostream& out, f64 x) {
+        return out << x;
+    }
+    static ostream& write_repr(ostream& out, f64 x) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+        if(x == FINF) return out << "FINF";
+#pragma GCC diagnostic pop
+        return out << x;
+    }
+};
+
 template<typename T>
 struct Formatter<vector<T>> {
     static ostream& write_str(ostream& out, const vector<T>& v) {
