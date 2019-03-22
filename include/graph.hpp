@@ -76,6 +76,48 @@ tuple<bool,vector<i64>,vector<i64>> graph_bellman(const vector<vector<pair<i64,i
     return make_tuple(ok, d, parent);
 }
 
+// SPFA (Shortest Path Faster Algorithm)
+//
+// ベルマンフォードより速い、はず
+//
+// (ok,d,parent) を返す
+// ok: 負閉路が存在しない場合に限り true
+// d[i]: start から点 i への最短距離(到達不能な点は INF, 負閉路上の点は -INF)
+// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+tuple<bool,vector<i64>,vector<i64>> graph_spfa(const vector<vector<pair<i64,i64>>>& g, i64 start) {
+    i64 n = SIZE(g);
+    bool ok = true;
+    vector<i64> d(n, INF);
+    vector<i64> parent(n, -1);
+
+    queue<i64> que;
+    BoolArray in_que(n, false);
+    const auto enqueue = [&que,&in_que](i64 v) { que.emplace(v); in_que[v] = true; };
+    const auto dequeue = [&que,&in_que]() { i64 v = POP(que); in_que[v] = false; return v; };
+
+    d[start] = 0;
+    enqueue(start);
+
+    REP(i, n) {
+        REP(_, que.size()) {
+            i64 from = dequeue();
+            for(const auto& p : g[from]) {
+                i64 to,cost; tie(to,cost) = p;
+                i64 d_new = d[from] + cost;
+                if(d_new < d[to]) {
+                    d[to] = i == n-1 ? -INF : d_new;
+                    parent[to] = from;
+                    if(!in_que[to]) enqueue(to);
+                }
+            }
+        }
+        if(que.empty()) break;
+        if(i == n-1) ok = false;
+    }
+
+    return make_tuple(ok, d, parent);
+}
+
 // ワーシャルフロイド法
 //
 // g は隣接行列 (g[from][to]) で、from == to の場合 0, from != to で辺
