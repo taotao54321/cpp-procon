@@ -25,7 +25,8 @@ using f80  = __float80;
 using f128 = __float128;
 // }}}
 
-constexpr i64 INF = 1'010'000'000'000'000'000LL;
+constexpr i64 INF  = 1'010'000'000'000'000'000LL;
+constexpr f64 FINF = 1e100;
 
 constexpr i64 MOD = 1'000'000'007LL;
 

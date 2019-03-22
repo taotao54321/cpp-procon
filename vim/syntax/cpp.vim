@@ -28,6 +28,7 @@ syntax keyword cppType HashMultiMap
 
 " constant {{{
 syntax keyword cppConstant INF
+syntax keyword cppConstant FINF
 syntax keyword cppConstant MOD
 syntax keyword cppConstant EPS
 syntax keyword cppConstant PI
