@@ -36,7 +36,7 @@ public:
         ALL(copy, other, begin());
     }
 
-    BoolArray(BoolArray&& other) : size_(other.size_), data_(other.data_) {
+    BoolArray(BoolArray&& other) noexcept : size_(other.size_), data_(other.data_) {
         other.data_ = nullptr;
     }
 
@@ -51,7 +51,7 @@ public:
         return *this;
     }
 
-    BoolArray& operator=(BoolArray&& other) {
+    BoolArray& operator=(BoolArray&& other) noexcept {
         if(this == &other) return *this;
         size_ = other.size_;
         data_ = other.data_;
