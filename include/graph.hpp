@@ -1,5 +1,10 @@
 // {{{ graph (container が必要)
 
+// ダイクストラ法
+//
+// (d,parent) を返す
+// d[i]: start から点 i への最短距離(到達不能な点は INF)
+// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 pair<vector<i64>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,i64>>>& g, i64 start) {
     i64 n = SIZE(g);
     vector<i64> d(n, INF);
@@ -36,6 +41,12 @@ pair<vector<i64>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,i64>>>
     return { d, parent };
 }
 
+// ベルマンフォード法
+//
+// (ok,d,parent) を返す
+// ok: 負閉路が存在しない場合に限り true
+// d[i]: start から点 i への最短距離(到達不能な点は INF, 負閉路上の点は -INF)
+// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 tuple<bool,vector<i64>,vector<i64>> graph_bellman(const vector<vector<pair<i64,i64>>>& g, i64 start) {
     i64 n = SIZE(g);
     bool ok = true;
@@ -65,6 +76,15 @@ tuple<bool,vector<i64>,vector<i64>> graph_bellman(const vector<vector<pair<i64,i
     return make_tuple(ok, d, parent);
 }
 
+// ワーシャルフロイド法
+//
+// g は隣接行列 (g[from][to]) で、from == to の場合 0, from != to で辺
+// がない場合 INF
+//
+// g は全点対間最短距離で上書きされる
+// (ok,nex) を返す
+// ok: 負閉路が存在しない場合に限り true
+// nex[i][j]: i から j へ最短経路で行くとき、次に辿るべき点
 pair<bool,vector<vector<i64>>> graph_floyd(vector<vector<i64>>& g) {
     i64 n = SIZE(g);
     vector<vector<i64>> nex(n, vector<i64>(n,-1));
