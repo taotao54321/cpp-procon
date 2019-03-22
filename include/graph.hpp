@@ -126,7 +126,7 @@ tuple<bool,vector<i64>,vector<i64>> graph_spfa(const vector<vector<pair<i64,i64>
 // g は全点対間最短距離で上書きされる
 // (ok,nex) を返す
 // ok: 負閉路が存在しない場合に限り true
-// nex[i][j]: i から j へ最短経路で行くとき、次に辿るべき点
+// nex[i][j]: i から j へ最短経路で行くとき、次に辿るべき点(到達不能なら -1)
 pair<bool,vector<vector<i64>>> graph_floyd(vector<vector<i64>>& g) {
     i64 n = SIZE(g);
     vector<vector<i64>> nex(n, vector<i64>(n,-1));
