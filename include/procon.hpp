@@ -77,6 +77,15 @@ bool is_even(i64 x) { return x % 2 == 0; }
 template<typename T> i64 cmp(T x, T y) { return (y<x) - (x<y); }
 template<typename T> i64 sgn(T x) { return cmp(x, T(0)); }
 
+i64 ipow(i64 x, i64 e) {
+    assert(e >= 0);
+    i64 res = 1;
+    REP(_, e) {
+        res *= x;
+    }
+    return res;
+}
+
 // Haskell の divMod と同じ
 pair<i64,i64> divmod(i64 a, i64 b) {
     i64 q = a / b;
