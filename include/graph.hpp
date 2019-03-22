@@ -36,6 +36,35 @@ pair<vector<i64>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,i64>>>
     return { d, parent };
 }
 
+tuple<bool,vector<i64>,vector<i64>> graph_bellman(const vector<vector<pair<i64,i64>>>& g, i64 start) {
+    i64 n = SIZE(g);
+    bool ok = true;
+    vector<i64> d(n, INF);
+    vector<i64> parent(n, -1);
+
+    d[start] = 0;
+
+    REP(i, n) {
+        bool update = false;
+        REP(from, n) {
+            if(d[from] == INF) continue;
+            for(const auto& p : g[from]) {
+                i64 to,cost; tie(to,cost) = p;
+                i64 d_new = d[from] + cost;
+                if(d_new < d[to]) {
+                    update = true;
+                    d[to] = i == n-1 ? -INF : d_new;
+                    parent[to] = from;
+                }
+            }
+        }
+        if(!update) break;
+        if(i == n-1) ok = false;
+    }
+
+    return make_tuple(ok, d, parent);
+}
+
 pair<bool,vector<vector<i64>>> graph_floyd(vector<vector<i64>>& g) {
     i64 n = SIZE(g);
     vector<vector<i64>> nex(n, vector<i64>(n,-1));
