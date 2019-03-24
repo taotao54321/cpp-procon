@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import argparse
 from pathlib import Path
 
 def get_dir():
     return Path(__file__).resolve().parent
 
-def create_cpp(base):
-    NAME = "solve.cpp"
+def create_cpp(base, name):
     hdr  = open(base/"include"/"procon.hpp", "r").read()
     body = open(base/"tmpl"/"solve.cpp", "r").read()
     try:
-        with open(NAME, "x") as out:
+        with open(name, "x") as out:
             out.write(hdr)
             out.write(body)
-        print(NAME)
+        print(name)
     except FileExistsError:
         return;
 
@@ -28,10 +28,17 @@ def create_makefile(base):
     except FileExistsError:
         return;
 
+def parse_args():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("name", nargs="?", default="solve.cpp")
+    return ap.parse_args()
+
 def main():
+    args = parse_args()
+
     base = get_dir()
 
-    create_cpp(base)
+    create_cpp(base, args.name)
     create_makefile(base)
 
 if __name__ == "__main__": main()
