@@ -487,6 +487,9 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
 #define DBG(expr) DBG_IMPL(__LINE__, #expr, (expr))
 #define DBG_ARRAY(expr) DBG_ARRAY_IMPL(__LINE__, #expr, (expr))
 #define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, #first, #last, (first), (last))
+
+#define PAIR  make_pair
+#define TUPLE make_tuple
 // }}}
 
 // init {{{
