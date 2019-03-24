@@ -140,6 +140,41 @@ bool chmin(T& xmin, const U& x) {
     return false;
 }
 
+template<typename ForwardIt, typename T, typename Comp=less<>>
+ForwardIt bsearch_find(ForwardIt first, ForwardIt last, const T& x, Comp comp={}) {
+    auto it = lower_bound(first, last, x, comp);
+    if(it == last || comp(x,*it)) return last;
+    return it;
+}
+
+// x 未満の最後の要素
+template<typename BidiIt, typename T, typename Comp=less<>>
+BidiIt bsearch_lt(BidiIt first, BidiIt last, const T& x, Comp comp={}) {
+    auto it = lower_bound(first, last, x, comp);
+    if(it == first) return last;
+    return prev(it);
+}
+
+// x 以下の最後の要素
+template<typename BidiIt, typename T, typename Comp=less<>>
+BidiIt bsearch_le(BidiIt first, BidiIt last, const T& x, Comp comp={}) {
+    auto it = upper_bound(first, last, x, comp);
+    if(it == first) return last;
+    return prev(it);
+}
+
+// x より大きい最初の要素
+template<typename BidiIt, typename T, typename Comp=less<>>
+BidiIt bsearch_gt(BidiIt first, BidiIt last, const T& x, Comp comp={}) {
+    return upper_bound(first, last, x, comp);
+}
+
+// x 以上の最初の要素
+template<typename BidiIt, typename T, typename Comp=less<>>
+BidiIt bsearch_ge(BidiIt first, BidiIt last, const T& x, Comp comp={}) {
+    return lower_bound(first, last, x, comp);
+}
+
 template<typename InputIt>
 auto SUM(InputIt first, InputIt last) {
     using T = typename iterator_traits<InputIt>::value_type;
