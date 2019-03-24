@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import argparse
 from pathlib import Path
 import subprocess
 from subprocess import DEVNULL
@@ -9,8 +10,17 @@ import sys
 import colorama
 from colorama import Fore, Style
 
-def get_cases():
-    return sorted(filter(Path.is_dir, Path('test/').iterdir()))
+def error(msg):
+    sys.exit(msg)
+
+def get_cases(cases):
+    if not cases:
+        return sorted(filter(Path.is_dir, Path('test/').iterdir()))
+    res = list(map(Path, cases))
+    for path in res:
+        if not path.is_dir():
+            error(f"{path}: not directory")
+    return res
 
 def build_case(case):
     cmdline = (
@@ -51,10 +61,16 @@ def exec_case(case):
     if not run_case(case): return False
     return True
 
-def main():
-    colorama.init()
+def parse_args():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("cases", nargs="*")
+    return ap.parse_args()
 
-    cases = get_cases()
+def main():
+    args = parse_args()
+    cases = get_cases(args.cases)
+
+    colorama.init()
 
     n_ok = 0
     for case in cases:
