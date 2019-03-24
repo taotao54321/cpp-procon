@@ -124,6 +124,205 @@ bool operator<=(const BoolArray& lhs, const BoolArray& rhs) { return !(rhs < lhs
 bool operator>=(const BoolArray& lhs, const BoolArray& rhs) { return !(lhs < rhs); }
 // }}}
 
+// {{{ set/map/multiset/multimap search
+// {{{ set
+template<typename T, typename Comp>
+auto set_lt(set<T,Comp>& s, const T& x) {
+    auto it = s.lower_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_lt(const set<T,Comp>& s, const T& x) {
+    auto it = s.lower_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_le(set<T,Comp>& s, const T& x) {
+    auto it = s.upper_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_le(const set<T,Comp>& s, const T& x) {
+    auto it = s.upper_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_gt(set<T,Comp>& s, const T& x) {
+    return s.upper_bound(x);
+}
+
+template<typename T, typename Comp>
+auto set_gt(const set<T,Comp>& s, const T& x) {
+    return s.upper_bound(x);
+}
+
+template<typename T, typename Comp>
+auto set_ge(set<T,Comp>& s, const T& x) {
+    return s.lower_bound(x);
+}
+
+template<typename T, typename Comp>
+auto set_ge(const set<T,Comp>& s, const T& x) {
+    return s.lower_bound(x);
+}
+// }}}
+// {{{ map
+template<typename K, typename V, typename Comp>
+auto map_lt(map<K,V,Comp>& m, const K& x) {
+    auto it = m.lower_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_lt(const map<K,V,Comp>& m, const K& x) {
+    auto it = m.lower_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_le(map<K,V,Comp>& m, const K& x) {
+    auto it = m.upper_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_le(const map<K,V,Comp>& m, const K& x) {
+    auto it = m.upper_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_gt(map<K,V,Comp>& m, const K& x) {
+    return m.upper_bound(x);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_gt(const map<K,V,Comp>& m, const K& x) {
+    return m.upper_bound(x);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_ge(map<K,V,Comp>& m, const K& x) {
+    return m.lower_bound(x);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_ge(const map<K,V,Comp>& m, const K& x) {
+    return m.lower_bound(x);
+}
+// }}}
+// {{{ multiset
+template<typename T, typename Comp>
+auto set_lt(multiset<T,Comp>& s, const T& x) {
+    auto it = s.lower_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_lt(const multiset<T,Comp>& s, const T& x) {
+    auto it = s.lower_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_le(multiset<T,Comp>& s, const T& x) {
+    auto it = s.upper_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_le(const multiset<T,Comp>& s, const T& x) {
+    auto it = s.upper_bound(x);
+    if(it == begin(s)) return end(s);
+    return prev(it);
+}
+
+template<typename T, typename Comp>
+auto set_gt(multiset<T,Comp>& s, const T& x) {
+    return s.upper_bound(x);
+}
+
+template<typename T, typename Comp>
+auto set_gt(const multiset<T,Comp>& s, const T& x) {
+    return s.upper_bound(x);
+}
+
+template<typename T, typename Comp>
+auto set_ge(multiset<T,Comp>& s, const T& x) {
+    return s.lower_bound(x);
+}
+
+template<typename T, typename Comp>
+auto set_ge(const multiset<T,Comp>& s, const T& x) {
+    return s.lower_bound(x);
+}
+// }}}
+// {{{ multimap
+template<typename K, typename V, typename Comp>
+auto map_lt(multimap<K,V,Comp>& m, const K& x) {
+    auto it = m.lower_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_lt(const multimap<K,V,Comp>& m, const K& x) {
+    auto it = m.lower_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_le(multimap<K,V,Comp>& m, const K& x) {
+    auto it = m.upper_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_le(const multimap<K,V,Comp>& m, const K& x) {
+    auto it = m.upper_bound(x);
+    if(it == begin(m)) return end(m);
+    return prev(it);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_gt(multimap<K,V,Comp>& m, const K& x) {
+    return m.upper_bound(x);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_gt(const multimap<K,V,Comp>& m, const K& x) {
+    return m.upper_bound(x);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_ge(multimap<K,V,Comp>& m, const K& x) {
+    return m.lower_bound(x);
+}
+
+template<typename K, typename V, typename Comp>
+auto map_ge(const multimap<K,V,Comp>& m, const K& x) {
+    return m.lower_bound(x);
+}
+// }}}
+// }}}
+
 template<typename K, typename V, typename Comp>
 bool map_contains(const map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& k) {
     return m.find(k) != end(m);
