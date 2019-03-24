@@ -8,7 +8,7 @@
 template<typename T>
 pair<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
-    vector<T> d(n, PROCON_INF<T>);
+    vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
 
     BoolArray done(n, false);
@@ -52,7 +52,7 @@ template<typename T>
 tuple<bool,vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
     bool ok = true;
-    vector<T> d(n, PROCON_INF<T>);
+    vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
 
     d[start] = T(0);
@@ -62,14 +62,14 @@ tuple<bool,vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>
         REP(from, n) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
-            if(d[from] == PROCON_INF<T>) continue;
+            if(d[from] == PROCON_INF<T>()) continue;
 #pragma GCC diagnostic pop
             for(const auto& p : g[from]) {
                 i64 to,cost; tie(to,cost) = p;
                 i64 d_new = d[from] + cost;
                 if(d_new < d[to]) {
                     update = true;
-                    d[to] = i == n-1 ? -PROCON_INF<T> : d_new;
+                    d[to] = i == n-1 ? -PROCON_INF<T>() : d_new;
                     parent[to] = from;
                 }
             }
@@ -93,7 +93,7 @@ template<typename T>
 tuple<bool,vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
     bool ok = true;
-    vector<T> d(n, PROCON_INF<T>);
+    vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
 
     queue<i64> que;
@@ -111,7 +111,7 @@ tuple<bool,vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& 
                 i64 to,cost; tie(to,cost) = p;
                 i64 d_new = d[from] + cost;
                 if(d_new < d[to]) {
-                    d[to] = i == n-1 ? -PROCON_INF<T> : d_new;
+                    d[to] = i == n-1 ? -PROCON_INF<T>() : d_new;
                     parent[to] = from;
                     if(!in_que[to]) enqueue(to);
                 }
@@ -141,15 +141,15 @@ pair<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
     REP(i, n) REP(j, n) {
-        if(g[i][j] != PROCON_INF<T>)
+        if(g[i][j] != PROCON_INF<T>())
             nex[i][j] = j;
     }
 
     REP(k, n) {
         REP(i, n) {
-            if(g[i][k] == PROCON_INF<T>) continue;
+            if(g[i][k] == PROCON_INF<T>()) continue;
             REP(j, n) {
-                if(g[k][j] == PROCON_INF<T>) continue;
+                if(g[k][j] == PROCON_INF<T>()) continue;
                 if(chmin(g[i][j], g[i][k] + g[k][j])) {
                     nex[i][j] = nex[i][k];
                 }
