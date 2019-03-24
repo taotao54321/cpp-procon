@@ -7,16 +7,26 @@ def get_dir():
     return Path(__file__).resolve().parent
 
 def create_cpp(base):
+    NAME = "solve.cpp"
     hdr  = open(base/"include"/"procon.hpp", "r").read()
     body = open(base/"tmpl"/"solve.cpp", "r").read()
-    with open("solve.cpp", "x") as out:
-        out.write(hdr)
-        out.write(body)
+    try:
+        with open(NAME, "x") as out:
+            out.write(hdr)
+            out.write(body)
+        print(NAME)
+    except FileExistsError:
+        return;
 
 def create_makefile(base):
+    NAME = "Makefile"
     body = open(base/"tmpl"/"Makefile", "r").read()
-    with open("Makefile", "x") as out:
-        out.write(body)
+    try:
+        with open(NAME, "x") as out:
+            out.write(body)
+        print(NAME)
+    except FileExistsError:
+        return;
 
 def main():
     base = get_dir()
