@@ -1,7 +1,6 @@
-// {{{ cum
+// {{{ cum (build() 忘れに注意)
 
 // 1次元累積和
-// build() 忘れに注意
 template<typename T>
 struct Cum1 {
     vector<T> v_;
@@ -22,7 +21,6 @@ struct Cum1 {
 };
 
 // 2次元累積和
-// build() 忘れに注意
 template<typename T>
 struct Cum2 {
     vector<vector<T>> v_;
