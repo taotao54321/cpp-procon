@@ -264,4 +264,27 @@ ModP (&partition_count())[H][W] {
     return dp;
 }
 
+// 分割数 メモ化再帰版
+template<size_t H, size_t W>
+auto partition_count_func() {
+    static_assert(W >= 1 && H >= W, "");
+    auto f = FIX([](auto self, i64 n, i64 k) -> ModP {
+        static bool done[H][W] {};
+        static ModP memo[H][W];
+
+        if(n <  k) return 0;
+        if(n == k) return 1;
+        if(k == 1) return 1;
+
+        if(!done[n][k]) {
+            ModP res = self(n-1,k-1) + self(n-k,k);
+
+            memo[n][k] = res;
+            done[n][k] = true;
+        }
+        return memo[n][k];
+    });
+    return f;
+}
+
 // }}}
