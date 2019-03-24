@@ -231,4 +231,37 @@ ModP combination_count(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     return fac[n] * ifac[r] * ifac[n-r];
 }
 
+// 分割数 P(n,k) (n を k 個の正整数の和で表す場合の数)
+//
+// 「n を 最大値 k の正整数の和で表す場合の数」でもある。
+// 「n を k 個『以下』の正整数の和で表す場合の数」は sum(P(n,i)) (1<=i<=k)
+// 「n を k 個の『非負整数』の和で表す場合の数」は P(n+k,k)
+//
+// P(0,0) = 1
+// P(n,0) = 0
+// P(0,k) = 0
+// n < k のとき P(n,k) = 0
+// P(n,1) = 1
+// P(n,n) = 1
+template<size_t H, size_t W>
+ModP (&partition_count())[H][W] {
+    static_assert(W >= 1 && H >= W, "");
+    static ModP dp[H][W] {};
+
+    if(dp[0][0] != 1) {
+        REP(j, W) {
+            dp[j][j] = 1;
+        }
+        FOR(i, 2, H) {
+            dp[i][1] = 1;
+        }
+        FOR(i, 3, H) {
+            FOR(j, 2, min<i64>(i,W)) {
+                dp[i][j] = dp[i-1][j-1] + dp[i-j][j];
+            }
+        }
+    }
+    return dp;
+}
+
 // }}}
