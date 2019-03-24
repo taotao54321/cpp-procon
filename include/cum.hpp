@@ -1,4 +1,4 @@
-// {{{ cum (build() 忘れに注意)
+// cum (build() 忘れに注意) {{{
 
 // 1次元累積和
 template<typename T>

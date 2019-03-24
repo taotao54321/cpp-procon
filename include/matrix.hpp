@@ -1,4 +1,4 @@
-// {{{ matrix
+// matrix {{{
 
 template<typename T>
 class Matrix {

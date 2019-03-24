@@ -1,4 +1,4 @@
-// {{{ graph (container が必要)
+// graph (container が必要) {{{
 
 // ダイクストラ法
 //

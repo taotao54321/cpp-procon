@@ -1,4 +1,4 @@
-// {{{ geometry
+// geometry {{{
 
 struct Vector {
     f64 x, y;

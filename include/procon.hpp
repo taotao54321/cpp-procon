@@ -2,7 +2,7 @@
  * 
  */
 
-// {{{ header
+// header {{{
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -38,7 +38,7 @@ constexpr f64 EPS = 1e-12;
 
 constexpr f64 PI = 3.14159265358979323846;
 
-// {{{ util
+// util {{{
 #define FOR(i, start, end) for(i64 i = (start), i##_end=(end); i < i##_end; ++i)
 #define REP(i, n) FOR(i, 0, n)
 
@@ -489,7 +489,7 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
 #define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, #first, #last, (first), (last))
 // }}}
 
-// {{{ init
+// init {{{
 struct ProconInit {
     static constexpr int IOS_PREC = 15;
     static constexpr bool AUTOFLUSH = false;

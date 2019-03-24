@@ -1,4 +1,4 @@
-// {{{ union_find
+// union_find {{{
 
 struct UnionFind {
     vector<i64> ps_;  // 親ノード。ただし根の場合 -(集合の要素数)

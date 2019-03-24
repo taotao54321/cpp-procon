@@ -1,6 +1,6 @@
-// {{{ container
+// container {{{
 
-// {{{ BoolArray
+// BoolArray {{{
 class BoolArray {
 public:
     using value_type      = bool;
@@ -124,8 +124,8 @@ bool operator<=(const BoolArray& lhs, const BoolArray& rhs) { return !(rhs < lhs
 bool operator>=(const BoolArray& lhs, const BoolArray& rhs) { return !(lhs < rhs); }
 // }}}
 
-// {{{ set/map/multiset/multimap search
-// {{{ set
+// set/map/multiset/multimap search {{{
+// set {{{
 template<typename T, typename Comp>
 auto set_lt(set<T,Comp>& s, const T& x) {
     auto it = s.lower_bound(x);
@@ -174,7 +174,7 @@ auto set_ge(const set<T,Comp>& s, const T& x) {
     return s.lower_bound(x);
 }
 // }}}
-// {{{ map
+// map {{{
 template<typename K, typename V, typename Comp>
 auto map_lt(map<K,V,Comp>& m, const K& x) {
     auto it = m.lower_bound(x);
@@ -223,7 +223,7 @@ auto map_ge(const map<K,V,Comp>& m, const K& x) {
     return m.lower_bound(x);
 }
 // }}}
-// {{{ multiset
+// multiset {{{
 template<typename T, typename Comp>
 auto set_lt(multiset<T,Comp>& s, const T& x) {
     auto it = s.lower_bound(x);
@@ -272,7 +272,7 @@ auto set_ge(const multiset<T,Comp>& s, const T& x) {
     return s.lower_bound(x);
 }
 // }}}
-// {{{ multimap
+// multimap {{{
 template<typename K, typename V, typename Comp>
 auto map_lt(multimap<K,V,Comp>& m, const K& x) {
     auto it = m.lower_bound(x);
@@ -354,7 +354,7 @@ using MaxHeap = priority_queue<T, vector<T>, less<T>>;
 template<typename T>
 using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-// {{{ POP() 系
+// POP() 系 {{{
 // 効率は悪い
 template<typename T>
 T POP_FRONT(vector<T>& v) {
@@ -417,7 +417,7 @@ T POP(priority_queue<T,C,Comp>& que) {
 }
 // }}}
 
-// {{{ Formatter
+// Formatter {{{
 template<typename T, size_t N>
 struct Formatter<array<T,N>> {
     static ostream& write_str(ostream& out, const array<T,N>& a) {
