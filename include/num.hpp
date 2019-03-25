@@ -117,6 +117,23 @@ struct ModPT {
         return *this;
     }
 
+    ModPT& operator++() {
+        return *this += 1;
+    }
+    ModPT& operator--() {
+        return *this -= 1;
+    }
+    ModPT operator++(int) {
+        ModPT res(*this);
+        ++*this;
+        return res;
+    }
+    ModPT operator--(int) {
+        ModPT res(*this);
+        --*this;
+        return res;
+    }
+
     ModPT inv() const {
         return ModPT(inv_mod(v_,P));
     }
