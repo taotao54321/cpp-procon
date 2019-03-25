@@ -191,6 +191,22 @@ void UNIQ(C& c) {
     c.erase(ALL(unique,c), end(c));
 }
 
+template<typename T, typename F>
+enable_if_t<rank<T>::value==0> ARRAY_FOREACH(T& e, F f) {
+    f(e);
+}
+
+template<typename Array, typename F>
+enable_if_t<rank<Array>::value!=0> ARRAY_FOREACH(Array& ary, F f) {
+    for(auto& e : ary)
+        ARRAY_FOREACH(e, f);
+}
+
+template<typename Array, typename U>
+enable_if_t<rank<Array>::value!=0> ARRAY_FILL(Array& ary, const U& v) {
+    ARRAY_FOREACH(ary, [&v](auto& e) { e = v; });
+}
+
 template<typename BinaryFunc, typename UnaryFunc>
 auto ON(BinaryFunc bf, UnaryFunc uf) {
     return [bf,uf](const auto& x, const auto& y) {
