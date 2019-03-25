@@ -243,6 +243,45 @@ ModP permutation_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     return fac[n] * ifac[n-r];
 }
 
+template<size_t H, size_t W>
+ModP (&combination_count_table())[H][W] {
+    static_assert(W >= 1 && H >= W, "");
+    static ModP dp[H][W] {};
+
+    if(dp[0][0] != 1) {
+        REP(i, H) {
+            dp[i][0] = 1;
+            dp[i][i] = 1;
+        }
+        FOR(i, 1, H) FOR(j, 1, i) {
+            dp[i][j] = dp[i-1][j-1] + dp[i-1][j];
+        }
+    }
+    return dp;
+}
+
+template<size_t H, size_t W>
+auto combination_count_func() {
+    static_assert(W >= 1 && H >= W, "");
+    auto f = FIX([](auto self, i64 n, i64 r) -> ModP {
+        static bool done[H][W] {};
+        static ModP memo[H][W];
+
+        if(n <  r) return 0;
+        if(r == 0) return 1;
+        if(n == r) return 1;
+
+        if(!done[n][r]) {
+            ModP res = self(n-1,r-1) + self(n-1,r);
+
+            memo[n][r] = res;
+            done[n][r] = true;
+        }
+        return memo[n][r];
+    });
+    return f;
+}
+
 ModP combination_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[r] * ifac[n-r];
