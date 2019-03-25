@@ -193,9 +193,9 @@ using ModP = ModPT<MOD>;
 // F(n) = F(n-1) + F(n-2)
 //
 // // decltype(auto) で受けると SIZE() が使える (auto だとポインタになってしまう)
-// decltype(auto) fib = fibonacci<1000>();
+// decltype(auto) fib = fibonacci_table<1000>();
 template<size_t N>
-ModP (&fibonacci())[N] {
+ModP (&fibonacci_table())[N] {
     static_assert(N >= 2, "");
     static ModP fib[N] {};
 
@@ -210,7 +210,7 @@ ModP (&fibonacci())[N] {
 }
 
 template<size_t N>
-ModP (&factorial())[N] {
+ModP (&factorial_table())[N] {
     static_assert(N >= 1, "");
     static ModP fac[N] {};
 
@@ -224,12 +224,12 @@ ModP (&factorial())[N] {
 }
 
 template<size_t N>
-ModP (&ifactorial())[N] {
+ModP (&ifactorial_table())[N] {
     static_assert(N >= 1, "");
     static ModP ifac[N] {};
 
     if(ifac[0] != 1) {
-        decltype(auto) fac = factorial<N>();
+        decltype(auto) fac = factorial_table<N>();
         ifac[N-1] = fac[N-1].inv();
         for(i64 i = N-2; i >= 0; --i) {
             ifac[i] = (i+1) * ifac[i+1];
@@ -238,12 +238,12 @@ ModP (&ifactorial())[N] {
     return ifac;
 }
 
-ModP permutation_count(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
+ModP permutation_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[n-r];
 }
 
-ModP combination_count(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
+ModP combination_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[r] * ifac[n-r];
 }
@@ -261,7 +261,7 @@ ModP combination_count(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
 // P(n,1) = 1
 // P(n,n) = 1
 template<size_t H, size_t W>
-ModP (&partition_count())[H][W] {
+ModP (&partition_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
     static ModP dp[H][W] {};
 
