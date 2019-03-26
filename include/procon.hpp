@@ -220,6 +220,13 @@ auto LT_ON(F f) { return ON(less<>(), f); }
 template<typename F>
 auto GT_ON(F f) { return ON(greater<>(), f); }
 
+struct IDENTITY {
+    template<typename T>
+    constexpr T&& operator()(T&& x) const noexcept {
+        return forward<T>(x);
+    }
+};
+
 char digit_chr(i64 n) {
     return static_cast<char>('0' + n);
 }
