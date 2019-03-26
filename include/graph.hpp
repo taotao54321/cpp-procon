@@ -186,4 +186,52 @@ tuple<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
     return make_tuple(true, nex);
 }
 
+// TODO: 重みあり/なし両対応
+// (関節点リスト,橋リスト) を返す
+tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>& g) {
+    i64 n = SIZE(g);
+    vector<i64> ord(n, -1);
+    vector<i64> low(n, -1);
+
+    vector<i64>           articulations;
+    vector<pair<i64,i64>> bridges;
+
+    auto dfs = FIX([&g,&ord,&low,&articulations,&bridges](auto self, i64 v, i64 parent, i64 k) -> void {
+        low[v] = ord[v] = k;
+
+        for(i64 to : g[v]) {
+            // 後退辺
+            if(ord[to] != -1) {
+                if(to != parent)
+                    chmin(low[v], ord[to]);
+                continue;
+            }
+
+            // 子を辿り、low[v] を更新
+            self(to, v, k+1);
+            chmin(low[v], low[to]);
+
+            // 橋の判定
+            if(low[to] > ord[v])
+                bridges.emplace_back(minmax(v,to));
+        }
+
+        // 関節点の判定
+        bool arti;
+        if(parent == -1) {
+            arti = SIZE(g[v]) > 1;
+        }
+        else {
+            arti = ALL(any_of, g[v], [&ord,&low,v](i64 to) {
+                return low[to] >= ord[v];
+            });
+        }
+        if(arti)
+            articulations.emplace_back(v);
+    });
+    dfs(0, -1, 0);
+
+    return make_tuple(articulations, bridges);
+}
+
 // }}}
