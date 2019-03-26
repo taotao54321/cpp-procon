@@ -199,8 +199,10 @@ tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>
     auto dfs = FIX([&g,&ord,&low,&articulations,&bridges](auto self, i64 v, i64 parent, i64 k) -> void {
         low[v] = ord[v] = k;
 
+        bool arti = false;
+        i64 n_child = 0;
         for(i64 to : g[v]) {
-            // 後退辺
+            // 親または後退辺
             if(ord[to] != -1) {
                 if(to != parent)
                     chmin(low[v], ord[to]);
@@ -208,24 +210,22 @@ tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>
             }
 
             // 子を辿り、low[v] を更新
+            ++n_child;
             self(to, v, k+1);
             chmin(low[v], low[to]);
 
-            // 橋の判定
+            // 関節点判定(根でない場合)
+            if(parent != -1 && low[to] >= ord[v])
+                arti = true;
+
+            // 橋判定
             if(low[to] > ord[v])
                 bridges.emplace_back(minmax(v,to));
         }
+        // 関節点判定(根の場合)
+        if(parent == -1 && n_child > 1)
+            arti = true;
 
-        // 関節点の判定
-        bool arti;
-        if(parent == -1) {
-            arti = SIZE(g[v]) > 1;
-        }
-        else {
-            arti = ALL(any_of, g[v], [&ord,&low,v](i64 to) {
-                return low[to] >= ord[v];
-            });
-        }
         if(arti)
             articulations.emplace_back(v);
     });
