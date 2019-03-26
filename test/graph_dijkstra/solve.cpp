@@ -7,7 +7,7 @@ signed main() {
     i64 M; RD(M);
     i64 S; RD(S);
 
-    vector<vector<pair<i64,i64>>> G(N);
+    auto G = graph_make_weighted<i64>(N);
     REP(_, M) {
         i64 from,to; RD(from); RD(to);
         i64 cost; RD(cost);

@@ -1,5 +1,14 @@
 // graph (container が必要) {{{
 
+template<typename T>
+vector<vector<pair<i64,T>>> graph_make_weighted(i64 n) {
+    return vector<vector<pair<i64,T>>>(n);
+}
+
+vector<vector<i64>> graph_make_unweighted(i64 n) {
+    return vector<vector<i64>>(n);
+}
+
 // n 頂点の初期化済み隣接行列 g を返す
 //
 // g[i][j]: i==j なら 0, i!=j なら INF
