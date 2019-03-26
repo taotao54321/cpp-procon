@@ -14,7 +14,7 @@ void solve(i64 N) {
         ps[b] = { x, y };
     }
 
-    vector<vector<f64>> G(N, vector<f64>(N, FINF));
+    auto G = graph_make_matrix<f64>(N);
     REP(i, N) REP(j, N) {
         const Pos& p1 = ps[i];
         const Pos& p2 = ps[j];

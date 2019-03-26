@@ -6,7 +6,7 @@ signed main() {
     i64 N; RD(N);
     i64 M; RD(M);
 
-    vector<vector<i64>> G(N, vector<i64>(N, INF));
+    auto G = graph_make_matrix<i64>(N);
     REP(i, N) {
         G[i][i] = 0;
     }
