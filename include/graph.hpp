@@ -6,7 +6,7 @@
 // d[i]: start から点 i への最短距離(到達不能な点は INF)
 // parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
-pair<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g, i64 start) {
+tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
     vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
@@ -44,55 +44,56 @@ pair<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g,
 
 // ベルマンフォード法
 //
-// (ok,d,parent) を返す
-// ok: 負閉路が存在しない場合に限り true
-// d[i]: start から点 i への最短距離(到達不能な点は INF, 負閉路上の点は -INF)
+// 負閉路が存在する場合、最短距離が負の無限大になる点が生じる。
+// そのような点を全て検出するため、2*n 回ループしている
+// (一般的な実装の倍の回数。ただし更新がなくなったら打ち切る)
+//
+// (d,parent) を返す
+// d[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
 // parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
-tuple<bool,vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g, i64 start) {
+tuple<vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
-    bool ok = true;
     vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
 
     d[start] = T(0);
 
-    REP(i, n) {
+    REP(i, 2*n) {
         bool update = false;
         REP(from, n) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
             if(d[from] == PROCON_INF<T>()) continue;
-#pragma GCC diagnostic pop
             for(const auto& p : g[from]) {
                 i64 to,cost; tie(to,cost) = p;
-                i64 d_new = d[from] + cost;
+                i64 d_new = d[from] == -PROCON_INF<T>() ? -PROCON_INF<T>() : d[from] + cost;
                 if(d_new < d[to]) {
-                    update = true;
-                    d[to] = i == n-1 ? -PROCON_INF<T>() : d_new;
+                    update     = true;
+                    d[to]      = i >= n-1 ? -PROCON_INF<T>() : d_new;
                     parent[to] = from;
                 }
             }
+#pragma GCC diagnostic pop
         }
         if(!update) break;
-        if(i == n-1) ok = false;
     }
 
-    return make_tuple(ok, d, parent);
+    return make_tuple(d, parent);
 }
 
 // SPFA (Shortest Path Faster Algorithm)
 //
-// ベルマンフォードより速い、はず
+// 理論上はベルマンフォードより速いはずだが、実際はそうでもなさげ
+// 最短距離が負の無限大になる点を全て検出するため 2*n 回ループしている
+// (一般的な実装の倍の回数。ただし更新がなくなったら打ち切る)
 //
-// (ok,d,parent) を返す
-// ok: 負閉路が存在しない場合に限り true
-// d[i]: start から点 i への最短距離(到達不能な点は INF, 負閉路上の点は -INF)
+// (d,parent) を返す
+// d[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
 // parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
-tuple<bool,vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i64 start) {
+tuple<vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
-    bool ok = true;
     vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
 
@@ -104,24 +105,26 @@ tuple<bool,vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& 
     d[start] = T(0);
     enqueue(start);
 
-    REP(i, n) {
+    REP(i, 2*n) {
         REP(_, que.size()) {
             i64 from = dequeue();
             for(const auto& p : g[from]) {
                 i64 to,cost; tie(to,cost) = p;
-                i64 d_new = d[from] + cost;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+                i64 d_new = d[from] == -PROCON_INF<T>() ? -PROCON_INF<T>() : d[from] + cost;
                 if(d_new < d[to]) {
-                    d[to] = i == n-1 ? -PROCON_INF<T>() : d_new;
+                    d[to]      = i >= n-1 ? -PROCON_INF<T>() : d_new;
                     parent[to] = from;
                     if(!in_que[to]) enqueue(to);
                 }
+#pragma GCC diagnostic pop
             }
         }
         if(que.empty()) break;
-        if(i == n-1) ok = false;
     }
 
-    return make_tuple(ok, d, parent);
+    return make_tuple(d, parent);
 }
 
 // ワーシャルフロイド法
@@ -134,7 +137,7 @@ tuple<bool,vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& 
 // ok: 負閉路が存在しない場合に限り true
 // nex[i][j]: i から j へ最短経路で行くとき、次に辿るべき点(到達不能なら -1)
 template<typename T>
-pair<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
+tuple<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
     i64 n = SIZE(g);
     vector<vector<i64>> nex(n, vector<i64>(n,-1));
 

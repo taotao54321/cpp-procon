@@ -14,11 +14,10 @@ signed main() {
         G[from].emplace_back(to,cost);
     }
 
-    bool ok;
     vector<i64> d;
-    tie(ok,d,ignore) = graph_bellman(G, start);
+    tie(d,ignore) = graph_bellman(G, start);
 
-    if(!ok) {
+    if(ALL(find, d, -INF) != end(d)) {
         PRINTLN("NEGATIVE CYCLE");
         EXIT();
     }
