@@ -39,7 +39,7 @@ tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g
         }
     }
 
-    return { d, parent };
+    return make_tuple(d, parent);
 }
 
 // ベルマンフォード法
@@ -156,13 +156,13 @@ tuple<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
                 if(chmin(g[i][j], g[i][k] + g[k][j])) {
                     nex[i][j] = nex[i][k];
                 }
-                if(i == j && g[i][j] < 0) return { false, nex };
+                if(i == j && g[i][j] < 0) return make_tuple(false, nex);
             }
         }
     }
 #pragma GCC diagnostic pop
 
-    return { true, nex };
+    return make_tuple(true, nex);
 }
 
 // }}}
