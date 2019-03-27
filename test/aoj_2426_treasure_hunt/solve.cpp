@@ -43,10 +43,10 @@ signed main() {
     REP(_, M) {
         i64 x1,y1; RD(x1); RD(y1);
         i64 x2,y2; RD(x2); RD(y2);
-        i64 yy1 = map_ge(ycomp,y1)->second;
-        i64 xx1 = map_ge(xcomp,x1)->second;
-        i64 yy2 = map_le(ycomp,y2)->second;
-        i64 xx2 = map_le(xcomp,x2)->second;
+        i64 yy1 = map_search_ge(ycomp,y1)->second;
+        i64 xx1 = map_search_ge(xcomp,x1)->second;
+        i64 yy2 = map_search_le(ycomp,y2)->second;
+        i64 xx2 = map_search_le(xcomp,x2)->second;
         i64 hh = yy2 - yy1 + 1;
         i64 ww = xx2 - xx1 + 1;
 
