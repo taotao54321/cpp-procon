@@ -194,7 +194,7 @@ using ModP = ModPT<MOD>;
 //
 // // decltype(auto) で受けると SIZE() が使える (auto だとポインタになってしまう)
 // decltype(auto) fib = fibonacci_table<1000>();
-template<size_t N>
+template<i64 N>
 ModP (&fibonacci_table())[N] {
     static_assert(N >= 2, "");
     static ModP fib[N] {};
@@ -209,7 +209,7 @@ ModP (&fibonacci_table())[N] {
     return fib;
 }
 
-template<size_t N>
+template<i64 N>
 ModP (&factorial_table())[N] {
     static_assert(N >= 1, "");
     static ModP fac[N] {};
@@ -223,7 +223,7 @@ ModP (&factorial_table())[N] {
     return fac;
 }
 
-template<size_t N>
+template<i64 N>
 ModP (&ifactorial_table())[N] {
     static_assert(N >= 1, "");
     static ModP ifac[N] {};
@@ -243,7 +243,7 @@ ModP permutation_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
     return fac[n] * ifac[n-r];
 }
 
-template<size_t H, size_t W>
+template<i64 H, i64 W>
 ModP (&combination_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
     static ModP dp[H][W] {};
@@ -260,7 +260,7 @@ ModP (&combination_count_table())[H][W] {
     return dp;
 }
 
-template<size_t H, size_t W>
+template<i64 H, i64 W>
 auto combination_count_func() {
     static_assert(W >= 1 && H >= W, "");
     auto f = FIX([](auto self, i64 n, i64 r) -> ModP {
@@ -299,7 +299,7 @@ ModP combination_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
 // n < k のとき P(n,k) = 0
 // P(n,1) = 1
 // P(n,n) = 1
-template<size_t H, size_t W>
+template<i64 H, i64 W>
 ModP (&partition_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
     static ModP dp[H][W] {};
@@ -321,7 +321,7 @@ ModP (&partition_count_table())[H][W] {
 }
 
 // 分割数 メモ化再帰版
-template<size_t H, size_t W>
+template<i64 H, i64 W>
 auto partition_count_func() {
     static_assert(W >= 1 && H >= W, "");
     auto f = FIX([](auto self, i64 n, i64 k) -> ModP {
