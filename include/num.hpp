@@ -65,6 +65,116 @@ vector<pair<i64,i64>> factorize(i64 n) {
     return res;
 }
 
+// Miller-Rabin 法
+//
+// 参考: http://miller-rabin.appspot.com/
+bool is_prime_u32(u32 n) {
+    static constexpr u32 AS[] {
+         2,
+         7,
+        61,
+    };
+
+    static const auto mulmod32 = [](u32 a, u32 b, u32 m) -> u32 {
+        u64 res = a;
+        res *= b;
+        res %= m;
+        return static_cast<u32>(res);
+    };
+
+    static const auto powmod32 = [](u32 a, u32 b, u32 m) -> u32 {
+        u32 res = 1;
+        while(b > 0) {
+            if(b & 1)
+                res = mulmod32(res, a, m);
+            a = mulmod32(a, a, m);
+            b >>= 1;
+        }
+        return res;
+    };
+
+    if(n <= 1)     return false;
+    if(n == 2)     return true;
+    if(n % 2 == 0) return false;
+
+    u32 d = n-1;
+    u32 s = __builtin_ctz(d);
+    d >>= s;
+
+    for(u32 a : AS) {
+        if(a >= n) a %= n;
+        if(a == 0) continue;
+
+        u32 x = powmod32(a, d, n);
+        if(x == 1 || x == n-1) continue;
+
+        u32 r;
+        for(r = 1; r < s; ++r) {
+            x = mulmod32(x, x, n);
+            if(x == 1)   return false;
+            if(x == n-1) break;
+        }
+        if(r == s) return false;
+    }
+
+    return true;
+}
+
+bool is_prime_u64(u64 n) {
+    static constexpr u64 AS[] {
+                 2,
+               325,
+              9375,
+             28178,
+            450775,
+           9780504,
+        1795265022,
+    };
+
+    static const auto mulmod64 = [](u64 a, u64 b, u64 m) -> u64 {
+        u128 res = a;
+        res *= b;
+        res %= m;
+        return static_cast<u64>(res);
+    };
+
+    static const auto powmod64 = [](u64 a, u64 b, u64 m) -> u64 {
+        u64 res = 1;
+        while(b > 0) {
+            if(b & 1)
+                res = mulmod64(res, a, m);
+            a = mulmod64(a, a, m);
+            b >>= 1;
+        }
+        return res;
+    };
+
+    if(n <= numeric_limits<u32>::max()) return is_prime_u32(static_cast<u32>(n));
+    if(n % 2 == 0) return false;
+
+    u64 d = n-1;
+    u64 s = __builtin_ctzll(d);
+    d >>= s;
+
+    for(u64 a : AS) {
+        if(a >= n) a %= n;
+        if(a == 0) continue;
+
+        u64 x = powmod64(a, d, n);
+        if(x == 1 || x == n-1) continue;
+
+        u64 r;
+        for(r = 1; r < s; ++r) {
+            x = mulmod64(x, x, n);
+            if(x == 1)   return false;
+            if(x == n-1) break;
+        }
+        if(r == s) return false;
+    }
+
+    return true;
+}
+
 // 二分累乗
 template<typename Monoid>
 Monoid pow_binary(Monoid x, i64 e) {
