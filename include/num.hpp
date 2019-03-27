@@ -175,6 +175,11 @@ bool is_prime_u64(u64 n) {
     return true;
 }
 
+bool is_prime(i64 n) {
+    assert(n >= 0);
+    return is_prime_u64(static_cast<u64>(n));
+}
+
 // 二分累乗
 template<typename Monoid>
 Monoid pow_binary(Monoid x, i64 e) {
