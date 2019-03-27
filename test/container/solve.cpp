@@ -57,6 +57,20 @@ void test_map() {
         assert(map_contains(m, 5));
         assert(!map_contains(m, 10));
     }
+    {
+        multimap<i64,i64> m;
+        assert(!map_contains(m, 5));
+        m.emplace(5, 8);
+        assert(map_contains(m, 5));
+        assert(!map_contains(m, 10));
+    }
+    {
+        unordered_multimap<i64,i64> m;
+        assert(!map_contains(m, 5));
+        m.emplace(5, 8);
+        assert(map_contains(m, 5));
+        assert(!map_contains(m, 10));
+    }
 }
 
 void test_multiset() {
