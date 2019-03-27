@@ -188,6 +188,23 @@ struct Formatter<ModPT<P>> {
 
 using ModP = ModPT<MOD>;
 
+// エラトステネスのふるい
+template<i64 N>
+bool (&is_prime_table())[N] {
+    static_assert(N >= 3, "");
+    static bool prime[N] {};
+
+    if(!prime[2]) {
+        fill(begin(prime)+2, end(prime), true);
+        for(i64 i = 2; i*i <= N-1; ++i) {
+            if(!prime[i]) continue;
+            for(i64 j = i+i; j < N; j += i)
+                prime[j] = false;
+        }
+    }
+    return prime;
+}
+
 // F(0) = 0
 // F(1) = 1
 // F(n) = F(n-1) + F(n-2)
