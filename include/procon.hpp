@@ -231,7 +231,7 @@ enable_if_t<rank<Array>::value!=0> ARRAY_FILL(Array& ary, const U& v) {
 }
 // }}}
 
-// メモ化ラッパー {{{
+// メモ化ラッパー (8引数まで) {{{
 template<i64 N1, typename F>
 class Memoized1 {
     static_assert(N1 >= 1);
@@ -270,6 +270,120 @@ private:
     const F f_;
 };
 
+template<i64 N1, i64 N2, i64 N3, typename F>
+class Memoized3 {
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1);
+public:
+    explicit Memoized3(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1, i64 x2, i64 x3) const {
+        using R = decltype(f_(*this,x1,x2,x3));
+        static bool done[N1][N2][N3] {};
+        static R    memo[N1][N2][N3];
+        if(!done[x1][x2][x3]) {
+            memo[x1][x2][x3] = f_(*this,x1,x2,x3);
+            done[x1][x2][x3] = true;
+        }
+        return memo[x1][x2][x3];
+    }
+private:
+    const F f_;
+};
+
+template<i64 N1, i64 N2, i64 N3, i64 N4, typename F>
+class Memoized4 {
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1);
+public:
+    explicit Memoized4(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4) const {
+        using R = decltype(f_(*this,x1,x2,x3,x4));
+        static bool done[N1][N2][N3][N4] {};
+        static R    memo[N1][N2][N3][N4];
+        if(!done[x1][x2][x3][x4]) {
+            memo[x1][x2][x3][x4] = f_(*this,x1,x2,x3,x4);
+            done[x1][x2][x3][x4] = true;
+        }
+        return memo[x1][x2][x3][x4];
+    }
+private:
+    const F f_;
+};
+
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, typename F>
+class Memoized5 {
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1);
+public:
+    explicit Memoized5(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5) const {
+        using R = decltype(f_(*this,x1,x2,x3,x4,x5));
+        static bool done[N1][N2][N3][N4][N5] {};
+        static R    memo[N1][N2][N3][N4][N5];
+        if(!done[x1][x2][x3][x4][x5]) {
+            memo[x1][x2][x3][x4][x5] = f_(*this,x1,x2,x3,x4,x5);
+            done[x1][x2][x3][x4][x5] = true;
+        }
+        return memo[x1][x2][x3][x4][x5];
+    }
+private:
+    const F f_;
+};
+
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, typename F>
+class Memoized6 {
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1);
+public:
+    explicit Memoized6(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5, i64 x6) const {
+        using R = decltype(f_(*this,x1,x2,x3,x4,x5,x6));
+        static bool done[N1][N2][N3][N4][N5][N6] {};
+        static R    memo[N1][N2][N3][N4][N5][N6];
+        if(!done[x1][x2][x3][x4][x5][x6]) {
+            memo[x1][x2][x3][x4][x5][x6] = f_(*this,x1,x2,x3,x4,x5,x6);
+            done[x1][x2][x3][x4][x5][x6] = true;
+        }
+        return memo[x1][x2][x3][x4][x5][x6];
+    }
+private:
+    const F f_;
+};
+
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, i64 N7, typename F>
+class Memoized7 {
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1 && N7 >= 1);
+public:
+    explicit Memoized7(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5, i64 x6, i64 x7) const {
+        using R = decltype(f_(*this,x1,x2,x3,x4,x5,x6,x7));
+        static bool done[N1][N2][N3][N4][N5][N6][N7] {};
+        static R    memo[N1][N2][N3][N4][N5][N6][N7];
+        if(!done[x1][x2][x3][x4][x5][x6][x7]) {
+            memo[x1][x2][x3][x4][x5][x6][x7] = f_(*this,x1,x2,x3,x4,x5,x6,x7);
+            done[x1][x2][x3][x4][x5][x6][x7] = true;
+        }
+        return memo[x1][x2][x3][x4][x5][x6][x7];
+    }
+private:
+    const F f_;
+};
+
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, i64 N7, i64 N8, typename F>
+class Memoized8 {
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1 && N7 >= 1 && N8 >= 1);
+public:
+    explicit Memoized8(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5, i64 x6, i64 x7, i64 x8) const {
+        using R = decltype(f_(*this,x1,x2,x3,x4,x5,x6,x7,x8));
+        static bool done[N1][N2][N3][N4][N5][N6][N7][N8] {};
+        static R    memo[N1][N2][N3][N4][N5][N6][N7][N8];
+        if(!done[x1][x2][x3][x4][x5][x6][x7][x8]) {
+            memo[x1][x2][x3][x4][x5][x6][x7][x8] = f_(*this,x1,x2,x3,x4,x5,x6,x7,x8);
+            done[x1][x2][x3][x4][x5][x6][x7][x8] = true;
+        }
+        return memo[x1][x2][x3][x4][x5][x6][x7][x8];
+    }
+private:
+    const F f_;
+};
+
 template<i64 N1, typename F>
 decltype(auto) MEMOIZE(F&& f) {
     return Memoized1<N1,F>(forward<F>(f));
@@ -277,6 +391,30 @@ decltype(auto) MEMOIZE(F&& f) {
 template<i64 N1, i64 N2, typename F>
 decltype(auto) MEMOIZE(F&& f) {
     return Memoized2<N1,N2,F>(forward<F>(f));
+}
+template<i64 N1, i64 N2, i64 N3, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized3<N1,N2,N3,F>(forward<F>(f));
+}
+template<i64 N1, i64 N2, i64 N3, i64 N4, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized4<N1,N2,N3,N4,F>(forward<F>(f));
+}
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized5<N1,N2,N3,N4,N5,F>(forward<F>(f));
+}
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized6<N1,N2,N3,N4,N5,N6,F>(forward<F>(f));
+}
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, i64 N7, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized7<N1,N2,N3,N4,N5,N6,N7,F>(forward<F>(f));
+}
+template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, i64 N7, i64 N8, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized8<N1,N2,N3,N4,N5,N6,N7,N8,F>(forward<F>(f));
 }
 
 // }}}
