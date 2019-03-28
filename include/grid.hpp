@@ -3,6 +3,7 @@
 struct Index2 {
     i64 y, x;
 
+    Index2() : Index2(0,0) {}
     Index2(i64 yy, i64 xx) : y(yy), x(xx) {}
     explicit Index2(const pair<i64,i64>& p) : Index2(p.first,p.second) {}
 
