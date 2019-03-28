@@ -234,7 +234,7 @@ enable_if_t<rank<Array>::value!=0> ARRAY_FILL(Array& ary, const U& v) {
 // メモ化ラッパー (8引数まで) {{{
 template<i64 N1, typename F>
 class Memoized1 {
-    static_assert(N1 >= 1);
+    static_assert(N1 >= 1, "");
 public:
     explicit Memoized1(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1) const {
@@ -253,7 +253,7 @@ private:
 
 template<i64 N1, i64 N2, typename F>
 class Memoized2 {
-    static_assert(N1 >= 1 && N2 >= 1);
+    static_assert(N1 >= 1 && N2 >= 1, "");
 public:
     explicit Memoized2(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1, i64 x2) const {
@@ -272,7 +272,7 @@ private:
 
 template<i64 N1, i64 N2, i64 N3, typename F>
 class Memoized3 {
-    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1);
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1, "");
 public:
     explicit Memoized3(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1, i64 x2, i64 x3) const {
@@ -291,7 +291,7 @@ private:
 
 template<i64 N1, i64 N2, i64 N3, i64 N4, typename F>
 class Memoized4 {
-    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1);
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1, "");
 public:
     explicit Memoized4(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4) const {
@@ -310,7 +310,7 @@ private:
 
 template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, typename F>
 class Memoized5 {
-    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1);
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1, "");
 public:
     explicit Memoized5(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5) const {
@@ -329,7 +329,7 @@ private:
 
 template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, typename F>
 class Memoized6 {
-    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1);
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1, "");
 public:
     explicit Memoized6(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5, i64 x6) const {
@@ -348,7 +348,7 @@ private:
 
 template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, i64 N7, typename F>
 class Memoized7 {
-    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1 && N7 >= 1);
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1 && N7 >= 1, "");
 public:
     explicit Memoized7(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5, i64 x6, i64 x7) const {
@@ -367,7 +367,7 @@ private:
 
 template<i64 N1, i64 N2, i64 N3, i64 N4, i64 N5, i64 N6, i64 N7, i64 N8, typename F>
 class Memoized8 {
-    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1 && N7 >= 1 && N8 >= 1);
+    static_assert(N1 >= 1 && N2 >= 1 && N3 >= 1 && N4 >= 1 && N5 >= 1 && N6 >= 1 && N7 >= 1 && N8 >= 1, "");
 public:
     explicit Memoized8(F&& f) : f_(forward<F>(f)) {}
     decltype(auto) operator()(i64 x1, i64 x2, i64 x3, i64 x4, i64 x5, i64 x6, i64 x7, i64 x8) const {
