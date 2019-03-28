@@ -231,6 +231,57 @@ enable_if_t<rank<Array>::value!=0> ARRAY_FILL(Array& ary, const U& v) {
 }
 // }}}
 
+// メモ化ラッパー {{{
+template<i64 N1, typename F>
+class Memoized1 {
+    static_assert(N1 >= 1);
+public:
+    explicit Memoized1(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1) const {
+        using R = decltype(f_(*this,x1));
+        static bool done[N1] {};
+        static R    memo[N1];
+        if(!done[x1]) {
+            memo[x1] = f_(*this,x1);
+            done[x1] = true;
+        }
+        return memo[x1];
+    }
+private:
+    const F f_;
+};
+
+template<i64 N1, i64 N2, typename F>
+class Memoized2 {
+    static_assert(N1 >= 1 && N2 >= 1);
+public:
+    explicit Memoized2(F&& f) : f_(forward<F>(f)) {}
+    decltype(auto) operator()(i64 x1, i64 x2) const {
+        using R = decltype(f_(*this,x1,x2));
+        static bool done[N1][N2] {};
+        static R    memo[N1][N2];
+        if(!done[x1][x2]) {
+            memo[x1][x2] = f_(*this,x1,x2);
+            done[x1][x2] = true;
+        }
+        return memo[x1][x2];
+    }
+private:
+    const F f_;
+};
+
+template<i64 N1, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized1<N1,F>(forward<F>(f));
+}
+template<i64 N1, i64 N2, typename F>
+decltype(auto) MEMOIZE(F&& f) {
+    return Memoized2<N1,N2,F>(forward<F>(f));
+}
+
+// }}}
+
+// lambda で再帰 {{{
 template<typename F>
 class FixPoint {
 public:
@@ -249,6 +300,7 @@ template<typename F>
 decltype(auto) FIX(F&& f) {
     return FixPoint<F>(forward<F>(f));
 }
+// }}}
 
 template<typename C>
 i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }

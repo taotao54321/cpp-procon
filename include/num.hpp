@@ -395,23 +395,12 @@ ModP (&combination_count_table())[H][W] {
 template<i64 H, i64 W>
 auto combination_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    auto f = FIX([](auto self, i64 n, i64 r) -> ModP {
-        static bool done[H][W] {};
-        static ModP memo[H][W];
-
+    return MEMOIZE<H,W>([](auto self, i64 n, i64 r) -> ModP {
         if(n <  r) return 0;
         if(r == 0) return 1;
         if(n == r) return 1;
-
-        if(!done[n][r]) {
-            ModP res = self(n-1,r-1) + self(n-1,r);
-
-            memo[n][r] = res;
-            done[n][r] = true;
-        }
-        return memo[n][r];
+        return self(n-1,r-1) + self(n-1,r);
     });
-    return f;
 }
 
 ModP combination_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
@@ -456,23 +445,12 @@ ModP (&partition_count_table())[H][W] {
 template<i64 H, i64 W>
 auto partition_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    auto f = FIX([](auto self, i64 n, i64 k) -> ModP {
-        static bool done[H][W] {};
-        static ModP memo[H][W];
-
+    return MEMOIZE<H,W>([](auto self, i64 n, i64 k) -> ModP {
         if(n <  k) return 0;
         if(n == k) return 1;
         if(k == 1) return 1;
-
-        if(!done[n][k]) {
-            ModP res = self(n-1,k-1) + self(n-k,k);
-
-            memo[n][k] = res;
-            done[n][k] = true;
-        }
-        return memo[n][k];
+        return self(n-1,k-1) + self(n-k,k);
     });
-    return f;
 }
 
 // }}}
