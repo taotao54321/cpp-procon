@@ -1,5 +1,4 @@
 #include "procon.hpp"
-#include "container.hpp"
 #include "grid.hpp"
 
 void solve(i64 H, i64 W) {

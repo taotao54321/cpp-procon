@@ -51,6 +51,186 @@ constexpr f64 PI = 3.14159265358979323846;
 
 #define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
+// BoolArray {{{
+class BoolArray {
+public:
+    using value_type      = bool;
+    using reference       = value_type&;
+    using const_reference = const value_type&;
+    using iterator        = value_type*;
+    using const_iterator  = const value_type*;
+    using difference_type = ptrdiff_t;
+    using size_type       = size_t;
+
+    using reverse_iterator       = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+    BoolArray() : BoolArray(0) {}
+    explicit BoolArray(size_t n) : BoolArray(n,false) {}
+    BoolArray(size_t n, bool value) : size_(n), data_(new bool[n]) {
+        ALL(fill, *this, value);
+    }
+
+    BoolArray(initializer_list<bool> init) : size_(init.size()), data_(new bool[size_]) {
+        ALL(copy, init, begin());
+    }
+
+    template<typename InputIt>
+    BoolArray(InputIt first, InputIt last) {
+        deque<bool> tmp(first, last);
+        size_ = tmp.size();
+        data_ = new bool[size_];
+        ALL(copy, tmp, begin());
+    }
+
+    BoolArray(const BoolArray& other) : size_(other.size_), data_(new bool[size_]) {
+        ALL(copy, other, begin());
+    }
+
+    BoolArray(BoolArray&& other) noexcept : size_(other.size_), data_(other.data_) {
+        other.data_ = nullptr;
+    }
+
+    BoolArray& operator=(const BoolArray& other) {
+        if(this == &other) return *this;
+        if(!data_ || size_ < other.size_) {
+            delete[] data_;
+            data_ = new bool[other.size_];
+        }
+        size_ = other.size_;
+        ALL(copy, other, begin());
+        return *this;
+    }
+
+    BoolArray& operator=(BoolArray&& other) noexcept {
+        if(this == &other) return *this;
+        size_ = other.size_;
+        data_ = other.data_;
+        other.data_ = nullptr;
+    }
+
+    BoolArray& operator=(initializer_list<bool> init) {
+        if(!data_ || size_ < init.size()) {
+            delete[] data_;
+            data_ = new bool[init.size()];
+        }
+        size_ = init.size();
+        ALL(copy, init, begin());
+        return *this;
+    }
+
+    void swap(BoolArray& other) noexcept {
+        std::swap(size_, other.size_);
+        std::swap(data_, other.data_);
+    }
+
+    ~BoolArray() {
+        delete[] data_;
+        data_ = nullptr;
+    }
+
+    bool      empty()    const noexcept { return size_ == 0; }
+    size_type size()     const noexcept { return size_; }
+    size_type max_size() const noexcept { return 1'010'000'000; }
+
+    iterator       begin()        noexcept { return data_; }
+    const_iterator begin()  const noexcept { return data_; }
+    const_iterator cbegin() const noexcept { return data_; }
+
+    iterator       end()        noexcept { return data_+size_; }
+    const_iterator end()  const noexcept { return data_+size_; }
+    const_iterator cend() const noexcept { return data_+size_; }
+
+    reverse_iterator       rbegin()        noexcept { return reverse_iterator(end()); }
+    const_reverse_iterator rbegin()  const noexcept { return const_reverse_iterator(end()); }
+    const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(end()); }
+
+    reverse_iterator       rend()        noexcept { return reverse_iterator(begin()); }
+    const_reverse_iterator rend()  const noexcept { return const_reverse_iterator(begin()); }
+    const_reverse_iterator crend() const noexcept { return const_reverse_iterator(begin()); }
+
+    reference       operator[](size_type pos)       { return data_[pos]; }
+    const_reference operator[](size_type pos) const { return data_[pos]; }
+
+    bool*       data()       noexcept { return data_; }
+    const bool* data() const noexcept { return data_; }
+
+private:
+    size_t size_;
+    bool*  data_;
+};
+
+void swap(BoolArray& lhs, BoolArray& rhs) noexcept { lhs.swap(rhs); }
+
+bool operator==(const BoolArray& lhs, const BoolArray& rhs) {
+    return equal(begin(lhs), end(lhs), begin(rhs), end(rhs));
+}
+bool operator!=(const BoolArray& lhs, const BoolArray& rhs) { return !(lhs == rhs); }
+
+bool operator<(const BoolArray& lhs, const BoolArray& rhs) {
+    return lexicographical_compare(begin(lhs), end(lhs), begin(rhs), end(rhs));
+}
+bool operator> (const BoolArray& lhs, const BoolArray& rhs) { return rhs < lhs; }
+bool operator<=(const BoolArray& lhs, const BoolArray& rhs) { return !(rhs < lhs); }
+bool operator>=(const BoolArray& lhs, const BoolArray& rhs) { return !(lhs < rhs); }
+// }}}
+
+// 多次元 vector {{{
+template<typename T,
+         enable_if_t<!is_same<T,bool>::value, nullptr_t> = nullptr>
+auto ndarray_make(i64 n, T x) {
+    return vector<T>(n, x);
+}
+
+// vector<bool> を避ける
+template<typename T,
+         enable_if_t<is_same<T,bool>::value, nullptr_t> = nullptr>
+auto ndarray_make(i64 n, bool x) {
+    return BoolArray(n, x);
+}
+
+template<typename T, typename... Args,
+         enable_if_t<2 <= sizeof...(Args), nullptr_t> = nullptr>
+auto ndarray_make(i64 n, Args... args) {
+    auto inner = ndarray_make<T>(args...);
+    return vector<decltype(inner)>(n, inner);
+}
+
+template<typename T, typename F>
+enable_if_t<!is_class<T>::value> ndarray_foreach(T& e, F f) {
+    f(e);
+}
+
+template<typename T, typename F>
+enable_if_t<is_class<T>::value> ndarray_foreach(T& ary, F f) {
+    for(auto& e : ary)
+        ndarray_foreach(e, f);
+}
+
+template<typename T, typename U>
+enable_if_t<is_class<T>::value> ndarray_fill(T& ary, const U& x) {
+    ndarray_foreach(ary, [&x](auto& e) { e = x; });
+}
+// }}}
+
+// 多次元生配列 {{{
+template<typename T, typename F>
+enable_if_t<rank<T>::value==0> ARRAY_FOREACH(T& e, F f) {
+    f(e);
+}
+
+template<typename Array, typename F>
+enable_if_t<rank<Array>::value!=0> ARRAY_FOREACH(Array& ary, F f) {
+    for(auto& e : ary)
+        ARRAY_FOREACH(e, f);
+}
+
+template<typename Array, typename U>
+enable_if_t<rank<Array>::value!=0> ARRAY_FILL(Array& ary, const U& v) {
+    ARRAY_FOREACH(ary, [&v](auto& e) { e = v; });
+}
+// }}}
+
 template<typename F>
 class FixPoint {
 public:
@@ -189,22 +369,6 @@ ForwardIt transform_self(ForwardIt first, ForwardIt last, UnaryOperation op) {
 template<typename C>
 void UNIQ(C& c) {
     c.erase(ALL(unique,c), end(c));
-}
-
-template<typename T, typename F>
-enable_if_t<rank<T>::value==0> ARRAY_FOREACH(T& e, F f) {
-    f(e);
-}
-
-template<typename Array, typename F>
-enable_if_t<rank<Array>::value!=0> ARRAY_FOREACH(Array& ary, F f) {
-    for(auto& e : ary)
-        ARRAY_FOREACH(e, f);
-}
-
-template<typename Array, typename U>
-enable_if_t<rank<Array>::value!=0> ARRAY_FILL(Array& ary, const U& v) {
-    ARRAY_FOREACH(ary, [&v](auto& e) { e = v; });
 }
 
 template<typename BinaryFunc, typename UnaryFunc>
@@ -378,6 +542,17 @@ struct Formatter<vector<T>> {
     static ostream& write_repr(ostream& out, const vector<T>& v) {
         out << "vector";
         return WRITE_RANGE_REPR(out, begin(v), end(v));
+    }
+};
+
+template<>
+struct Formatter<BoolArray> {
+    static ostream& write_str(ostream& out, const BoolArray& a) {
+        return WRITE_RANGE_STR(out, begin(a), end(a));
+    }
+    static ostream& write_repr(ostream& out, const BoolArray& a) {
+        out << "BoolArray";
+        return WRITE_RANGE_REPR(out, begin(a), end(a));
     }
 };
 

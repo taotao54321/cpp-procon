@@ -1,4 +1,4 @@
-// grid (container が必要) {{{
+// grid {{{
 
 struct Index2 {
     i64 y, x;
