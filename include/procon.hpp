@@ -839,6 +839,25 @@ auto RD_ARRAY2(i64 h, i64 w) {
     return res;
 }
 
+template<typename T1, typename T2>
+pair<T1,T2> RD_PAIR() {
+    T1 x; RD(x);
+    T2 y; RD(y);
+    return { x, y };
+}
+
+template<typename... TS,
+         enable_if_t<0 == sizeof...(TS), nullptr_t> = nullptr>
+auto RD_TUPLE() {
+    return make_tuple();
+}
+
+template<typename T, typename... TS>
+auto RD_TUPLE() {
+    T x; RD(x);
+    return tuple_cat(make_tuple(x), RD_TUPLE<TS...>());
+}
+
 void PRINT() {}
 
 template<typename T, typename... TS>
