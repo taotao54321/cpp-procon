@@ -137,6 +137,15 @@ struct Grid2 {
 };
 
 template<typename T>
+auto RD_GRID2(i64 h, i64 w) {
+    Grid2<T> grid(h, w);
+    REP(y, grid.h()) REP(x, grid.w()) {
+        RD(grid.at(y,x));
+    }
+    return grid;
+}
+
+template<typename T>
 struct Formatter<Grid2<T>> {
     static ostream& write_str(ostream& out, const Grid2<T>& grid) {
         return write_repr(out, grid);
