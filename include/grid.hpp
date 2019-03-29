@@ -136,6 +136,17 @@ struct Grid2 {
         return res;
     }
     vector<Index2> neighbor8(i64 y, i64 x) const { return neighbor8({y,x}); }
+
+    template<typename F>
+    void foreach(F f) {
+        for(auto& row : cont_)
+            for(auto& e : row)
+                f(e);
+    }
+
+    void fill(const T& x) {
+        foreach([&x](auto& e) { e = x; });
+    }
 };
 
 template<typename T>
