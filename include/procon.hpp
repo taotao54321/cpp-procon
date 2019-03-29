@@ -176,17 +176,20 @@ bool operator>=(const BoolArray& lhs, const BoolArray& rhs) { return !(lhs < rhs
 // }}}
 
 // 多次元 vector {{{
-template<typename T,
-         enable_if_t<!is_same<T,bool>::value, nullptr_t> = nullptr>
-auto arrayn_make(i64 n, T x) {
-    return vector<T>(n, x);
-}
+// 最内周が vector<bool> になるのを避けるための措置
+template<typename T>
+struct Array1Container {
+    using type = vector<T>;
+};
+template<>
+struct Array1Container<bool> {
+    using type = BoolArray;
+};
 
-// vector<bool> を避ける
-template<typename T,
-         enable_if_t<is_same<T,bool>::value, nullptr_t> = nullptr>
-auto arrayn_make(i64 n, bool x) {
-    return BoolArray(n, x);
+template<typename T>
+auto arrayn_make(i64 n, T x) {
+    using Cont = typename Array1Container<T>::type;
+    return Cont(n, x);
 }
 
 template<typename T, typename... Args,

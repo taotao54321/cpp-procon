@@ -84,24 +84,11 @@ struct Formatter<Index2> {
 };
 
 template<typename T>
-struct Grid2Container {
-    using inner = vector<T>;
-    using outer = vector<inner>;
-};
-template<>
-struct Grid2Container<bool> {
-    using inner = BoolArray;
-    using outer = vector<inner>;
-};
-
-template<typename T>
 struct Grid2 {
-    using inner = typename Grid2Container<T>::inner;
-    using outer = typename Grid2Container<T>::outer;
+    using InnerT = typename Array1Container<T>::type;
+    vector<InnerT> cont_;
 
-    outer cont_;
-
-    Grid2(i64 h, i64 w, const T& val) : cont_(h, inner(w,val)) {
+    Grid2(i64 h, i64 w, const T& val) : cont_(arrayn_make<T>(h,w, val)) {
         assert(h >= 1);
         assert(w >= 1);
     }
