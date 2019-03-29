@@ -186,7 +186,7 @@ struct Array1Container<bool> {
     using type = BoolArray;
 };
 
-// foreach 用
+// イテレート用
 template<typename T>
 struct is_arrayn_container {
     static constexpr bool value = false;
