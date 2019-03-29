@@ -178,38 +178,38 @@ bool operator>=(const BoolArray& lhs, const BoolArray& rhs) { return !(lhs < rhs
 // 多次元 vector {{{
 template<typename T,
          enable_if_t<!is_same<T,bool>::value, nullptr_t> = nullptr>
-auto ndarray_make(i64 n, T x) {
+auto arrayn_make(i64 n, T x) {
     return vector<T>(n, x);
 }
 
 // vector<bool> を避ける
 template<typename T,
          enable_if_t<is_same<T,bool>::value, nullptr_t> = nullptr>
-auto ndarray_make(i64 n, bool x) {
+auto arrayn_make(i64 n, bool x) {
     return BoolArray(n, x);
 }
 
 template<typename T, typename... Args,
          enable_if_t<2 <= sizeof...(Args), nullptr_t> = nullptr>
-auto ndarray_make(i64 n, Args... args) {
-    auto inner = ndarray_make<T>(args...);
+auto arrayn_make(i64 n, Args... args) {
+    auto inner = arrayn_make<T>(args...);
     return vector<decltype(inner)>(n, inner);
 }
 
 template<typename T, typename F>
-enable_if_t<!is_class<T>::value> ndarray_foreach(T& e, F f) {
+enable_if_t<!is_class<T>::value> arrayn_foreach(T& e, F f) {
     f(e);
 }
 
 template<typename T, typename F>
-enable_if_t<is_class<T>::value> ndarray_foreach(T& ary, F f) {
+enable_if_t<is_class<T>::value> arrayn_foreach(T& ary, F f) {
     for(auto& e : ary)
-        ndarray_foreach(e, f);
+        arrayn_foreach(e, f);
 }
 
 template<typename T, typename U>
-enable_if_t<is_class<T>::value> ndarray_fill(T& ary, const U& x) {
-    ndarray_foreach(ary, [&x](auto& e) { e = x; });
+enable_if_t<is_class<T>::value> arrayn_fill(T& ary, const U& x) {
+    arrayn_foreach(ary, [&x](auto& e) { e = x; });
 }
 // }}}
 
