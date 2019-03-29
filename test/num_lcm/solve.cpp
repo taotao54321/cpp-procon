@@ -6,7 +6,7 @@ vector<i64> A;
 
 signed main() {
     RD(N);
-    RD(A, N);
+    A = RD_ARRAY<i64>(N);
 
     i64 ans = ALL(accumulate, A, 1, lcm);
 

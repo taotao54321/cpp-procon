@@ -3,7 +3,7 @@
 
 signed main() {
     i64 N; RD(N);
-    vector<Vector> ps; RD(ps, N);
+    auto ps = RD_ARRAY<Vector>(N);
 
     auto t = geo_closest_pair_sq(ps);
     f64 ans = sqrt(get<0>(t));

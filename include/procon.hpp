@@ -186,6 +186,20 @@ struct Array1Container<bool> {
     using type = BoolArray;
 };
 
+// foreach 用
+template<typename T>
+struct is_arrayn_container {
+    static constexpr bool value = false;
+};
+template<typename T>
+struct is_arrayn_container<vector<T>> {
+    static constexpr bool value = true;
+};
+template<>
+struct is_arrayn_container<BoolArray> {
+    static constexpr bool value = true;
+};
+
 template<typename T>
 auto arrayn_make(i64 n, T x) {
     using Cont = typename Array1Container<T>::type;
@@ -200,12 +214,12 @@ auto arrayn_make(i64 n, Args... args) {
 }
 
 template<typename T, typename F>
-enable_if_t<!is_class<T>::value> arrayn_foreach(T& e, F f) {
+enable_if_t<!is_arrayn_container<T>::value> arrayn_foreach(T& e, F f) {
     f(e);
 }
 
 template<typename T, typename F>
-enable_if_t<is_class<T>::value> arrayn_foreach(T& ary, F f) {
+enable_if_t<is_arrayn_container<T>::value> arrayn_foreach(T& ary, F f) {
     for(auto& e : ary)
         arrayn_foreach(e, f);
 }
@@ -812,12 +826,17 @@ void RD(T& x) {
 }
 
 template<typename T>
-void RD(vector<T>& v, i64 n) {
-    v.reserve(n);
-    REP(_, n) {
-        T e; RD(e);
-        v.emplace_back(e);
-    }
+auto RD_ARRAY(i64 n) {
+    auto res = arrayn_make(n, T());
+    arrayn_foreach(res, [](T& e) { RD(e); });
+    return res;
+}
+
+template<typename T>
+auto RD_ARRAY2(i64 h, i64 w) {
+    auto res = arrayn_make(h,w, T());
+    arrayn_foreach(res, [](T& e) { RD(e); });
+    return res;
 }
 
 void PRINT() {}

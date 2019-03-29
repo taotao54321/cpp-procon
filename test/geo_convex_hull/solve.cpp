@@ -3,7 +3,7 @@
 
 signed main() {
     i64 N; RD(N);
-    vector<Vector> ps; RD(ps, N);
+    auto ps = RD_ARRAY<Vector>(N);
 
     Polygon ans = geo_convex_hull(move(ps));
 
