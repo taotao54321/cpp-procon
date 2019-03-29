@@ -225,26 +225,26 @@ enable_if_t<is_arrayn_container<T>::value> arrayn_foreach(T& ary, F f) {
 }
 
 template<typename T, typename U>
-enable_if_t<is_class<T>::value> arrayn_fill(T& ary, const U& x) {
+enable_if_t<is_arrayn_container<T>::value> arrayn_fill(T& ary, const U& x) {
     arrayn_foreach(ary, [&x](auto& e) { e = x; });
 }
 // }}}
 
 // 多次元生配列 {{{
 template<typename T, typename F>
-enable_if_t<rank<T>::value==0> ARRAY_FOREACH(T& e, F f) {
+enable_if_t<rank<T>::value==0> CARRAY_FOREACH(T& e, F f) {
     f(e);
 }
 
 template<typename Array, typename F>
-enable_if_t<rank<Array>::value!=0> ARRAY_FOREACH(Array& ary, F f) {
+enable_if_t<rank<Array>::value!=0> CARRAY_FOREACH(Array& ary, F f) {
     for(auto& e : ary)
-        ARRAY_FOREACH(e, f);
+        CARRAY_FOREACH(e, f);
 }
 
 template<typename Array, typename U>
-enable_if_t<rank<Array>::value!=0> ARRAY_FILL(Array& ary, const U& v) {
-    ARRAY_FOREACH(ary, [&v](auto& e) { e = v; });
+enable_if_t<rank<Array>::value!=0> CARRAY_FILL(Array& ary, const U& v) {
+    CARRAY_FOREACH(ary, [&v](auto& e) { e = v; });
 }
 // }}}
 
@@ -894,7 +894,7 @@ void DBG_IMPL(i64 line, const char* expr, const T& value) {
 }
 
 template<typename T, size_t N>
-void DBG_ARRAY_IMPL(i64 line, const char* expr, const T (&ary)[N]) {
+void DBG_CARRAY_IMPL(i64 line, const char* expr, const T (&ary)[N]) {
 #ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
@@ -914,7 +914,7 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
 }
 
 #define DBG(expr) DBG_IMPL(__LINE__, #expr, (expr))
-#define DBG_ARRAY(expr) DBG_ARRAY_IMPL(__LINE__, #expr, (expr))
+#define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, #expr, (expr))
 #define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, #first, #last, (first), (last))
 
 #define PAIR  make_pair
