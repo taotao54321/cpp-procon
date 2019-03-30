@@ -65,6 +65,11 @@ bool operator==(const Index2& lhs, const Index2& rhs) {
     return lhs.y == rhs.y && lhs.x == rhs.x;
 }
 
+void RD(Index2& idx) {
+    RD(idx.y);
+    RD(idx.x);
+}
+
 template<>
 struct Formatter<Index2> {
     static ostream& write_str(ostream& out, const Index2& idx) {
