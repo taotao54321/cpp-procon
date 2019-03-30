@@ -457,6 +457,31 @@ decltype(auto) FIX(F&& f) {
 }
 // }}}
 
+// tuple {{{
+template<typename... TS,
+         enable_if_t<0 < sizeof...(TS), nullptr_t> = nullptr>
+constexpr auto tuple_head(const tuple<TS...>& t) {
+    return get<0>(t);
+}
+
+template<typename... TS, size_t i, size_t... is>
+constexpr auto tuple_tail_helper(const tuple<TS...>& t, index_sequence<i,is...>) {
+    return make_tuple(get<is>(t)...);
+}
+
+template<typename... TS,
+         enable_if_t<1 == sizeof...(TS), nullptr_t> = nullptr>
+constexpr auto tuple_tail(const tuple<TS...>&) {
+    return make_tuple();
+}
+
+template<typename... TS,
+         enable_if_t<1 < sizeof...(TS), nullptr_t> = nullptr>
+constexpr auto tuple_tail(const tuple<TS...>& t) {
+    return tuple_tail_helper(t, make_index_sequence<sizeof...(TS)>());
+}
+// }}}
+
 template<typename C>
 i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }
 
