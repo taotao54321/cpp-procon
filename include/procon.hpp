@@ -503,6 +503,41 @@ i64 ipow(i64 x, i64 e) {
     return res;
 }
 
+// 0 <= ilog2(x) <= 62
+i64 ilog2(i64 x) {
+    assert(x > 0);
+    return 63 - __builtin_clzll(x);
+}
+
+// 0 <= ilog10(x) <= 18
+i64 ilog10(i64 x) {
+    assert(x > 0);
+    static constexpr i64 TABLE[18] {
+        9LL,
+        99LL,
+        999LL,
+        9999LL,
+        99999LL,
+        999999LL,
+        9999999LL,
+        99999999LL,
+        999999999LL,
+        9999999999LL,
+        99999999999LL,
+        999999999999LL,
+        9999999999999LL,
+        99999999999999LL,
+        999999999999999LL,
+        9999999999999999LL,
+        99999999999999999LL,
+        999999999999999999LL,
+    };
+    REP(i, SIZE(TABLE)) {
+        if(x <= TABLE[i]) return i;
+    }
+    return SIZE(TABLE);
+}
+
 // Haskell の divMod と同じ
 pair<i64,i64> divmod(i64 a, i64 b) {
     i64 q = a / b;
