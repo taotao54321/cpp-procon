@@ -68,7 +68,7 @@ struct WeightedUnionFind {
     // (xの根、根に対するxの重み) を返す
     tuple<i64,i64> compress(i64 x) {
         i64 p = ps_[x];
-        if(p < 0) return { x, 0 };
+        if(p < 0) return make_tuple(x, 0);
 
         i64 r,d; tie(r,d) = compress(p);
         ps_[x]  = r;
