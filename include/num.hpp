@@ -41,6 +41,29 @@ tuple<i64,i64,i64> extgcd(i64 a, i64 b) {
     return make_tuple(g, x, y);
 }
 
+vector<i64> divisors_proper(i64 n) {
+    if(n == 1) return {};
+    vector<i64> res(1, 1);
+
+    i64 d = 2;
+    for(; d*d < n; ++d) {
+        if(n % d == 0) {
+            res.emplace_back(d);
+            res.emplace_back(n/d);
+        }
+    }
+    if(d*d == n)
+        res.emplace_back(d);
+
+    return res;
+}
+
+vector<i64> divisors(i64 n) {
+    vector<i64> res = divisors_proper(n);
+    res.emplace_back(n);
+    return res;
+}
+
 // 素因数分解
 // (素因数,指数) のリストを返す
 // n >= 1 でなければならない
