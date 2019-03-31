@@ -852,14 +852,14 @@ void RD(T& x) {
 
 template<typename T>
 auto RD_ARRAY(i64 n) {
-    auto res = arrayn_make(n, T());
+    auto res = arrayn_make<T>(n, T());
     arrayn_foreach(res, [](T& e) { RD(e); });
     return res;
 }
 
 template<typename T>
 auto RD_ARRAY2(i64 h, i64 w) {
-    auto res = arrayn_make(h,w, T());
+    auto res = arrayn_make<T>(h,w, T());
     arrayn_foreach(res, [](T& e) { RD(e); });
     return res;
 }
