@@ -1,5 +1,8 @@
 // grid {{{
 
+template<typename T> struct procon_hash;
+template<typename T> void procon_hash_combine(size_t&, const T&);
+
 struct Index2 {
     i64 y, x;
 
@@ -64,6 +67,16 @@ Index2 operator/(const Index2& lhs, i64 rhs) { return Index2(lhs) /= rhs; }
 bool operator==(const Index2& lhs, const Index2& rhs) {
     return lhs.y == rhs.y && lhs.x == rhs.x;
 }
+
+template<>
+struct procon_hash<Index2> {
+    size_t operator()(const Index2& idx) const {
+        size_t seed = 0;
+        procon_hash_combine(seed, idx.y);
+        procon_hash_combine(seed, idx.x);
+        return seed;
+    }
+};
 
 void RD(Index2& idx) {
     RD(idx.y);
