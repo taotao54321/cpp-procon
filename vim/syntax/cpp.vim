@@ -22,8 +22,8 @@ syntax keyword cppType MinHeap
 
 syntax keyword cppType HashSet
 syntax keyword cppType HashMap
-syntax keyword cppType HashMultiSet
-syntax keyword cppType HashMultiMap
+syntax keyword cppType HashMultiset
+syntax keyword cppType HashMultimap
 " }}}
 
 " constant {{{

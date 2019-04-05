@@ -1,5 +1,64 @@
 // container {{{
 
+// hash {{{
+template<typename T>
+struct procon_hash {
+    size_t operator()(const T& x) const {
+        return hash<T>()(x);
+    }
+};
+
+template<typename T>
+size_t procon_hash_value(const T& x) {
+    return procon_hash<T>()(x);
+}
+
+template<typename T>
+void procon_hash_combine(size_t& seed, const T& x) {
+    seed ^= procon_hash_value(x) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+}
+
+template<typename InputIt>
+void procon_hash_range(size_t& seed, InputIt first, InputIt last) {
+    for(; first != last; ++first)
+        procon_hash_combine(seed, *first);
+}
+
+template<typename InputIt>
+size_t procon_hash_range(InputIt first, InputIt last) {
+    size_t seed = 0;
+    procon_hash_range(seed, first, last);
+    return seed;
+}
+
+template<typename T1, typename T2>
+struct procon_hash<pair<T1,T2>> {
+    size_t operator()(const pair<T1,T2>& p) const {
+        size_t seed = 0;
+        procon_hash_combine(seed, p.first);
+        procon_hash_combine(seed, p.second);
+        return seed;
+    }
+};
+
+template<typename T, typename Eq=equal_to<T>>
+using HashSet = unordered_set<T,procon_hash<T>,Eq>;
+
+template<typename K, typename V, typename Eq=equal_to<K>>
+using HashMap = unordered_map<K,V,procon_hash<K>,Eq>;
+
+template<typename T, typename Eq=equal_to<T>>
+using HashMultiset = unordered_multiset<T,procon_hash<T>,Eq>;
+
+template<typename K, typename V, typename Eq=equal_to<K>>
+using HashMultimap = unordered_multimap<K,V,procon_hash<K>,Eq>;
+// }}}
+
+template<typename T>
+using MaxHeap = priority_queue<T, vector<T>, less<T>>;
+template<typename T>
+using MinHeap = priority_queue<T, vector<T>, greater<T>>;
+
 // set/map/multiset/multimap search {{{
 // set {{{
 template<typename T, typename Comp>
@@ -234,11 +293,6 @@ bool multiset_erase_one(unordered_multiset<K,Hash,Eq>& m, const typename unorder
     m.erase(it);
     return true;
 }
-
-template<typename T>
-using MaxHeap = priority_queue<T, vector<T>, less<T>>;
-template<typename T>
-using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 // POP() 系 {{{
 // 効率は悪い
