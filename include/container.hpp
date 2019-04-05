@@ -31,12 +31,30 @@ size_t procon_hash_range(InputIt first, InputIt last) {
     return seed;
 }
 
+template<typename... TS, enable_if_t<0 == sizeof...(TS), nullptr_t> = nullptr>
+void procon_hash_tuple(size_t&, const tuple<TS...>&) {}
+
+template<typename... TS, enable_if_t<0 < sizeof...(TS), nullptr_t> = nullptr>
+void procon_hash_tuple(size_t& seed, const tuple<TS...>& t) {
+    procon_hash_combine(seed, tuple_head(t));
+    procon_hash_tuple(seed, tuple_tail(t));
+}
+
 template<typename T1, typename T2>
 struct procon_hash<pair<T1,T2>> {
     size_t operator()(const pair<T1,T2>& p) const {
         size_t seed = 0;
         procon_hash_combine(seed, p.first);
         procon_hash_combine(seed, p.second);
+        return seed;
+    }
+};
+
+template<typename... TS>
+struct procon_hash<tuple<TS...>> {
+    size_t operator()(const tuple<TS...>& t) const {
+        size_t seed = 0;
+        procon_hash_tuple(seed, t);
         return seed;
     }
 };
