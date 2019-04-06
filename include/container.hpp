@@ -276,6 +276,26 @@ auto map_search_ge(const multimap<K,V,Comp>& m, const K& x) {
 // }}}
 // }}}
 
+template<typename T, typename Comp>
+bool set_contains(const set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
+    return s.find(x) != end(s);
+}
+
+template<typename T, typename Hash, typename Eq>
+bool set_contains(const unordered_set<T,Hash,Eq>& s, const typename unordered_set<T,Hash,Eq>::key_type& x) {
+    return s.find(x) != end(s);
+}
+
+template<typename T, typename Comp>
+bool set_contains(const multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
+    return s.find(x) != end(s);
+}
+
+template<typename T, typename Hash, typename Eq>
+bool set_contains(const unordered_multiset<T,Hash,Eq>& s, const typename unordered_multiset<T,Hash,Eq>::key_type& x) {
+    return s.find(x) != end(s);
+}
+
 template<typename K, typename V, typename Comp>
 bool map_contains(const map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& k) {
     return m.find(k) != end(m);
