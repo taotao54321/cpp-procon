@@ -66,4 +66,25 @@ bool prev_combination(BidiIt first, BidiIt middle, BidiIt last) {
     return next_combination_impl(middle, last, first, middle);
 }
 
+template<typename ForwardIt, typename BinaryPred=equal_to<>>
+vector<pair<ForwardIt,ForwardIt>> group_by(ForwardIt first, ForwardIt last, BinaryPred pred={}) {
+    vector<pair<ForwardIt,ForwardIt>> res;
+
+    for(auto it = first; it != last; ) {
+        auto it2 = it;
+        for(;;) {
+            auto nex = next(it2);
+            if(nex == last) break;
+            if(!pred(*it2, *nex)) break;
+            it2 = nex;
+        }
+        it2 = next(it2);
+
+        res.emplace_back(it, it2);
+        it = it2;
+    }
+
+    return res;
+}
+
 // }}}
