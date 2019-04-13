@@ -651,6 +651,12 @@ auto LT_ON(F f) { return ON(less<>(), f); }
 template<typename F>
 auto GT_ON(F f) { return ON(greater<>(), f); }
 
+template<typename F>
+auto EQ_ON(F f) { return ON(equal_to<>(), f); }
+
+template<typename F>
+auto NE_ON(F f) { return ON(not_equal_to<>(), f); }
+
 struct IDENTITY {
     template<typename T>
     constexpr T&& operator()(T&& x) const noexcept {
