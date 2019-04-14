@@ -88,6 +88,11 @@ vector<pair<i64,i64>> factorize(i64 n) {
     return res;
 }
 
+bool is_square(i64 x) {
+    i64 r = isqrt(x);
+    return r*r == x;
+}
+
 // Miller-Rabin 法
 //
 // 参考: http://miller-rabin.appspot.com/
