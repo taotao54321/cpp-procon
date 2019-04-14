@@ -494,6 +494,35 @@ bool is_even(i64 x) { return x % 2 == 0; }
 template<typename T> i64 cmp(T x, T y) { return (y<x) - (x<y); }
 template<typename T> i64 sgn(T x) { return cmp(x, T(0)); }
 
+// lo:OK, hi:NG
+template<typename Pred>
+i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
+    assert(lo < hi);
+
+    while(lo+1 < hi) {
+        i64 mid = (lo+hi) / 2;
+        if(pred(mid))
+            lo = mid;
+        else
+            hi = mid;
+    }
+    return lo;
+}
+
+template<typename Pred>
+f64 bisect_real(f64 lo, f64 hi, Pred pred, i64 iter=100) {
+    assert(lo < hi);
+
+    REP(_, iter) {
+        f64 mid = (lo+hi) / 2;
+        if(pred(mid))
+            lo = mid;
+        else
+            hi = mid;
+    }
+    return lo;
+}
+
 i64 ipow(i64 x, i64 e) {
     assert(e >= 0);
     i64 res = 1;
@@ -501,6 +530,14 @@ i64 ipow(i64 x, i64 e) {
         res *= x;
     }
     return res;
+}
+
+i64 isqrt(i64 x) {
+    assert(x >= 0);
+
+    i64 lo = 0;
+    i64 hi = min<i64>(x/2+2, 3037000500LL);
+    return bisect_integer(lo, hi, [x](i64 r) { return r*r <= x; });
 }
 
 // 0 <= ilog2(x) <= 62
