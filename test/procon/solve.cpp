@@ -1,5 +1,22 @@
 #include "procon.hpp"
 
+void test_fst_snd() {
+    {
+        pair<i64,string> p(5, "foo");
+        FST(p) = 3;
+        SND(p) = "bar";
+        assert(FST(p) == 3);
+        assert(SND(p) == "bar");
+    }
+    {
+        tuple<i64,string,char> t(5, "foo", 'z');
+        FST(t) = 3;
+        SND(t) = "bar";
+        assert(FST(t) == 3);
+        assert(SND(t) == "bar");
+    }
+}
+
 void test_digit_conv() {
     string cs("0123456789");
     vector<i64> ds(10);
@@ -71,6 +88,8 @@ void test_fmt() {
 }
 
 signed main() {
+    test_fst_snd();
+
     test_digit_conv();
     test_lower_conv();
     test_upper_conv();

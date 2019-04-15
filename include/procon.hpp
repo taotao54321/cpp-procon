@@ -482,6 +482,48 @@ constexpr auto tuple_tail(const tuple<TS...>& t) {
 }
 // }}}
 
+// FST/SND {{{
+template<typename T1, typename T2>
+T1& FST(pair<T1,T2>& p) {
+    return p.first;
+}
+
+template<typename T1, typename T2>
+const T1& FST(const pair<T1,T2>& p) {
+    return p.first;
+}
+
+template<typename T1, typename T2>
+T2& SND(pair<T1,T2>& p) {
+    return p.second;
+}
+
+template<typename T1, typename T2>
+const T2& SND(const pair<T1,T2>& p) {
+    return p.second;
+}
+
+template<typename... TS, enable_if_t<1 <= sizeof...(TS), nullptr_t> = nullptr>
+auto& FST(tuple<TS...>& t) {
+    return get<0>(t);
+}
+
+template<typename... TS, enable_if_t<1 <= sizeof...(TS), nullptr_t> = nullptr>
+const auto& FST(const tuple<TS...>& t) {
+    return get<0>(t);
+}
+
+template<typename... TS, enable_if_t<2 <= sizeof...(TS), nullptr_t> = nullptr>
+auto& SND(tuple<TS...>& t) {
+    return get<1>(t);
+}
+
+template<typename... TS, enable_if_t<2 <= sizeof...(TS), nullptr_t> = nullptr>
+const auto& SND(const tuple<TS...>& t) {
+    return get<1>(t);
+}
+// }}}
+
 template<typename C>
 i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }
 
@@ -675,6 +717,13 @@ void UNIQ(C& c) {
     c.erase(ALL(unique,c), end(c));
 }
 
+template<typename BinaryFunc>
+auto FLIP(BinaryFunc f) {
+    return [f](const auto& x, const auto& y) {
+        return f(y,x);
+    };
+}
+
 template<typename BinaryFunc, typename UnaryFunc>
 auto ON(BinaryFunc bf, UnaryFunc uf) {
     return [bf,uf](const auto& x, const auto& y) {
@@ -693,6 +742,13 @@ auto EQ_ON(F f) { return ON(equal_to<>(), f); }
 
 template<typename F>
 auto NE_ON(F f) { return ON(not_equal_to<>(), f); }
+
+template<typename Comp=less<>>
+auto EQUIV(Comp comp={}) {
+    return [comp](const auto& lhs, const auto& rhs) {
+        return !comp(lhs,rhs) && !comp(rhs,lhs);
+    };
+}
 
 struct IDENTITY {
     template<typename T>
