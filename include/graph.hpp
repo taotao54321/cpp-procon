@@ -234,4 +234,40 @@ tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>
     return make_tuple(articulations, bridges);
 }
 
+// 各頂点の (indegree,outdegree) のリストを返す
+vector<pair<i64,i64>> graph_degrees(const vector<vector<i64>>& g) {
+    i64 n = SIZE(g);
+    vector<pair<i64,i64>> res(n, {0,0});
+
+    REP(from, n) {
+        for(i64 to : g[from]) {
+            ++FST(res[from]);
+            ++SND(res[to]);
+        }
+    }
+
+    return res;
+}
+
+// 有向グラフのオイラー路
+//
+// g は隣接リスト(破壊される)
+// start は始点
+vector<i64> graph_euler_trail_directed(vector<vector<i64>>& g, i64 start) {
+    vector<i64> res;
+
+    auto dfs = FIX([&g,&res](auto self, i64 v) -> void {
+        while(!g[v].empty()) {
+            i64 to = POP_BACK(g[v]);
+            self(to);
+        }
+        res.emplace_back(v);
+    });
+
+    dfs(start);
+    ALL(reverse, res);
+
+    return res;
+}
+
 // }}}
