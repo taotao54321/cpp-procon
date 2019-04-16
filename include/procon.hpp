@@ -648,18 +648,18 @@ bool feq(f64 x, f64 y, f64 eps=EPS) {
     return fabs(x-y) < eps;
 }
 
-template<typename T, typename U>
-bool chmax(T& xmax, const U& x) {
-    if(xmax < x) {
+template<typename T, typename U, typename Comp=less<>>
+bool chmax(T& xmax, const U& x, Comp comp={}) {
+    if(comp(xmax, x)) {
         xmax = x;
         return true;
     }
     return false;
 }
 
-template<typename T, typename U>
-bool chmin(T& xmin, const U& x) {
-    if(x < xmin) {
+template<typename T, typename U, typename Comp=less<>>
+bool chmin(T& xmin, const U& x, Comp comp={}) {
+    if(comp(x, xmin)) {
         xmin = x;
         return true;
     }
