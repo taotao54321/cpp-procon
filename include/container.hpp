@@ -395,6 +395,47 @@ T POP(priority_queue<T,C,Comp>& que) {
 }
 // }}}
 
+// bimap {{{
+template<typename T1, typename T2>
+struct BiHashMap {
+    HashMap<T1,T2> fwd_;
+    HashMap<T2,T1> rev_;
+
+    void insert(const T1& x, const T2& y) {
+        auto it_fwd = fwd_.find(x);
+        if(it_fwd == end(fwd_)) {
+            fwd_.insert(it_fwd, make_pair(x,y));
+            rev_.insert(end(rev_), make_pair(y,x));
+        }
+        else {
+            assert(y == it_fwd->second);
+        }
+    }
+
+    bool contains_fwd(const T1& x) const {
+        return map_contains(fwd_, x);
+    }
+
+    bool contains_rev(const T2& y) const {
+        return map_contains(rev_, y);
+    }
+
+    const T2& at_fwd(const T1& x) const {
+        auto it = fwd_.find(x);
+        assert(it != end(fwd_));
+        return it->second;
+    }
+
+    const T1& at_rev(const T2& y) const {
+        auto it = rev_.find(y);
+        assert(it != end(rev_));
+        return it->second;
+    }
+
+    size_t size() const { return fwd_.size(); }
+};
+// }}}
+
 // Formatter {{{
 template<typename T, size_t N>
 struct Formatter<array<T,N>> {
