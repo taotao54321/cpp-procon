@@ -40,6 +40,13 @@ void procon_hash_tuple(size_t& seed, const tuple<TS...>& t) {
     procon_hash_tuple(seed, tuple_tail(t));
 }
 
+template<typename T>
+struct procon_hash<vector<T>> {
+    size_t operator()(const vector<T>& v) const {
+        return ALL(procon_hash_range, v);
+    }
+};
+
 template<typename T1, typename T2>
 struct procon_hash<pair<T1,T2>> {
     size_t operator()(const pair<T1,T2>& p) const {
