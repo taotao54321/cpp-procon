@@ -1035,11 +1035,15 @@ void PRINTLN(const TS& ...args) {
 }
 
 [[noreturn]] void EXIT() {
-#ifdef PROCON_LOCAL
+#ifdef __OPTIMIZE__
+# ifdef PROCON_LOCAL
     cerr.flush();
-#endif
+# endif
     cout.flush();
     _Exit(0);
+#else
+    exit(0);
+#endif
 }
 
 template<typename T>
