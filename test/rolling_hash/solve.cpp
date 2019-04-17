@@ -7,7 +7,7 @@ signed main() {
     i64 N = SIZE(S);
     i64 M; RD(M);
 
-    RollingHash rh(begin(S),end(S));
+    auto rh = ALL(make_rolling_hash, S);
     HashMap<vector<i64>,i64> cnts;
     FOR(len, 1, 11) {
         REP(i, N-len+1) {
@@ -18,7 +18,7 @@ signed main() {
     i64 ans = 0;
     REP(_, M) {
         string t; RD(t);
-        RollingHash rh2(begin(t),end(t));
+        auto rh2 = ALL(make_rolling_hash, t);
         ans += cnts[rh2.get(0,SIZE(t))];
     }
 

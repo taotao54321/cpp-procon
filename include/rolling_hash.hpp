@@ -45,4 +45,9 @@ struct RollingHash {
 };
 constexpr pair<i64,i64> RollingHash::BMS_DEF[];
 
+template<typename ForwardIt>
+RollingHash make_rolling_hash(ForwardIt first, ForwardIt last) {
+    return RollingHash(first, last);
+}
+
 // }}}
