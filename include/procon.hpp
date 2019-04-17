@@ -757,6 +757,18 @@ struct IDENTITY {
     }
 };
 
+template<typename ForwardIt>
+void advance_bounded(ForwardIt first, ForwardIt last, ForwardIt& it, i64 n) {
+    if(n > 0) {
+        auto bound = distance(it, last);
+        advance(it, min<i64>(n, bound));
+    }
+    else if(n < 0) {
+        auto bound = distance(it, first);
+        advance(it, max<i64>(n, bound));
+    }
+}
+
 char digit_chr(i64 n) {
     return static_cast<char>('0' + n);
 }
