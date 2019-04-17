@@ -24,7 +24,7 @@ CXXFLAGS := \
 ifdef OPTIMIZE
     CXXFLAGS += -O2
 else
-    CXXFLAGS += -g -fsanitize=undefined -D_GLIBCXX_DEBUG
+    CXXFLAGS += -g -fsanitize=undefined -D_GLIBCXX_DEBUG -pg
 endif
 
 SRC_SOLVE := solve.cpp
