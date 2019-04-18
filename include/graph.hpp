@@ -234,8 +234,8 @@ tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>
     return make_tuple(articulations, bridges);
 }
 
-// 各頂点の (indegree,outdegree) のリストを返す
-vector<pair<i64,i64>> graph_degrees(const vector<vector<i64>>& g) {
+// 各頂点の (indegree,outdegree) のリストを返す (隣接リスト版)
+vector<pair<i64,i64>> graph_degrees_list(const vector<vector<i64>>& g) {
     i64 n = SIZE(g);
     vector<pair<i64,i64>> res(n, {0,0});
 
@@ -249,22 +249,89 @@ vector<pair<i64,i64>> graph_degrees(const vector<vector<i64>>& g) {
     return res;
 }
 
-// 有向グラフのオイラー路
+// 各頂点の (indegree,outdegree) のリストを返す (隣接行列版)
+vector<pair<i64,i64>> graph_degrees_matrix(const vector<vector<i64>>& g) {
+    i64 n = SIZE(g);
+    vector<pair<i64,i64>> res(n, {0,0});
+
+    REP(from, n) REP(to, n) {
+        i64 k = g[from][to];
+        SND(res[from]) += k;
+        FST(res[to])   += k;
+    }
+
+    return res;
+}
+
+// グラフのオイラー路 (隣接リスト版)
 //
-// g は隣接リスト(破壊される)
-// start は始点
-vector<i64> graph_euler_trail_directed(vector<vector<i64>>& g, i64 start) {
+// g は破壊される
+// start: 始点
+// digraph: 有向グラフか?
+vector<i64> graph_euler_trail_list(vector<vector<i64>>& g, i64 start, bool digraph) {
+    // スタックオーバーフロー回避のため再帰を使わず自前の stack で処理
+    enum Action { CALL, RESUME };
+
     vector<i64> res;
 
-    auto dfs = FIX([&g,&res](auto self, i64 v) -> void {
-        while(!g[v].empty()) {
-            i64 to = POP_BACK(g[v]);
-            self(to);
+    stack<tuple<Action,i64>> stk;
+    stk.emplace(CALL, start);
+    while(!stk.empty()) {
+        Action act; i64 v; tie(act,v) = POP(stk);
+        switch(act) {
+        case CALL:
+            stk.emplace(RESUME, v);
+            while(!g[v].empty()) {
+                i64 to = POP_BACK(g[v]);
+                if(!digraph)
+                    g[to].erase(ALL(find, g[to], v));
+                stk.emplace(CALL, to);
+            }
+            break;
+        case RESUME:
+            res.emplace_back(v);
+            break;
         }
-        res.emplace_back(v);
-    });
+    }
 
-    dfs(start);
+    ALL(reverse, res);
+
+    return res;
+}
+
+// 無向グラフのオイラー路 (隣接行列版)
+//
+// g[v][w]: v,w 間の辺の本数 (破壊される)
+// start: 始点
+// digraph: 有向グラフか?
+vector<i64> graph_euler_trail_matrix(vector<vector<i64>>& g, i64 start, bool digraph) {
+    // スタックオーバーフロー回避のため再帰を使わず自前の stack で処理
+    enum Action { CALL, RESUME };
+
+    i64 n = SIZE(g);
+    vector<i64> res;
+
+    stack<tuple<Action,i64>> stk;
+    stk.emplace(CALL, start);
+    while(!stk.empty()) {
+        Action act; i64 v; tie(act,v) = POP(stk);
+        switch(act) {
+        case CALL:
+            stk.emplace(RESUME, v);
+            REP(to, n) {
+                if(g[v][to] == 0) continue;
+                --g[v][to];
+                if(!digraph)
+                    --g[to][v];
+                stk.emplace(CALL, to);
+            }
+            break;
+        case RESUME:
+            res.emplace_back(v);
+            break;
+        }
+    }
+
     ALL(reverse, res);
 
     return res;
