@@ -66,6 +66,9 @@ bool prev_combination(BidiIt first, BidiIt middle, BidiIt last) {
     return next_combination_impl(middle, last, first, middle);
 }
 
+// [first,last) を隣接2項間で pred が成り立つグループに分ける
+// デフォルトでは同じ値のグループに分ける
+// 返り値はイテレータ対のリスト
 template<typename ForwardIt, typename BinaryPred=equal_to<>>
 vector<pair<ForwardIt,ForwardIt>> group_by(ForwardIt first, ForwardIt last, BinaryPred pred={}) {
     vector<pair<ForwardIt,ForwardIt>> res;
@@ -85,6 +88,30 @@ vector<pair<ForwardIt,ForwardIt>> group_by(ForwardIt first, ForwardIt last, Bina
     }
 
     return res;
+}
+
+// 集合 [first,last) を n 個繰り返したものの直積についてイテレート
+// f は bool f(const vector<T>& v)
+// f が true を返した時点でイテレーション終了
+// 返り値は f が true を返していれば true, さもなくば false
+template<typename ForwardIt, typename F>
+bool cartesian_product_repeat(ForwardIt first, ForwardIt last, i64 n, F f) {
+    using T = typename iterator_traits<ForwardIt>::value_type;
+
+    auto rec = FIX([first,last,n,f](auto&& self, vector<T>& v) -> bool {
+        if(SIZE(v) == n)
+            return f(const_cast<const vector<T>&>(v));
+
+        for(auto it = first; it != last; ++it) {
+            v.emplace_back(*it);
+            if(self(v)) return true;
+            v.pop_back();
+        }
+        return false;
+    });
+
+    vector<T> v;
+    return rec(v);
 }
 
 // }}}
