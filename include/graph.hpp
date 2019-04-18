@@ -241,8 +241,8 @@ vector<pair<i64,i64>> graph_degrees(const vector<vector<i64>>& g) {
 
     REP(from, n) {
         for(i64 to : g[from]) {
-            ++FST(res[from]);
-            ++SND(res[to]);
+            ++SND(res[from]);
+            ++FST(res[to]);
         }
     }
 
