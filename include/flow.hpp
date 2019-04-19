@@ -14,7 +14,7 @@ tuple<i64,vector<vector<i64>>> flow_fulkerson(vector<vector<i64>>& g, i64 s, i64
     vector<vector<i64>> flow(n, vector<i64>(n,0));
 
     BoolArray visited(n);
-    auto dfs = FIX([&g,t,n,&flow,&visited](auto self, i64 v, i64 f) -> i64 {
+    auto dfs = FIX([&g,t,n,&flow,&visited](auto&& self, i64 v, i64 f) -> i64 {
         if(v == t) return f;
 
         visited[v] = true;

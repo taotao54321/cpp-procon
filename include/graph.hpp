@@ -196,7 +196,7 @@ tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>
     vector<i64>           articulations;
     vector<pair<i64,i64>> bridges;
 
-    auto dfs = FIX([&g,&ord,&low,&articulations,&bridges](auto self, i64 v, i64 parent, i64 k) -> void {
+    auto dfs = FIX([&g,&ord,&low,&articulations,&bridges](auto&& self, i64 v, i64 parent, i64 k) -> void {
         low[v] = ord[v] = k;
 
         bool arti = false;

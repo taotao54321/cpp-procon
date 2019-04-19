@@ -4,7 +4,7 @@
 void solve(i64 H, i64 W) {
     auto grid = RD_GRID2<i64>(H,W);
 
-    auto dfs = FIX([&grid](auto self, const Index2& idx) -> void {
+    auto dfs = FIX([&grid](auto&& self, const Index2& idx) -> void {
         grid[idx] = 0;
         for(const auto& to : grid.neighbor8(idx)) {
             if(grid[to] == 0) continue;

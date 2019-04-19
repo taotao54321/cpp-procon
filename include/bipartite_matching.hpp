@@ -11,7 +11,7 @@ tuple<i64,vector<i64>> bipartite_matching(const vector<vector<i64>>& g) {
     vector<i64> match(n, -1);
 
     BoolArray visited(n);
-    auto dfs = FIX([&g,&match,&visited](auto self, i64 v) -> bool {
+    auto dfs = FIX([&g,&match,&visited](auto&& self, i64 v) -> bool {
         visited[v] = true;
         for(i64 to : g[v]) {
             i64 w = match[to];

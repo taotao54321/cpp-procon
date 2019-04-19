@@ -423,7 +423,7 @@ ModP (&combination_count_table())[H][W] {
 template<i64 H, i64 W>
 auto combination_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    return MEMOIZE<H,W>([](auto self, i64 n, i64 r) -> ModP {
+    return MEMOIZE<H,W>([](auto&& self, i64 n, i64 r) -> ModP {
         if(n <  r) return 0;
         if(r == 0) return 1;
         if(n == r) return 1;
@@ -473,7 +473,7 @@ ModP (&partition_count_table())[H][W] {
 template<i64 H, i64 W>
 auto partition_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    return MEMOIZE<H,W>([](auto self, i64 n, i64 k) -> ModP {
+    return MEMOIZE<H,W>([](auto&& self, i64 n, i64 k) -> ModP {
         if(n <  k) return 0;
         if(n == k) return 1;
         if(k == 1) return 1;
