@@ -11,6 +11,10 @@ struct UnionFind {
         return ps_[x] = root(p);
     }
 
+    i64 set_size(i64 x) {
+        return -ps_[root(x)];
+    }
+
     void unite(i64 x, i64 y) {
         i64 rx = root(x);
         i64 ry = root(y);
@@ -33,6 +37,10 @@ struct WeightedUnionFind {
 
     i64 root(i64 x) {
         return get<0>(compress(x));
+    }
+
+    i64 set_size(i64 x) {
+        return -ps_[root(x)];
     }
 
     // 根に対する重み
