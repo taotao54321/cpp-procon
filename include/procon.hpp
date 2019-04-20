@@ -26,7 +26,7 @@ using f128 = __float128;
 // }}}
 
 template<typename T> constexpr T PROCON_INF();
-template<> constexpr i64 PROCON_INF<i64>() { return 1'010'000'000'000'000'000LL; }
+template<> constexpr i64 PROCON_INF<i64>() { return 1'010'000'000'000'000'017LL; }
 template<> constexpr f64 PROCON_INF<f64>() { return 1e100; }
 
 constexpr i64 INF  = PROCON_INF<i64>();
