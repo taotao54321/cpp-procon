@@ -45,4 +45,4 @@ bin/%: %.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 clean:
-	-$(RM) $(TARGET)
+	-$(RM) $(TARGET) gmon.out
