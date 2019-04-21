@@ -17,6 +17,10 @@ syntax keyword cppType f64
 syntax keyword cppType f80
 syntax keyword cppType f128
 
+syntax keyword cppType BoolArray
+
+syntax keyword cppType ModP
+
 syntax keyword cppType MaxHeap
 syntax keyword cppType MinHeap
 
@@ -44,6 +48,12 @@ syntax keyword cppStatement DBG
 " }}}
 
 " function {{{
+syntax keyword Function FIX
+syntax keyword Function MEMOIZE
+
+syntax keyword Function FST
+syntax keyword Function SND
+
 syntax keyword Function SIZE
 syntax keyword Function ALL
 
