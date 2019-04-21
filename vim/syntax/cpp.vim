@@ -50,6 +50,7 @@ syntax keyword Function ALL
 syntax keyword Function chmax chmin
 
 syntax keyword Function RD
+syntax keyword Function RD1
 
 syntax keyword Function PRINT PRINTLN
 " }}}

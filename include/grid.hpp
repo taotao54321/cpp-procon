@@ -83,6 +83,11 @@ void RD(Index2& idx) {
     RD(idx.x);
 }
 
+void RD1(Index2& idx) {
+    RD1(idx.y);
+    RD1(idx.x);
+}
+
 template<>
 struct Formatter<Index2> {
     static ostream& write_str(ostream& out, const Index2& idx) {
@@ -159,6 +164,15 @@ auto RD_GRID2(i64 h, i64 w) {
     Grid2<T> grid(h, w);
     REP(y, grid.h()) REP(x, grid.w()) {
         RD(grid.at(y,x));
+    }
+    return grid;
+}
+
+template<typename T>
+auto RD1_GRID2(i64 h, i64 w) {
+    Grid2<T> grid(h, w);
+    REP(y, grid.h()) REP(x, grid.w()) {
+        RD1(grid.at(y,x));
     }
     return grid;
 }

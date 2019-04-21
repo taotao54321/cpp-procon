@@ -9,7 +9,7 @@ struct Pos {
 void solve(i64 N) {
     vector<Pos> ps(N);
     REP(_, N) {
-        i64 b; RD(b); --b;  // 0-based
+        i64 b; RD1(b);
         i64 x,y; RD(x); RD(y);
         ps[b] = { x, y };
     }
@@ -31,7 +31,7 @@ void solve(i64 N) {
 
     i64 M; RD(M);
     REP(_, M) {
-        i64 s,g; RD(s); RD(g); --s; --g;  // 0-based
+        i64 s,g; RD1(s); RD1(g);
         if(nex[s][g] == -1) {
             PRINTLN("NA");
             continue;

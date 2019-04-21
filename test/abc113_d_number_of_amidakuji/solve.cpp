@@ -4,7 +4,7 @@
 
 signed main() {
     i64 H, W; RD(H); RD(W);
-    i64 K; RD(K); --K;  // 0-based
+    i64 K; RD1(K);
 
     decltype(auto) fib = fibonacci_table<1000>();
     assert(SIZE(fib) == 1000);

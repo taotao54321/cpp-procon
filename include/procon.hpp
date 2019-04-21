@@ -997,9 +997,22 @@ void RD(T& x) {
 }
 
 template<typename T>
+void RD1(T& x) {
+    RD(x);
+    --x;
+}
+
+template<typename T>
 auto RD_ARRAY(i64 n) {
     auto res = arrayn_make<T>(n, T());
     arrayn_foreach(res, [](T& e) { RD(e); });
+    return res;
+}
+
+template<typename T>
+auto RD1_ARRAY(i64 n) {
+    auto res = arrayn_make<T>(n, T());
+    arrayn_foreach(res, [](T& e) { RD1(e); });
     return res;
 }
 
@@ -1010,10 +1023,24 @@ auto RD_ARRAY2(i64 h, i64 w) {
     return res;
 }
 
+template<typename T>
+auto RD1_ARRAY2(i64 h, i64 w) {
+    auto res = arrayn_make<T>(h,w, T());
+    arrayn_foreach(res, [](T& e) { RD1(e); });
+    return res;
+}
+
 template<typename T1, typename T2>
 pair<T1,T2> RD_PAIR() {
     T1 x; RD(x);
     T2 y; RD(y);
+    return { x, y };
+}
+
+template<typename T1, typename T2>
+pair<T1,T2> RD1_PAIR() {
+    T1 x; RD1(x);
+    T2 y; RD1(y);
     return { x, y };
 }
 
@@ -1026,6 +1053,18 @@ auto RD_TUPLE() {
 template<typename T, typename... TS>
 auto RD_TUPLE() {
     T x; RD(x);
+    return tuple_cat(make_tuple(x), RD_TUPLE<TS...>());
+}
+
+template<typename... TS,
+         enable_if_t<0 == sizeof...(TS), nullptr_t> = nullptr>
+auto RD1_TUPLE() {
+    return make_tuple();
+}
+
+template<typename T, typename... TS>
+auto RD1_TUPLE() {
+    T x; RD1(x);
     return tuple_cat(make_tuple(x), RD_TUPLE<TS...>());
 }
 

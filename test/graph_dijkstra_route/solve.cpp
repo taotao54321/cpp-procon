@@ -8,7 +8,7 @@ signed main() {
 
     vector<vector<pair<i64,i64>>> G(N);
     REP(_, M) {
-        i64 from,to; RD(from); RD(to); --from; --to;  // 0-based
+        i64 from,to; RD1(from); RD1(to);
         i64 cost; RD(cost);
         G[from].emplace_back(to,cost);
         G[to].emplace_back(from,cost);
