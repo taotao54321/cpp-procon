@@ -1058,11 +1058,21 @@ void PRINTLN(const TS& ...args) {
 #endif
 }
 
-template<typename T>
-void DBG_IMPL(i64 line, const char* expr, const T& value) {
+template<typename... TS, enable_if_t<1 == sizeof...(TS), nullptr_t> = nullptr>
+void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
 #ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
+    WRITE_REPR(cerr, get<0>(value));
+    cerr << "\n";
+#endif
+}
+
+template<typename... TS, enable_if_t<2 <= sizeof...(TS), nullptr_t> = nullptr>
+void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
+#ifdef PROCON_LOCAL
+    cerr << "[L " << line << "]: ";
+    cerr << "(" << expr << ") = ";
     WRITE_REPR(cerr, value);
     cerr << "\n";
 #endif
@@ -1088,7 +1098,7 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
 #endif
 }
 
-#define DBG(expr) DBG_IMPL(__LINE__, #expr, (expr))
+#define DBG(args...) DBG2_IMPL(__LINE__, (#args), make_tuple(args))
 #define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, #expr, (expr))
 #define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, #first, #last, (first), (last))
 
