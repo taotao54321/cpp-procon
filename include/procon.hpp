@@ -758,6 +758,18 @@ struct IDENTITY {
 };
 
 template<typename ForwardIt>
+ForwardIt next_bounded(ForwardIt last, ForwardIt it, i64 n=1) {
+    auto bound = distance(it, last);
+    return next(it, min<i64>(n, bound));
+}
+
+template<typename ForwardIt>
+ForwardIt prev_bounded(ForwardIt first, ForwardIt it, i64 n=1) {
+    auto bound = distance(first, it);
+    return prev(it, min<i64>(n, bound));
+}
+
+template<typename ForwardIt>
 void advance_bounded(ForwardIt first, ForwardIt last, ForwardIt& it, i64 n) {
     if(n > 0) {
         auto bound = distance(it, last);
