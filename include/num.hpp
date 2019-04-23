@@ -461,7 +461,7 @@ ModP (&partition_count_table())[H][W] {
             dp[i][1] = 1;
         }
         FOR(i, 3, H) {
-            FOR(j, 2, min<i64>(i,W)) {
+            FOR(j, 2, MIN(i,W)) {
                 dp[i][j] = dp[i-1][j-1] + dp[i-j][j];
             }
         }

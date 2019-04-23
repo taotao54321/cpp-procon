@@ -524,6 +524,38 @@ const auto& SND(const tuple<TS...>& t) {
 }
 // }}}
 
+template<typename T1, typename T2, typename Comp=less<>,
+         enable_if_t<is_signed<T1>::value != is_unsigned<T2>::value, nullptr_t> = nullptr>
+common_type_t<T1,T2> MAX(T1 x, T2 y, Comp comp={}) {
+    return max<common_type_t<T1,T2>>(x, y, comp);
+}
+
+template<typename T, typename Comp=less<>>
+const T& MAX(const T& x, const T& y, Comp comp={}) {
+    return max(x, y, comp);
+}
+
+template<typename T, typename Comp=less<>>
+T MAX(initializer_list<T> ilist, Comp comp={}) {
+    return max(ilist, comp);
+}
+
+template<typename T1, typename T2, typename Comp=less<>,
+         enable_if_t<is_signed<T1>::value != is_unsigned<T2>::value, nullptr_t> = nullptr>
+common_type_t<T1,T2> MIN(T1 x, T2 y, Comp comp={}) {
+    return min<common_type_t<T1,T2>>(x, y, comp);
+}
+
+template<typename T, typename Comp=less<>>
+const T& MIN(const T& x, const T& y, Comp comp={}) {
+    return min(x, y, comp);
+}
+
+template<typename T, typename Comp=less<>>
+T MIN(initializer_list<T> ilist, Comp comp={}) {
+    return min(ilist, comp);
+}
+
 template<typename C>
 i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }
 
@@ -578,7 +610,7 @@ i64 isqrt(i64 x) {
     assert(x >= 0);
 
     i64 lo = 0;
-    i64 hi = min<i64>(x/2+2, 3037000500LL);
+    i64 hi = MIN(x/2+2, 3037000500LL);
     return bisect_integer(lo, hi, [x](i64 r) { return r*r <= x; });
 }
 
@@ -760,24 +792,24 @@ struct IDENTITY {
 template<typename ForwardIt>
 ForwardIt next_bounded(ForwardIt last, ForwardIt it, i64 n=1) {
     auto bound = distance(it, last);
-    return next(it, min<i64>(n, bound));
+    return next(it, MIN(n, bound));
 }
 
 template<typename ForwardIt>
 ForwardIt prev_bounded(ForwardIt first, ForwardIt it, i64 n=1) {
     auto bound = distance(first, it);
-    return prev(it, min<i64>(n, bound));
+    return prev(it, MIN(n, bound));
 }
 
 template<typename ForwardIt>
 void advance_bounded(ForwardIt first, ForwardIt last, ForwardIt& it, i64 n) {
     if(n > 0) {
         auto bound = distance(it, last);
-        advance(it, min<i64>(n, bound));
+        advance(it, MIN(n, bound));
     }
     else if(n < 0) {
         auto bound = distance(it, first);
-        advance(it, max<i64>(n, bound));
+        advance(it, MAX(n, bound));
     }
 }
 

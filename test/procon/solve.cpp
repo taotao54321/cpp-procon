@@ -1,5 +1,34 @@
 #include "procon.hpp"
 
+void test_max_min() {
+    {
+        i64 x = 5;
+        i64 y = 6;
+        assert(MAX(0,x) == 5);
+        assert(MAX(9,x) == 9);
+        assert(MAX(x,y) == y);
+        assert(MIN(0,x) == 0);
+        assert(MIN(9,x) == x);
+        assert(MIN(x,y) == x);
+    }
+    {
+        string s("foo");
+        string t("bar");
+        assert(MAX(s,t) == s);
+        assert(MIN(s,t) == t);
+    }
+    {
+        assert(MAX({ 2, 1, 4, 2, 5, 3 }) == 5);
+        assert(MIN({ 2, 1, 4, 2, 5, 3 }) == 1);
+    }
+    {
+        string s("foo");
+        string t("bar");
+        assert(MAX({ s, t }) == s);
+        assert(MIN({ s, t }) == t);
+    }
+}
+
 void test_fst_snd() {
     {
         pair<i64,string> p(5, "foo");
@@ -88,6 +117,8 @@ void test_fmt() {
 }
 
 signed main() {
+    test_max_min();
+
     test_fst_snd();
 
     test_digit_conv();

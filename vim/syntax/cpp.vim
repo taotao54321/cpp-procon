@@ -54,6 +54,9 @@ syntax keyword Function MEMOIZE
 syntax keyword Function FST
 syntax keyword Function SND
 
+syntax keyword Function MAX
+syntax keyword Function MIN
+
 syntax keyword Function SIZE
 syntax keyword Function ALL
 
