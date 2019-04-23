@@ -11,7 +11,7 @@ struct UnionFind {
         return ps_[x] = root(p);
     }
 
-    i64 set_size(i64 x) {
+    i64 group_size(i64 x) {
         return -ps_[root(x)];
     }
 
@@ -39,7 +39,7 @@ struct WeightedUnionFind {
         return get<0>(compress(x));
     }
 
-    i64 set_size(i64 x) {
+    i64 group_size(i64 x) {
         return -ps_[root(x)];
     }
 
