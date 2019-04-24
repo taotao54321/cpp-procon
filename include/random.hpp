@@ -1,5 +1,6 @@
 // random {{{
 
+// PCGEngine {{{
 // PCG random number generator
 //
 // http://www.pcg-random.org/
@@ -43,7 +44,9 @@ private:
     std::uint64_t state_;
     std::uint64_t inc_;
 };
+// }}}
 
+// Seeder {{{
 class Seeder {
 private:
     static constexpr std::uint32_t INIT_A = 0x43b0d7e5;
@@ -174,7 +177,9 @@ public:
         std::copy(std::begin(res), std::end(res), first);
     }
 };
+// }}}
 
+// AutoSeeder {{{
 #ifndef ENTROPY_CPU
     #if defined(__has_builtin)
         #if __has_builtin(__builtin_readcyclecounter)
@@ -280,14 +285,155 @@ public:
 };
 
 using AutoSeeder = AutoSeederT<Seeder>;
+// }}}
 
-template<typename Num>
-using UniformDistribution = typename std::conditional_t<
-    std::is_integral<Num>::value,
-    std::uniform_int_distribution<Num>,
-    std::uniform_real_distribution<Num>
->;
+// UniformDistributionType {{{
+template<typename T>
+struct IsUniformInt {
+    static constexpr bool value = std::is_same<T,short             >::value ||
+                                  std::is_same<T,int               >::value ||
+                                  std::is_same<T,long              >::value ||
+                                  std::is_same<T,long long         >::value ||
+                                  std::is_same<T,unsigned short    >::value ||
+                                  std::is_same<T,unsigned int      >::value ||
+                                  std::is_same<T,unsigned long     >::value ||
+                                  std::is_same<T,unsigned long long>::value;
+};
 
+template<typename T>
+struct IsUniformReal {
+    static constexpr bool value = std::is_same<T,float      >::value ||
+                                  std::is_same<T,double     >::value ||
+                                  std::is_same<T,long double>::value;
+};
+
+template<typename T>
+struct IsUniformByte {
+    static constexpr bool value = std::is_same<T,char         >::value ||
+                                  std::is_same<T,signed char  >::value ||
+                                  std::is_same<T,unsigned char>::value;
+};
+
+template<typename T, typename Enable=void>
+struct UniformDistribution {};
+
+template<typename T>
+struct UniformDistribution<T, std::enable_if_t<IsUniformInt<T>::value>> {
+    using type = std::uniform_int_distribution<T>;
+};
+
+template<typename T>
+struct UniformDistribution<T, std::enable_if_t<IsUniformReal<T>::value>> {
+    using type = std::uniform_real_distribution<T>;
+};
+
+template<typename T>
+using UniformDistributionType = typename UniformDistribution<T>::type;
+
+template<typename T, typename Enable=void>
+struct UniformDistributionImpl {};
+
+template<typename T>
+class UniformDistributionImpl<T, std::enable_if_t<IsUniformByte<T>::value>> {
+private:
+    using Short = std::conditional_t<std::is_signed<T>::value, short, unsigned short>;
+    using Dist  = UniformDistributionType<Short>;
+
+    Dist dist_;
+
+public:
+    using result_type = T;
+    using param_type  = typename Dist::param_type;
+
+    explicit UniformDistributionImpl(result_type a=0,
+                                     result_type b=std::numeric_limits<result_type>::max())
+        : dist_(a,b) {}
+    explicit UniformDistributionImpl(const param_type& p)
+        : dist_(p) {}
+
+    template<typename URNG>
+    result_type operator()(URNG& g) {
+        return static_cast<result_type>(dist_(g));
+    }
+    template<typename URNG>
+    result_type operator()(URNG& g, const param_type& p) {
+        return static_cast<result_type>(dist_(g,p));
+    }
+
+    result_type a() const { return static_cast<result_type>(dist_.a()); }
+    result_type b() const { return static_cast<result_type>(dist_.b()); }
+
+    param_type param() const { return dist_.param(); }
+    void param(const param_type& p) { dist_.param(p); }
+
+    result_type min() const { return a(); }
+    result_type max() const { return b(); }
+
+    friend bool operator==(const UniformDistributionImpl& lhs,
+                           const UniformDistributionImpl& rhs) {
+        return lhs.dist_ == rhs.dist_;
+    }
+    friend bool operator!=(const UniformDistributionImpl& lhs,
+                           const UniformDistributionImpl& rhs) {
+        return !(lhs == rhs);
+    }
+};
+
+template<>
+class UniformDistributionImpl<bool> {
+private:
+    using Dist  = UniformDistributionType<int>;
+
+    Dist dist_;
+
+public:
+    using result_type = bool;
+    using param_type  = typename Dist::param_type;
+
+    explicit UniformDistributionImpl(result_type a=false, result_type b=true)
+        : dist_(a,b) {}
+    explicit UniformDistributionImpl(const param_type& p)
+        : dist_(p) {}
+
+    template<typename URNG>
+    result_type operator()(URNG& g) {
+        return static_cast<result_type>(dist_(g));
+    }
+    template<typename URNG>
+    result_type operator()(URNG& g, const param_type& p) {
+        return static_cast<result_type>(dist_(g,p));
+    }
+
+    result_type a() const { return static_cast<result_type>(dist_.a()); }
+    result_type b() const { return static_cast<result_type>(dist_.b()); }
+
+    param_type param() const { return dist_.param(); }
+    void param(const param_type& p) { dist_.param(p); }
+
+    result_type min() const { return a(); }
+    result_type max() const { return b(); }
+
+    friend bool operator==(const UniformDistributionImpl& lhs,
+                           const UniformDistributionImpl& rhs) {
+        return lhs.dist_ == rhs.dist_;
+    }
+    friend bool operator!=(const UniformDistributionImpl& lhs,
+                           const UniformDistributionImpl& rhs) {
+        return !(lhs == rhs);
+    }
+};
+
+template<typename T>
+struct UniformDistribution<T, std::enable_if_t<IsUniformByte<T>::value>> {
+    using type = UniformDistributionImpl<T>;
+};
+template<>
+struct UniformDistribution<bool> {
+    using type = UniformDistributionImpl<bool>;
+};
+// }}}
+
+// Rng {{{
 template<typename Engine>
 class RngT {
 private:
@@ -307,12 +453,33 @@ public:
         return dist(engine_);
     }
 
-    template<typename Num>
-    Num uniform(Num min_value, Num max_value) {
-        return variate<Num,UniformDistribution>(min_value, max_value);
+    template<typename T,
+             std::enable_if_t<IsUniformInt<T>::value, std::nullptr_t> = nullptr>
+    T uniform(T min_value=std::numeric_limits<T>::min(),
+              T max_value=std::numeric_limits<T>::max()) {
+        return variate<T,UniformDistributionType>(min_value, max_value);
     }
 
-    template<template<typename> class DistT=UniformDistribution,
+    template<typename T,
+             std::enable_if_t<IsUniformReal<T>::value, std::nullptr_t> = nullptr>
+    T uniform(T min_value=-std::numeric_limits<T>::max(),
+              T max_value= std::numeric_limits<T>::max()) {
+        return variate<T,UniformDistributionType>(min_value, max_value);
+    }
+
+    template<typename T,
+             std::enable_if_t<IsUniformByte<T>::value, std::nullptr_t> = nullptr>
+    T uniform(T min_value=std::numeric_limits<T>::min(),
+              T max_value=std::numeric_limits<T>::max()) {
+        return variate<T,UniformDistributionType>(min_value, max_value);
+    }
+
+    bool uniform() {
+        int x = uniform(0, 1);
+        return x;
+    }
+
+    template<template<typename> class DistT=UniformDistributionType,
              typename OutputIt,
              typename... Params>
     void generate(OutputIt first, OutputIt last, Params&&... params) {
@@ -360,5 +527,6 @@ public:
 };
 
 using Rng = RngT<PcgEngine>;
+// }}}
 
 // }}}
