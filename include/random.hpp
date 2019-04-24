@@ -476,9 +476,10 @@ public:
         return variate<T,UniformDistributionType>(min_value, max_value);
     }
 
-    bool uniform() {
-        int x = uniform(0, 1);
-        return x;
+    template<typename T,
+             std::enable_if_t<std::is_same<T,bool>::value, std::nullptr_t> = nullptr>
+    T uniform(T min_value=false, T max_value=true) {
+        return variate<T,UniformDistributionType>(min_value, max_value);
     }
 
     template<template<typename> class DistT=UniformDistributionType,
