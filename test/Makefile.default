@@ -28,8 +28,11 @@ all: $(TARGET)
 
 -include solve.d
 
-$(TARGET): solve.cpp
-	$(CXX) $(CXXFLAGS) -MMD -MP $<
+$(TARGET): solve.o
+	$(CXX) $(CXXFLAGS) $<
+
+%.o: %.c
+	$(CXX) $(CXXFLAGS) -c -MMD -MP $<
 
 clean:
-	-$(RM) $(TARGET)
+	-$(RM) $(TARGET) *.o
