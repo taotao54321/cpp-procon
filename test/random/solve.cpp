@@ -26,7 +26,7 @@ uint32_t f_seeder() {
 
 uint32_t f_rng() {
     static Rng rng;
-    return rng.uniform(numeric_limits<uint32_t>::min(), numeric_limits<uint32_t>::max());
+    return rng.uniform<uint32_t>();
 }
 
 int main() {
