@@ -23,29 +23,7 @@ def get_cases(cases):
     return res
 
 def build_case(case):
-    cmdline = (
-        "g++",
-        "-std=c++14",
-        "-Wall", "-Wextra",
-        "-Wconditionally-supported",
-        "-Wconversion",
-        "-Wduplicated-cond",
-        "-Wduplicated-branches",
-        "-Wextra-semi",
-        "-Wfloat-equal",
-        "-Wformat=2",
-        "-Wlogical-op",
-        "-Wnull-dereference",
-        "-Wold-style-cast",
-        "-Wshadow",
-        "-Wundef",
-        "-Wuseless-cast",
-        "-Wvla",
-        "-Wzero-as-null-pointer-constant",
-        "-O2",
-        "-I../../include/",
-        "solve.cpp",
-    )
+    cmdline = ( "make", )
     proc = subprocess.run(cmdline, cwd=case)
     return proc.returncode == 0
 
