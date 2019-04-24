@@ -350,6 +350,7 @@ public:
         : dist_(a,b) {}
     explicit UniformDistributionImpl(const param_type& p)
         : dist_(p) {}
+    void reset() {}
 
     template<typename URNG>
     result_type operator()(URNG& g) {
@@ -394,6 +395,7 @@ public:
         : dist_(a,b) {}
     explicit UniformDistributionImpl(const param_type& p)
         : dist_(p) {}
+    void reset() {}
 
     template<typename URNG>
     result_type operator()(URNG& g) {
