@@ -10,12 +10,15 @@ def get_dir():
 def create_cpp(base, name):
     hdr_procon = open(base/"include"/"procon.hpp", "r").read()
     hdr_random = open(base/"include"/"random.hpp", "r").read()
+    hdr_string = open(base/"include"/"string.hpp", "r").read()
     body = open(base/"tmpl"/"gen.cpp", "r").read()
     try:
         with open(name, "x") as out:
             out.write(hdr_procon)
             out.write("\n")
             out.write(hdr_random)
+            out.write("\n")
+            out.write(hdr_string)
             out.write(body)
         print(name)
     except FileExistsError:
