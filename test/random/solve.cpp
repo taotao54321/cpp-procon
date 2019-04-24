@@ -26,7 +26,16 @@ uint32_t f_seeder() {
 
 uint32_t f_rng() {
     static Rng rng;
+#if 1
     return rng.uniform<uint32_t>();
+#else
+    uint32_t res = 0;
+    for(int i = 0; i < 32; ++i) {
+        res <<= 1;
+        res  |= rng.uniform<bool>();
+    }
+    return res;
+#endif
 }
 
 int main() {
