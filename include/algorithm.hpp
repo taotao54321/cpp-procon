@@ -66,6 +66,14 @@ bool prev_combination(BidiIt first, BidiIt middle, BidiIt last) {
     return next_combination_impl(middle, last, first, middle);
 }
 
+template<typename InputIt>
+auto nth_value(InputIt first, InputIt last, i64 n) {
+    using T = typename iterator_traits<InputIt>::value_type;
+    vector<T> v(first, last);
+    nth_element(begin(v), begin(v)+n, end(v));
+    return v[n];
+}
+
 // [first,last) を隣接2項間で pred が成り立つグループに分ける
 // デフォルトでは同じ値のグループに分ける
 // 返り値はイテレータ対のリスト
