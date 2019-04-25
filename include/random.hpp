@@ -507,8 +507,7 @@ public:
 
         using distance_type = decltype(d);
         distance_type choice = uniform(distance_type(0), --d);
-        std::advance(first, choice);
-        return first;
+        return std::next(first, choice);
     }
 
     template<typename T>
