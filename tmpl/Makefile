@@ -19,12 +19,13 @@ CXXFLAGS := \
     -Wuseless-cast \
     -Wvla \
     -Wzero-as-null-pointer-constant \
+    -pg \
     -DPROCON_LOCAL
 
 ifdef OPTIMIZE
     CXXFLAGS += -O2
 else
-    CXXFLAGS += -g -fsanitize=undefined -D_GLIBCXX_DEBUG -pg
+    CXXFLAGS += -g -fsanitize=undefined -D_GLIBCXX_DEBUG
 endif
 
 SRC_SOLVE := solve.cpp

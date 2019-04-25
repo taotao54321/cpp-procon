@@ -1166,14 +1166,12 @@ void PRINTLN(const TS& ...args) {
 }
 
 [[noreturn]] void EXIT() {
-#ifdef __OPTIMIZE__
-# ifdef PROCON_LOCAL
-    cerr.flush();
-# endif
     cout.flush();
-    _Exit(0);
-#else
+#ifdef PROCON_LOCAL
+    cerr.flush();
     exit(0);
+#else
+    _Exit(0);
 #endif
 }
 
