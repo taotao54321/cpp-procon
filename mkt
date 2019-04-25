@@ -41,4 +41,7 @@ signed main() {
 }
 """)
 
+    makefile = target / "Makefile"
+    makefile.symlink_to("../Makefile.default")
+
 if __name__ == "__main__": main()
