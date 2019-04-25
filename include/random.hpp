@@ -455,31 +455,35 @@ public:
         return dist(engine_);
     }
 
+    // [a,b]
     template<typename T,
              std::enable_if_t<IsUniformInt<T>::value, std::nullptr_t> = nullptr>
-    T uniform(T min_value=std::numeric_limits<T>::min(),
-              T max_value=std::numeric_limits<T>::max()) {
-        return variate<T,UniformDistributionType>(min_value, max_value);
+    T uniform(T a=std::numeric_limits<T>::min(),
+              T b=std::numeric_limits<T>::max()) {
+        return variate<T,UniformDistributionType>(a, b);
     }
 
+    // [a,b)
     template<typename T,
              std::enable_if_t<IsUniformReal<T>::value, std::nullptr_t> = nullptr>
-    T uniform(T min_value=-std::numeric_limits<T>::max(),
-              T max_value= std::numeric_limits<T>::max()) {
-        return variate<T,UniformDistributionType>(min_value, max_value);
+    T uniform(T a=-std::numeric_limits<T>::max(),
+              T b= std::numeric_limits<T>::max()) {
+        return variate<T,UniformDistributionType>(a, b);
     }
 
+    // [a,b]
     template<typename T,
              std::enable_if_t<IsUniformByte<T>::value, std::nullptr_t> = nullptr>
-    T uniform(T min_value=std::numeric_limits<T>::min(),
-              T max_value=std::numeric_limits<T>::max()) {
-        return variate<T,UniformDistributionType>(min_value, max_value);
+    T uniform(T a=std::numeric_limits<T>::min(),
+              T b=std::numeric_limits<T>::max()) {
+        return variate<T,UniformDistributionType>(a, b);
     }
 
+    // [a,b]
     template<typename T,
              std::enable_if_t<std::is_same<T,bool>::value, std::nullptr_t> = nullptr>
-    T uniform(T min_value=false, T max_value=true) {
-        return variate<T,UniformDistributionType>(min_value, max_value);
+    T uniform(T a=false, T b=true) {
+        return variate<T,UniformDistributionType>(a, b);
     }
 
     template<template<typename> class DistT=UniformDistributionType,
