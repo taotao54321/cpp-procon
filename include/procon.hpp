@@ -734,6 +734,22 @@ i64 arg_min(i64 lo, i64 hi, F f) {
     return res;
 }
 
+template<typename Pred>
+i64 arg_find_r(i64 lo, i64 hi, Pred pred) {
+    i64 x = arg_find(-hi+1, lo+1, [pred](i64 xx) { return pred(-xx); });
+    return x == INF ? INF : -x;
+}
+
+template<typename F>
+i64 arg_max_r(i64 lo, i64 hi, F f) {
+    return -arg_max(-hi+1, lo+1, [f](i64 x) { return f(-x); });
+}
+
+template<typename F>
+i64 arg_min_r(i64 lo, i64 hi, F f) {
+    return -arg_min(-hi+1, lo+1, [f](i64 x) { return f(-x); });
+}
+
 template<typename ForwardIt, typename T, typename Comp=less<>>
 ForwardIt bsearch_find(ForwardIt first, ForwardIt last, const T& x, Comp comp={}) {
     auto it = lower_bound(first, last, x, comp);
