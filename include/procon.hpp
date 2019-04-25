@@ -698,6 +698,42 @@ bool chmin(T& xmin, const U& x, Comp comp={}) {
     return false;
 }
 
+template<typename Pred>
+i64 arg_find(i64 lo, i64 hi, Pred pred) {
+    assert(lo < hi);
+
+    FOR(x, lo, hi) {
+        if(pred(x)) return x;
+    }
+    return -1;
+}
+
+template<typename F>
+i64 arg_max(i64 lo, i64 hi, F f) {
+    assert(lo < hi);
+
+    i64 res = lo;
+    auto ymax = f(lo);
+    FOR(x, lo+1, hi) {
+        if(chmax(ymax, f(x)))
+            res = x;
+    }
+    return res;
+}
+
+template<typename F>
+i64 arg_min(i64 lo, i64 hi, F f) {
+    assert(lo < hi);
+
+    i64 res = lo;
+    auto ymin = f(lo);
+    FOR(x, lo+1, hi) {
+        if(chmin(ymin, f(x)))
+            res = x;
+    }
+    return res;
+}
+
 template<typename ForwardIt, typename T, typename Comp=less<>>
 ForwardIt bsearch_find(ForwardIt first, ForwardIt last, const T& x, Comp comp={}) {
     auto it = lower_bound(first, last, x, comp);
