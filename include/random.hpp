@@ -113,7 +113,7 @@ public:
     }
 
     template<typename T>
-    Seeder(std::initializer_list<T> ilist) : Seeder(begin(ilist),end(ilist)) {}
+    Seeder(std::initializer_list<T> ilist) : Seeder(std::begin(ilist),std::end(ilist)) {}
 
     template<typename InputIt>
     void seed(InputIt first, InputIt last) {
@@ -236,7 +236,7 @@ private:
 
         auto timestamp = crushto32(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
-        void* malloc_ptr = malloc(sizeof(int));
+        void* malloc_ptr = std::malloc(sizeof(int));
         free(malloc_ptr);
         auto addr_heap  = hash_func(malloc_ptr);
         auto addr_stack = hash_func(&malloc_ptr);
