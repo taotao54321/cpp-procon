@@ -65,7 +65,7 @@ void DBG_CARRAYN_SLICE_IMPL(i64 line, const char* expr, const T& ary, const tupl
 #endif
 }
 
-#define DBG_CARRAYN(expr) DBG_CARRAYN_IMPL(__LINE__, #expr, (expr))
-#define DBG_CARRAYN_SLICE(expr, offs, sizes) DBG_CARRAYN_SLICE_IMPL(__LINE__, #expr, (expr), (offs), (sizes))
+#define DBG_CARRAYN(expr) DBG_CARRAYN_IMPL(__LINE__, CPP_STR(expr), (expr))
+#define DBG_CARRAYN_SLICE(expr, offs, sizes) DBG_CARRAYN_SLICE_IMPL(__LINE__, CPP_STR(expr), (expr), (offs), (sizes))
 
 // }}}

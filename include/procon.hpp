@@ -6,6 +6,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define CPP_STR(x) CPP_DETAIL_STR(x)
+#define CPP_JOIN(x,y) CPP_DETAIL_JOIN(x,y)
+#define CPP_DETAIL_STR(x) #x
+#define CPP_DETAIL_JOIN(x,y) x ## y
+
 using i8   = int8_t;
 using u8   = uint8_t;
 using i16  = int16_t;
@@ -39,7 +44,7 @@ constexpr f64 EPS = 1e-12;
 constexpr f64 PI = 3.14159265358979323846;
 
 // util {{{
-#define FOR(i, start, end) for(i64 i = (start), i##_end=(end); i < i##_end; ++i)
+#define FOR(i, start, end) for(i64 i = (start), CPP_JOIN(i,_end)=(end); i < CPP_JOIN(i,_end); ++i)
 #define REP(i, n) FOR(i, 0, n)
 
 #define ALL(f,c,...) (([&](decltype((c)) cccc) { return (f)(std::begin(cccc), std::end(cccc), ## __VA_ARGS__); })(c))
@@ -1231,9 +1236,9 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
 #endif
 }
 
-#define DBG(args...) DBG_IMPL(__LINE__, (#args), make_tuple(args))
-#define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, #expr, (expr))
-#define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, #first, #last, (first), (last))
+#define DBG(args...) DBG_IMPL(__LINE__, CPP_STR(args), make_tuple(args))
+#define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, CPP_STR(expr), (expr))
+#define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, CPP_STR(first), CPP_STR(last), (first), (last))
 
 #define PAIR  make_pair
 #define TUPLE make_tuple
