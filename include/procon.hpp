@@ -705,7 +705,7 @@ i64 arg_find(i64 lo, i64 hi, Pred pred) {
     FOR(x, lo, hi) {
         if(pred(x)) return x;
     }
-    return -1;
+    return INF;
 }
 
 template<typename F>
