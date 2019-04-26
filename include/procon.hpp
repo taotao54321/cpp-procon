@@ -6,10 +6,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define CPP_STR(x) CPP_DETAIL_STR(x)
-#define CPP_CAT(x,y) CPP_DETAIL_CAT(x,y)
-#define CPP_DETAIL_STR(x) #x
-#define CPP_DETAIL_CAT(x,y) x ## y
+#define CPP_STR(x) CPP_STR_I(x)
+#define CPP_CAT(x,y) CPP_CAT_I(x,y)
+#define CPP_STR_I(args...) #args
+#define CPP_CAT_I(x,y) x ## y
 
 using i8   = int8_t;
 using u8   = uint8_t;
@@ -1237,7 +1237,7 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
 #endif
 }
 
-#define DBG(args...) DBG_IMPL(__LINE__, CPP_STR(args), make_tuple(args))
+#define DBG(args...) DBG_IMPL(__LINE__, CPP_STR_I(args), make_tuple(args))
 #define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, CPP_STR(expr), (expr))
 #define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, CPP_STR(first), CPP_STR(last), (first), (last))
 
