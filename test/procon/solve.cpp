@@ -46,6 +46,10 @@ void test_max_min() {
         //MAX(0, 0U);
         //MAX("", 0);
         //MAX(0, string{});
+        //MIN(0, 0.0);
+        //MIN(0, 0U);
+        //MIN("", 0);
+        //MIN(0, string{});
     }
 }
 
