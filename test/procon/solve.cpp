@@ -4,12 +4,25 @@ void test_max_min() {
     {
         i64 x = 5;
         i64 y = 6;
-        assert(MAX(0,x) == 5);
+        assert(MAX(0,x) == x);
         assert(MAX(9,x) == 9);
         assert(MAX(x,y) == y);
         assert(MIN(0,x) == 0);
         assert(MIN(9,x) == x);
         assert(MIN(x,y) == x);
+    }
+    {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+        f64 x = 5.0;
+        f64 y = 6.0;
+        assert(MAX(f32(0),x) == x);
+        assert(MAX(f32(9),x) == 9.0);
+        assert(MAX(x,y) == y);
+        assert(MIN(f32(0),x) == 0.0);
+        assert(MIN(f32(9),x) == x);
+        assert(MIN(x,y) == x);
+#pragma GCC diagnostic pop
     }
     {
         string s("foo");
@@ -26,6 +39,13 @@ void test_max_min() {
         string t("bar");
         assert(MAX({ s, t }) == s);
         assert(MIN({ s, t }) == t);
+    }
+    {
+        // コンパイルエラー
+        //MAX(0, 0.0);
+        //MAX(0, 0U);
+        //MAX("", 0);
+        //MAX(0, string{});
     }
 }
 
