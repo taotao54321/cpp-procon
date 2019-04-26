@@ -532,10 +532,10 @@ const auto& SND(const tuple<TS...>& t) {
 
 template<typename T1, typename T2, typename Comp=less<>,
          enable_if_t<
-            is_integral<T1>::value &&
-            is_integral<T2>::value &&
-            is_signed<T1>::value != is_unsigned<T2>::value,
-            nullptr_t
+             is_integral<T1>::value &&
+             is_integral<T2>::value &&
+             is_signed<T1>::value != is_unsigned<T2>::value,
+             nullptr_t
          > = nullptr>
 common_type_t<T1,T2> MAX(T1 x, T2 y, Comp comp={}) {
     return max<common_type_t<T1,T2>>(x, y, comp);
@@ -543,9 +543,9 @@ common_type_t<T1,T2> MAX(T1 x, T2 y, Comp comp={}) {
 
 template<typename T1, typename T2, typename Comp=less<>,
          enable_if_t<
-            is_floating_point<T1>::value &&
-            is_floating_point<T2>::value,
-            nullptr_t
+             is_floating_point<T1>::value &&
+             is_floating_point<T2>::value,
+             nullptr_t
          > = nullptr>
 common_type_t<T1,T2> MAX(T1 x, T2 y, Comp comp={}) {
     return max<common_type_t<T1,T2>>(x, y, comp);
