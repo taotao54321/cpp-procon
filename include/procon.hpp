@@ -897,7 +897,7 @@ i64 upper_ord(char c) {
 
 // 出力は operator<< を直接使わず、このテンプレート経由で行う
 // 提出用出力とデバッグ用出力を分けるため
-template<typename T>
+template<typename T, typename Enable=void>
 struct Formatter {
     static ostream& write_str(ostream& out, const T& x)  { return out << x; }
     static ostream& write_repr(ostream& out, const T& x) { return out << x; }
@@ -1011,6 +1011,16 @@ struct Formatter<f64> {
         if(x == -FINF) return out << "-FINF";
 #pragma GCC diagnostic pop
         return out << x;
+    }
+};
+
+template<typename Enum>
+struct Formatter<Enum, enable_if_t<is_enum<Enum>::value>> {
+    static ostream& write_str(ostream& out, Enum x) {
+        return WRITE_STR(out, static_cast<underlying_type_t<Enum>>(x));
+    }
+    static ostream& write_repr(ostream& out, Enum x) {
+        return WRITE_REPR(out, static_cast<underlying_type_t<Enum>>(x));
     }
 };
 
