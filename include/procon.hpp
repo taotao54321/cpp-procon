@@ -112,6 +112,7 @@ public:
         size_ = other.size_;
         data_ = other.data_;
         other.data_ = nullptr;
+        return *this;
     }
 
     BoolArray& operator=(initializer_list<bool> init) {
