@@ -277,6 +277,8 @@ struct ModPT {
         return res;
     }
 
+    explicit operator i64() const { return v_; }
+
     ModPT inv() const {
         return ModPT(inv_mod(v_,P));
     }
