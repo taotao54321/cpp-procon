@@ -31,7 +31,7 @@ all: $(TARGET)
 $(TARGET): solve.o
 	$(CXX) $(CXXFLAGS) $<
 
-%.o: %.c
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -MMD -MP $<
 
 clean:
