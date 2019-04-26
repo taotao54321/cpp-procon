@@ -456,11 +456,36 @@ public:
     }
 
     // [a,b]
+    template<typename T1, typename T2,
+             std::enable_if_t<
+                 IsUniformInt<T1>::value &&
+                 IsUniformInt<T2>::value &&
+                 std::is_signed<T1>::value != std::is_unsigned<T2>::value,
+                 std::nullptr_t
+             > = nullptr>
+    auto uniform(T1 a, T2 b) {
+        using R = std::common_type_t<T1,T2>;
+        return variate<R,UniformDistributionType>(a, b);
+    }
+
+    // [a,b]
     template<typename T,
              std::enable_if_t<IsUniformInt<T>::value, std::nullptr_t> = nullptr>
     T uniform(T a=std::numeric_limits<T>::min(),
               T b=std::numeric_limits<T>::max()) {
         return variate<T,UniformDistributionType>(a, b);
+    }
+
+    // [a,b)
+    template<typename T1, typename T2,
+             std::enable_if_t<
+                 IsUniformReal<T1>::value &&
+                 IsUniformReal<T2>::value,
+                 std::nullptr_t
+             > = nullptr>
+    auto uniform(T1 a, T2 b) {
+        using R = std::common_type_t<T1,T2>;
+        return variate<R,UniformDistributionType>(a, b);
     }
 
     // [a,b)

@@ -26,6 +26,11 @@ uint32_t f_seeder() {
 
 uint32_t f_rng() {
     static Rng rng;
+
+    static_assert(is_same<int64_t,decltype(rng.uniform(int64_t(0),0))>::value, "");
+    static_assert(is_same<unsigned int,decltype(rng.uniform(uint16_t(0),0U))>::value, "");
+    static_assert(is_same<double,decltype(rng.uniform(float(0),0.0))>::value, "");
+
 #if 1
     return rng.uniform<uint32_t>();
 #else
