@@ -20,6 +20,19 @@ public:
             __libc_dlclose(handle_);
     }
 
+    DynamicLibrary(const DynamicLibrary&)            = delete;
+    DynamicLibrary& operator=(const DynamicLibrary&) = delete;
+
+    DynamicLibrary(DynamicLibrary&& other) noexcept : handle_(other.handle_) {
+        other.handle_ = nullptr;
+    }
+    DynamicLibrary& operator=(DynamicLibrary&& other) noexcept {
+        if(this == &other) return *this;
+        handle_ = other.handle_;
+        other.handle_ = nullptr;
+        return *this;
+    }
+
     void* sym(const char* name) {
         void* res = __libc_dlsym(handle_, name);
         assert(res);

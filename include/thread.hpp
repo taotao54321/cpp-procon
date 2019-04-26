@@ -12,6 +12,17 @@ public:
         call(lib.pthread_attr_destroy, &attr);
     }
 
+    Thread(const Thread&)            = delete;
+    Thread& operator=(const Thread&) = delete;
+
+    Thread(Thread&& other) noexcept : f_(other.f_), id_(other.id_) {}
+    Thread& operator=(Thread&& other) noexcept {
+        if(this == &other) return *this;
+        f_  = other.f_;
+        id_ = other.id_;
+        return *this;
+    }
+
     void join() {
         const auto& lib = lib_pthread;
         call(lib.pthread_join, id_, nullptr);
