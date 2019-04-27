@@ -21,6 +21,41 @@ vector<vector<T>> graph_make_matrix(i64 n) {
     return g;
 }
 
+// 辺のリストから n 頂点無向グラフの隣接リスト表現を得る
+vector<vector<i64>> graph_from_edges(i64 n, const vector<pair<i64,i64>>& es) {
+    vector<vector<i64>> g(n);
+    for(const auto& e : es) {
+        i64 s,t; tie(s,t) = e;
+        g[s].emplace_back(t);
+        g[t].emplace_back(s);
+    }
+    return g;
+}
+
+// 単純無向グラフが木かどうか判定する
+//
+// g: 隣接リスト表現(頂点数 n > 0)
+bool graph_is_tree(const vector<vector<i64>>& g) {
+    i64 n = SIZE(g);
+    assert(n > 0);
+
+    i64 edge_cnt = 0;
+    BoolArray visited(n, false);
+    auto dfs = FIX([&g,&edge_cnt,&visited](auto&& self, i64 v) -> void {
+        visited[v] = true;
+        for(i64 to : g[v]) {
+            if(visited[to]) continue;
+            ++edge_cnt;
+            self(to);
+        }
+    });
+    dfs(0);
+
+    bool connected = ALL(all_of, visited, IDENTITY());
+
+    return edge_cnt == n-1 && connected;
+}
+
 // ダイクストラ法
 //
 // (d,parent) を返す
