@@ -592,6 +592,12 @@ T MIN(initializer_list<T> ilist, Comp comp={}) {
     return min(ilist, comp);
 }
 
+template<typename T>
+T ABS(T x) {
+    static_assert(is_signed<T>::value, "ABS(): argument must be signed");
+    return x < 0 ? -x : x;
+}
+
 template<typename C>
 i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }
 
