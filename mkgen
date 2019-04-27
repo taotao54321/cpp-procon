@@ -8,17 +8,18 @@ def get_dir():
     return Path(__file__).resolve().parent
 
 def create_cpp(base, name):
-    hdr_procon = open(base/"include"/"procon.hpp", "r").read()
-    hdr_random = open(base/"include"/"random.hpp", "r").read()
-    hdr_string = open(base/"include"/"string.hpp", "r").read()
+    hpps = (
+        "procon.hpp",
+        "random.hpp",
+        "string.hpp",
+        "prufer.hpp",
+        "gen.hpp",
+    )
+    hdrs = tuple(open(base/"include"/hpp,"r").read() for hpp in hpps)
     body = open(base/"tmpl"/"gen.cpp", "r").read()
     try:
         with open(name, "x") as out:
-            out.write(hdr_procon)
-            out.write("\n")
-            out.write(hdr_random)
-            out.write("\n")
-            out.write(hdr_string)
+            out.write("\n".join(hdrs))
             out.write(body)
         print(name)
     except FileExistsError:
