@@ -691,6 +691,11 @@ i64 ilog10(i64 x) {
     return SIZE(TABLE);
 }
 
+bool is_pow2(i64 x) {
+    assert(x > 0);
+    return (x&(x-1)) == 0;
+}
+
 // Haskell の divMod と同じ
 pair<i64,i64> divmod(i64 a, i64 b) {
     i64 q = a / b;
