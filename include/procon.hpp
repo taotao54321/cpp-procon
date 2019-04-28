@@ -56,6 +56,22 @@ constexpr f64 PI = 3.14159265358979323846;
 
 #define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
+// ビット演算 {{{
+i64 BIT_CLZ(i64 x) {
+    if(x == 0) return 64;
+    return __builtin_clzll(x);
+}
+
+i64 BIT_CTZ(i64 x) {
+    if(x == 0) return 64;
+    return __builtin_ctzll(x);
+}
+
+i64 BIT_POP(i64 x) {
+    return __builtin_popcountll(x);
+}
+// }}}
+
 // BoolArray {{{
 class BoolArray {
 public:
@@ -659,7 +675,7 @@ i64 isqrt(i64 x) {
 // 0 <= ilog2(x) <= 62
 i64 ilog2(i64 x) {
     assert(x > 0);
-    return 63 - __builtin_clzll(x);
+    return 63 - BIT_CLZ(x);
 }
 
 // 0 <= ilog10(x) <= 18
