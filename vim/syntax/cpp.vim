@@ -59,6 +59,7 @@ syntax keyword Function divmod div_ceil div_floor modulo
 
 syntax keyword Function feq
 
+syntax keyword Function FOLD FOLD1
 syntax keyword Function SUM
 syntax keyword Function transform_self
 syntax keyword Function UNIQ
