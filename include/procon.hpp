@@ -827,6 +827,22 @@ BidiIt bsearch_ge(BidiIt first, BidiIt last, const T& x, Comp comp={}) {
     return lower_bound(first, last, x, comp);
 }
 
+template<typename InputIt, typename BinaryOp>
+auto FOLD(InputIt first, InputIt last,
+          typename iterator_traits<InputIt>::value_type init,
+          BinaryOp op)
+{
+    for(; first != last; ++first)
+        init = op(move(init), *first);
+    return init;
+}
+
+template<typename InputIt, typename BinaryOp>
+auto FOLD1(InputIt first, InputIt last, BinaryOp op) {
+    auto init = *first++;
+    return FOLD(first, last, init, op);
+}
+
 template<typename InputIt>
 auto SUM(InputIt first, InputIt last) {
     using T = typename iterator_traits<InputIt>::value_type;
