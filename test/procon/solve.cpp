@@ -1,5 +1,28 @@
 #include "procon.hpp"
 
+void test_pow2() {
+    assert( is_pow2(1));
+    assert( is_pow2(2));
+    assert(!is_pow2(3));
+    assert( is_pow2(4));
+    assert( is_pow2(1LL<<62));
+    assert(!is_pow2((1LL<<62)-1));
+
+    assert(pow2_ceil(1) == 1);
+    assert(pow2_ceil(2) == 2);
+    assert(pow2_ceil(3) == 4);
+    assert(pow2_ceil(4) == 4);
+    assert(pow2_ceil(1LL<<62) == (1LL<<62));
+    assert(pow2_ceil((1LL<<62)-1) == (1LL<<62));
+
+    assert(pow2_floor(1) == 1);
+    assert(pow2_floor(2) == 2);
+    assert(pow2_floor(3) == 2);
+    assert(pow2_floor(4) == 4);
+    assert(pow2_floor(1LL<<62) == (1LL<<62));
+    assert(pow2_floor((1LL<<62)-1) == (1LL<<61));
+}
+
 void test_max_min() {
     {
         i64 x = 5;
@@ -141,6 +164,8 @@ void test_fmt() {
 }
 
 signed main() {
+    test_pow2();
+
     test_max_min();
 
     test_fst_snd();

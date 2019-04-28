@@ -712,6 +712,16 @@ bool is_pow2(i64 x) {
     return (x&(x-1)) == 0;
 }
 
+i64 pow2_ceil(i64 x) {
+    assert(x > 0);
+    return 1LL << (64 - BIT_CLZ(x-1));
+}
+
+i64 pow2_floor(i64 x) {
+    assert(x > 0);
+    return 1LL << (63 - BIT_CLZ(x));
+}
+
 // Haskell の divMod と同じ
 pair<i64,i64> divmod(i64 a, i64 b) {
     i64 q = a / b;
