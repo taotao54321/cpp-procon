@@ -34,7 +34,7 @@ struct Index2 {
         return *this;
     }
 
-    i64 norm1() const { return abs(y) + abs(x); }
+    i64 norm1() const { return ABS(y) + ABS(x); }
 
     vector<Index2> neighbor4() const {
         return {
