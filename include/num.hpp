@@ -89,7 +89,7 @@ vector<pair<i64,i64>> factorize(i64 n) {
 }
 
 bool is_square(i64 x) {
-    i64 r = isqrt(x);
+    i64 r = sqrt_floor(x);
     return r*r == x;
 }
 
