@@ -965,6 +965,7 @@ auto EQUIV(Comp comp={}) {
 }
 
 struct IDENTITY {
+    using is_transparent = void;
     template<typename T>
     constexpr T&& operator()(T&& x) const noexcept {
         return forward<T>(x);
