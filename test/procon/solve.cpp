@@ -38,6 +38,36 @@ void test_log2() {
     assert(log2_floor((1LL<<62)+1) == 62);
 }
 
+void test_log10() {
+    assert(log10_ceil(1) == 0);
+    assert(log10_ceil(2) == 1);
+    assert(log10_ceil(9) == 1);
+    assert(log10_ceil(10) == 1);
+    assert(log10_ceil(11) == 2);
+    assert(log10_ceil(50) == 2);
+    assert(log10_ceil(100) == 2);
+    assert(log10_ceil(  999'999'999LL) == 9);
+    assert(log10_ceil(1'000'000'000LL) == 9);
+    assert(log10_ceil(5'000'000'000LL) == 10);
+    assert(log10_ceil(  999'999'999'999'999'999LL) == 18);
+    assert(log10_ceil(1'000'000'000'000'000'000LL) == 18);
+    assert(log10_ceil(5'000'000'000'000'000'000LL) == 19);
+
+    assert(log10_floor(1) == 0);
+    assert(log10_floor(2) == 0);
+    assert(log10_floor(9) == 0);
+    assert(log10_floor(10) == 1);
+    assert(log10_floor(11) == 1);
+    assert(log10_floor(50) == 1);
+    assert(log10_floor(100) == 2);
+    assert(log10_floor(  999'999'999LL) == 8);
+    assert(log10_floor(1'000'000'000LL) == 9);
+    assert(log10_floor(5'000'000'000LL) == 9);
+    assert(log10_floor(  999'999'999'999'999'999LL) == 17);
+    assert(log10_floor(1'000'000'000'000'000'000LL) == 18);
+    assert(log10_floor(5'000'000'000'000'000'000LL) == 18);
+}
+
 void test_pow2() {
     assert( is_pow2(1));
     assert( is_pow2(2));
@@ -204,6 +234,7 @@ void test_fmt() {
 signed main() {
     test_sqrt();
     test_log2();
+    test_log10();
 
     test_pow2();
 

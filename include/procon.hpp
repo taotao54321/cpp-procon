@@ -689,8 +689,38 @@ i64 log2_ceil(i64 x) {
     return 64 - BIT_CLZ(x-1);
 }
 
-// 0 <= ilog10(x) <= 18
-i64 ilog10(i64 x) {
+// 0 <= log10_ceil(x) <= 19
+i64 log10_ceil(i64 x) {
+    assert(x > 0);
+    static constexpr i64 TABLE[19] {
+        1LL,
+        10LL,
+        100LL,
+        1000LL,
+        10000LL,
+        100000LL,
+        1000000LL,
+        10000000LL,
+        100000000LL,
+        1000000000LL,
+        10000000000LL,
+        100000000000LL,
+        1000000000000LL,
+        10000000000000LL,
+        100000000000000LL,
+        1000000000000000LL,
+        10000000000000000LL,
+        100000000000000000LL,
+        1000000000000000000LL,
+    };
+    REP(i, SIZE(TABLE)) {
+        if(x <= TABLE[i]) return i;
+    }
+    return SIZE(TABLE);
+}
+
+// 0 <= log10_floor(x) <= 18
+i64 log10_floor(i64 x) {
     assert(x > 0);
     static constexpr i64 TABLE[18] {
         9LL,
