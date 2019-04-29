@@ -626,6 +626,25 @@ bool is_even(i64 x) { return x % 2 == 0; }
 template<typename T> i64 cmp(T x, T y) { return (y<x) - (x<y); }
 template<typename T> i64 sgn(T x) { return cmp(x, T(0)); }
 
+// 事前条件: a >= 0, b >= 0
+i64 gcd_impl(i64 a, i64 b) {
+    if(b == 0) return a;
+    return gcd_impl(b, a%b);
+}
+
+// GCD(0,0) = 0
+i64 GCD(i64 a, i64 b) {
+    return gcd_impl(ABS(a), ABS(b));
+}
+
+// LCM(0,x) は未定義
+i64 LCM(i64 a, i64 b) {
+    assert(a != 0 && b != 0);
+    a = ABS(a);
+    b = ABS(b);
+    return a / gcd_impl(a,b) * b;
+}
+
 // lo:OK, hi:NG
 template<typename Pred>
 i64 bisect_integer(i64 lo, i64 hi, Pred pred) {

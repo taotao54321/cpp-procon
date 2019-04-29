@@ -57,6 +57,8 @@ syntax keyword Function is_odd is_even
 
 syntax keyword Function divmod div_ceil div_floor modulo
 
+syntax keyword Function GCD LCM
+
 syntax keyword Function feq
 
 syntax keyword Function FOLD FOLD1

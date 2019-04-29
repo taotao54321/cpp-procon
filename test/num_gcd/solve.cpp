@@ -1,10 +1,9 @@
 #include "procon.hpp"
-#include "num.hpp"
 
 signed main() {
     i64 x, y; RD(x); RD(y);
 
-    i64 ans = gcd(x,y);
+    i64 ans = GCD(x,y);
 
     PRINTLN(ans);
 
