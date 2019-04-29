@@ -672,10 +672,16 @@ i64 isqrt(i64 x) {
     return bisect_integer(lo, hi, [x](i64 r) { return r*r <= x; });
 }
 
-// 0 <= ilog2(x) <= 62
-i64 ilog2(i64 x) {
+// 0 <= log2_floor(x) <= 62
+i64 log2_floor(i64 x) {
     assert(x > 0);
     return 63 - BIT_CLZ(x);
+}
+
+// 0 <= log2_ceil(x) <= 63
+i64 log2_ceil(i64 x) {
+    assert(x > 0);
+    return 64 - BIT_CLZ(x-1);
 }
 
 // 0 <= ilog10(x) <= 18

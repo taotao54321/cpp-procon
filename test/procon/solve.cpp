@@ -1,5 +1,23 @@
 #include "procon.hpp"
 
+void test_log2() {
+    assert(log2_ceil(1) == 0);
+    assert(log2_ceil(2) == 1);
+    assert(log2_ceil(3) == 2);
+    assert(log2_ceil(4) == 2);
+    assert(log2_ceil(1LL<<62) == 62);
+    assert(log2_ceil((1LL<<62)-1) == 62);
+    assert(log2_ceil((1LL<<62)+1) == 63);
+
+    assert(log2_floor(1) == 0);
+    assert(log2_floor(2) == 1);
+    assert(log2_floor(3) == 1);
+    assert(log2_floor(4) == 2);
+    assert(log2_floor(1LL<<62) == 62);
+    assert(log2_floor((1LL<<62)-1) == 61);
+    assert(log2_floor((1LL<<62)+1) == 62);
+}
+
 void test_pow2() {
     assert( is_pow2(1));
     assert( is_pow2(2));
@@ -164,6 +182,8 @@ void test_fmt() {
 }
 
 signed main() {
+    test_log2();
+
     test_pow2();
 
     test_max_min();
