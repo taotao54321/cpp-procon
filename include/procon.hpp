@@ -664,12 +664,17 @@ i64 ipow(i64 x, i64 e) {
     return res;
 }
 
-i64 isqrt(i64 x) {
+i64 sqrt_floor(i64 x) {
     assert(x >= 0);
 
     i64 lo = 0;
     i64 hi = MIN(x/2+2, 3037000500LL);
     return bisect_integer(lo, hi, [x](i64 r) { return r*r <= x; });
+}
+
+i64 sqrt_ceil(i64 x) {
+    i64 r = sqrt_floor(x);
+    return r*r == x ? r : r+1;
 }
 
 // 0 <= log2_floor(x) <= 62
@@ -718,14 +723,14 @@ bool is_pow2(i64 x) {
     return (x&(x-1)) == 0;
 }
 
+// x > 0
 i64 pow2_ceil(i64 x) {
-    assert(x > 0);
-    return 1LL << (64 - BIT_CLZ(x-1));
+    return 1LL << log2_ceil(x);
 }
 
+// x > 0
 i64 pow2_floor(i64 x) {
-    assert(x > 0);
-    return 1LL << (63 - BIT_CLZ(x));
+    return 1LL << log2_floor(x);
 }
 
 // Haskell の divMod と同じ

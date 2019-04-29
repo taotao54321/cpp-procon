@@ -1,5 +1,25 @@
 #include "procon.hpp"
 
+void test_sqrt() {
+    assert(sqrt_ceil(0) == 0);
+    assert(sqrt_ceil(1) == 1);
+    assert(sqrt_ceil(2) == 2);
+    assert(sqrt_ceil(3) == 2);
+    assert(sqrt_ceil(4) == 2);
+    assert(sqrt_ceil(5) == 3);
+    assert(sqrt_ceil(99) == 10);
+    assert(sqrt_ceil(numeric_limits<i64>::max()) == 3037000500);
+
+    assert(sqrt_floor(0) == 0);
+    assert(sqrt_floor(1) == 1);
+    assert(sqrt_floor(2) == 1);
+    assert(sqrt_floor(3) == 1);
+    assert(sqrt_floor(4) == 2);
+    assert(sqrt_floor(5) == 2);
+    assert(sqrt_floor(99) == 9);
+    assert(sqrt_floor(numeric_limits<i64>::max()) == 3037000499);
+}
+
 void test_log2() {
     assert(log2_ceil(1) == 0);
     assert(log2_ceil(2) == 1);
@@ -182,6 +202,7 @@ void test_fmt() {
 }
 
 signed main() {
+    test_sqrt();
     test_log2();
 
     test_pow2();
