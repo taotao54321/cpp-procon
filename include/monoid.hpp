@@ -14,6 +14,21 @@ struct Monoid<T,multiplies<>> {
 };
 
 template<typename T>
+struct Monoid<T,bit_and<>> {
+    static const T UNITY() { return T(-1); }
+};
+
+template<typename T>
+struct Monoid<T,bit_or<>> {
+    static const T UNITY() { return T(0); }
+};
+
+template<typename T>
+struct Monoid<T,bit_xor<>> {
+    static const T UNITY() { return T(0); }
+};
+
+template<typename T>
 struct Monoid<T,OpMax<>> {
     static const T UNITY() { return -PROCON_INF<T>(); }
 };
