@@ -37,11 +37,11 @@ struct SegTree {
             v_[i] = op_(v_[2*i], v_[2*i+1]);
     }
 
-    void add(i64 i, i64 x) {
+    void add(i64 i, const T& x) {
         update(i, v_[n_+i]+x);
     }
 
-    void update(i64 i, i64 x) {
+    void update(i64 i, const T& x) {
         i += n_;
         v_[i] = x;
         while(i > 1) {
@@ -50,7 +50,7 @@ struct SegTree {
         }
     }
 
-    i64 query(i64 i, i64 k) const {
+    T query(i64 i, i64 k) const {
         assert(0 <= i && i+k <= n_orig_);
         return query_impl(i, i+k, 1, 0, n_);
     }
@@ -62,7 +62,7 @@ private:
         v_.resize(2*n_);
     }
 
-    i64 query_impl(i64 a, i64 b, i64 i, i64 l, i64 r) const {
+    T query_impl(i64 a, i64 b, i64 i, i64 l, i64 r) const {
         if(r <= a || b <= l) return M::UNITY();
         if(a <= l && r <= b) return v_[i];
 
