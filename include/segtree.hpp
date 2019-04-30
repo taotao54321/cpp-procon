@@ -91,7 +91,7 @@ struct Formatter<SegTree<T,Op>> {
             out << "\n";
             it += m;
         }
-        out << "}\n";
+        out << "}";
         return out;
     }
 };
