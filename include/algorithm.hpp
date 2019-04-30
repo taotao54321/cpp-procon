@@ -74,6 +74,18 @@ auto nth_value(InputIt first, InputIt last, i64 n) {
     return v[n];
 }
 
+template<typename ForwardIt>
+void rotate_left(ForwardIt first, ForwardIt last, i64 n) {
+    rotate(first, first+n, last);
+}
+
+template<typename ForwardIt>
+void rotate_right(ForwardIt first, ForwardIt last, i64 n) {
+    auto rfirst = make_reverse_iterator(last);
+    auto rlast  = make_reverse_iterator(first);
+    rotate(rfirst, rfirst+n, rlast);
+}
+
 // [first,last) を隣接2項間で pred が成り立つグループに分ける
 // デフォルトでは同じ値のグループに分ける
 // 返り値はイテレータ対のリスト
