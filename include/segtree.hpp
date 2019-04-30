@@ -88,7 +88,6 @@ struct Formatter<SegTree<T,Op>> {
             string space((1LL<<(k+1))-1, ' ');
             out << margin;
             WRITE_JOIN_REPR(out, it, it+m, space);
-            out << margin;
             out << "\n";
             it += m;
         }
