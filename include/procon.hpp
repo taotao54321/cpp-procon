@@ -70,6 +70,18 @@ i64 BIT_CTZ(i64 x) {
 i64 BIT_POP(i64 x) {
     return __builtin_popcountll(x);
 }
+
+i64 BIT_FFS(i64 x) {
+    return __builtin_ffsll(x);
+}
+
+i64 BIT_CLRSB(i64 x) {
+    return __builtin_clrsbll(x);
+}
+
+i64 BIT_PARITY(i64 x) {
+    return __builtin_parityll(x);
+}
 // }}}
 
 // BoolArray {{{
