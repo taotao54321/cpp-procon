@@ -16,7 +16,7 @@ signed main() {
     i64 ans = 0;
     REP(i, N) {
         i64 a = A[i];
-        ans += i - fen.sum(a);  // i から既に現れた [0,i) の個数を引く
+        ans += i - fen.query(0,a);  // i から既に現れた [0,i) の個数を引く
         fen.add(a, 1);
     }
 
