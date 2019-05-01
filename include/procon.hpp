@@ -58,6 +58,7 @@ constexpr f64 PI = 3.14159265358979323846;
 
 // ビット演算 {{{
 // 2の補数を仮定
+// 引数は [-INF,INF] のみ想定
 
 i64 BIT_GET(i64 x, i64 i) {
     return x & (1LL<<i);
@@ -189,6 +190,18 @@ i64 BIT_MASKTO_FIRST_ZERO(i64 x) {
 i64 BIT_MASKTO_FIRST_ONE(i64 x) {
     if(x == 0) return 0;
     return x ^ (x-1);
+}
+
+// 最右の連続した0を1にする (ex. 0b101001 -> 0b101111)
+// x=-1 なら -1 を返す
+i64 BIT_FLIP_FIRST_ZEROS(i64 x) {
+    return ((x&(x+1))-1) | x;
+}
+
+// 最右の連続した1を0にする (ex. 0b10110 -> 0b10000)
+// x=0 なら 0 を返す
+i64 BIT_FLIP_FIRST_ONES(i64 x) {
+    return ((x|(x-1))+1) & x;
 }
 // }}}
 

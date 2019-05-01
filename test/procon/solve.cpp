@@ -194,6 +194,22 @@ void test_bit() {  // {{{
     assert(BIT_MASKTO_FIRST_ONE(0b110100) == 0b000111);
     assert(BIT_MASKTO_FIRST_ONE(-1) == 1);
     assert(BIT_MASKTO_FIRST_ONE(1LL<<62) == numeric_limits<i64>::max());
+
+    assert(BIT_FLIP_FIRST_ZEROS(0) == -1);
+    assert(BIT_FLIP_FIRST_ZEROS(1) == -1);
+    assert(BIT_FLIP_FIRST_ZEROS(4) == 7);
+    assert(BIT_FLIP_FIRST_ZEROS(0b101001) == 0b101111);
+    assert(BIT_FLIP_FIRST_ZEROS(-1) == -1);
+    assert(BIT_FLIP_FIRST_ZEROS(1LL<<62) == numeric_limits<i64>::max());
+    assert(BIT_FLIP_FIRST_ZEROS((1LL<<62)-1) == -1);
+
+    assert(BIT_FLIP_FIRST_ONES(0) == 0);
+    assert(BIT_FLIP_FIRST_ONES(1) == 0);
+    assert(BIT_FLIP_FIRST_ONES(4) == 0);
+    assert(BIT_FLIP_FIRST_ONES(0b110110) == 0b110000);
+    assert(BIT_FLIP_FIRST_ONES(-1) == 0);
+    assert(BIT_FLIP_FIRST_ONES(1LL<<50) == 0);
+    assert(BIT_FLIP_FIRST_ONES((1LL<<50)-1) == 0);
 } // }}}
 
 void test_sqrt() {
