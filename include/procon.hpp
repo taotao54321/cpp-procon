@@ -101,6 +101,18 @@ i64 BIT_COUNT_TRAILING_ONES(i64 x) {
     return BIT_COUNT_TRAILING_ZEROS(~x);
 }
 
+// 末尾へ続く0を識別するマスクを返す (ex. 0b10100 -> 0b00011)
+// x=0 なら -1 を返す
+i64 BIT_MASK_TRAILING_ZEROS(i64 x) {
+    return ~x & (x-1);
+}
+
+// 末尾へ続く1を識別するマスクを返す (ex. 0b10011 -> 0b00011)
+// x=-1 なら -1 を返す
+i64 BIT_MASK_TRAILING_ONES(i64 x) {
+    return x & ~(x+1);
+}
+
 i64 BIT_COUNT_ONES(i64 x) {
     return __builtin_popcountll(x);
 }

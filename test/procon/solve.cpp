@@ -71,6 +71,30 @@ void test_bit() {  // {{{
     assert(BIT_COUNT_TRAILING_ONES(-2) == 0);
     assert(BIT_COUNT_TRAILING_ONES((1LL<<62)-1) == 62);
 
+    assert(BIT_MASK_TRAILING_ZEROS(0) == -1);
+    assert(BIT_MASK_TRAILING_ZEROS(1) == 0);
+    assert(BIT_MASK_TRAILING_ZEROS(2) == 1);
+    assert(BIT_MASK_TRAILING_ZEROS(3) == 0);
+    assert(BIT_MASK_TRAILING_ZEROS(4) == 3);
+    assert(BIT_MASK_TRAILING_ZEROS(0b1011) == 0);
+    assert(BIT_MASK_TRAILING_ZEROS(0b1100) == 3);
+    assert(BIT_MASK_TRAILING_ZEROS(-1) == 0);
+    assert(BIT_MASK_TRAILING_ZEROS(-2) == 1);
+    assert(BIT_MASK_TRAILING_ZEROS(1LL<<62) == (1LL<<62)-1);
+    assert(BIT_MASK_TRAILING_ZEROS((1LL<<62)-1) == 0);
+
+    assert(BIT_MASK_TRAILING_ONES(0) == 0);
+    assert(BIT_MASK_TRAILING_ONES(1) == 1);
+    assert(BIT_MASK_TRAILING_ONES(2) == 0);
+    assert(BIT_MASK_TRAILING_ONES(3) == 3);
+    assert(BIT_MASK_TRAILING_ONES(4) == 0);
+    assert(BIT_MASK_TRAILING_ONES(0b1011) == 3);
+    assert(BIT_MASK_TRAILING_ONES(0b1100) == 0);
+    assert(BIT_MASK_TRAILING_ONES(-1) == -1);
+    assert(BIT_MASK_TRAILING_ONES(-2) == 0);
+    assert(BIT_MASK_TRAILING_ONES(1LL<<62) == 0);
+    assert(BIT_MASK_TRAILING_ONES((1LL<<62)-1) == (1LL<<62)-1);
+
     assert(BIT_COUNT_ZEROS(0) == 64);
     assert(BIT_COUNT_ZEROS(1) == 63);
     assert(BIT_COUNT_ZEROS(0b1100) == 62);
