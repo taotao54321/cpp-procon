@@ -176,6 +176,20 @@ i64 BIT_PROPAGATE_FIRST_ONE(i64 x) {
     if(x == 0) return 0;
     return x | (x-1);
 }
+
+// 最右の0および末尾へ続く1を識別するマスクを返す (ex. 0b11011 -> 0b00111)
+// x=-1 なら 0 を返す
+i64 BIT_MASKTO_FIRST_ZERO(i64 x) {
+    if(x == -1) return 0;
+    return x ^ (x+1);
+}
+
+// 最右の1および末尾へ続く0を識別するマスクを返す (ex. 0b10100 -> 0b00111)
+// x=0 なら 0 を返す
+i64 BIT_MASKTO_FIRST_ONE(i64 x) {
+    if(x == 0) return 0;
+    return x ^ (x-1);
+}
 // }}}
 
 // BoolArray {{{
