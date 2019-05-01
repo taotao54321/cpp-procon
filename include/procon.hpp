@@ -130,13 +130,13 @@ i64 BIT_PARITY(i64 x) {
 }
 
 // 最右の0を分離する (ex. 0b11001 -> 0b00010)
-// x=-1 なら0を返す
+// x=-1 なら 0 を返す
 i64 BIT_EXTRACT_FIRST_ZERO(i64 x) {
     return ~x & (x+1);
 }
 
 // 最右の1を分離する (ex. 0b10110 -> 0b00010)
-// x=0 なら0を返す
+// x=0 なら 0 を返す
 i64 BIT_EXTRACT_FIRST_ONE(i64 x) {
     return x & (-x);
 }
@@ -152,15 +152,29 @@ i64 BIT_FLIP_FIRST_ONE(i64 x) {
 }
 
 // 最右の1の位置(1-based)を得る
-// x=0 なら0を返す
+// x=0 なら 0 を返す
 i64 BIT_FIND_FIRST_ONE(i64 x) {
     return __builtin_ffsll(x);
 }
 
 // 最右の0の位置(1-based)を得る
-// x=-1 なら0を返す
+// x=-1 なら 0 を返す
 i64 BIT_FIND_FIRST_ZERO(i64 x) {
     return BIT_FIND_FIRST_ONE(~x);
+}
+
+// 最右の0をそれより右に伝播する (ex. 0b11011 -> 0b11000)
+// x=-1 なら -1 を返す
+i64 BIT_PROPAGATE_FIRST_ZERO(i64 x) {
+    if(x == -1) return -1;
+    return x & (x+1);
+}
+
+// 最右の1をそれより右に伝播する (ex. 0b10100 -> 0b10111)
+// x=0 なら 0 を返す
+i64 BIT_PROPAGATE_FIRST_ONE(i64 x) {
+    if(x == 0) return 0;
+    return x | (x-1);
 }
 // }}}
 

@@ -169,6 +169,18 @@ void test_bit() {  // {{{
     assert(BIT_FIND_FIRST_ONE(0b1100) == 3);
     assert(BIT_FIND_FIRST_ONE(-1) == 1);
     assert(BIT_FIND_FIRST_ONE((1LL<<62)-1) == 1);
+
+    assert(BIT_PROPAGATE_FIRST_ZERO(0) == 0);
+    assert(BIT_PROPAGATE_FIRST_ZERO(1) == 0);
+    assert(BIT_PROPAGATE_FIRST_ZERO(0b101011) == 0b101000);
+    assert(BIT_PROPAGATE_FIRST_ZERO(-1) == -1);
+    assert(BIT_PROPAGATE_FIRST_ZERO((1LL<<62)-1) == 0);
+
+    assert(BIT_PROPAGATE_FIRST_ONE(0) == 0);
+    assert(BIT_PROPAGATE_FIRST_ONE(1) == 1);
+    assert(BIT_PROPAGATE_FIRST_ONE(0b110100) == 0b110111);
+    assert(BIT_PROPAGATE_FIRST_ONE(-1) == -1);
+    assert(BIT_PROPAGATE_FIRST_ONE(1LL<<62) == numeric_limits<i64>::max());
 } // }}}
 
 void test_sqrt() {
