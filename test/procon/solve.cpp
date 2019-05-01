@@ -193,6 +193,16 @@ void test_log10() {
 }
 
 void test_pow2() {
+    assert( is_mersenne(0));
+    assert( is_mersenne(1));
+    assert(!is_mersenne(2));
+    assert( is_mersenne(3));
+    assert(!is_mersenne(4));
+    assert(!is_mersenne(5));
+    assert(!is_mersenne(13));
+    assert(!is_mersenne(1LL<<62));
+    assert( is_mersenne((1LL<<62)-1));
+
     assert( is_pow2(1));
     assert( is_pow2(2));
     assert(!is_pow2(3));

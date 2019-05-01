@@ -834,6 +834,12 @@ i64 log10_floor(i64 x) {
     return SIZE(TABLE);
 }
 
+// 2^n - 1 の形かどうか
+bool is_mersenne(i64 x) {
+    assert(x >= 0);
+    return (x&(x+1)) == 0;
+}
+
 bool is_pow2(i64 x) {
     assert(x > 0);
     return (x&(x-1)) == 0;
