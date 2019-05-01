@@ -122,6 +122,7 @@ i64 BIT_COUNT_ZEROS(i64 x) {
     return 64 - BIT_COUNT_ONES(x);
 }
 
+// 先頭から続く冗長な符号ビットを数える (ex. 1 -> 62, -1 -> 63)
 i64 BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(i64 x) {
     return __builtin_clrsbll(x);
 }
