@@ -1,5 +1,53 @@
 #include "procon.hpp"
 
+void test_bit() {
+    assert(BIT_CLZ(0) == 64);
+    assert(BIT_CLZ(1) == 63);
+    assert(BIT_CLZ(0b1100) == 60);
+    assert(BIT_CLZ(-1) == 0);
+    assert(BIT_CLZ((1LL<<62)-1) == 2);
+
+    assert(BIT_CTZ(0) == 64);
+    assert(BIT_CTZ(1) == 0);
+    assert(BIT_CTZ(0b1100) == 2);
+    assert(BIT_CTZ(-1) == 0);
+    assert(BIT_CTZ((1LL<<62)-1) == 0);
+
+    assert(BIT_POP(0) == 0);
+    assert(BIT_POP(1) == 1);
+    assert(BIT_POP(0b1100) == 2);
+    assert(BIT_POP(-1) == 64);
+    assert(BIT_POP((1LL<<62)-1) == 62);
+
+    assert(BIT_FFS(0) == 0);
+    assert(BIT_FFS(1) == 1);
+    assert(BIT_FFS(0b1100) == 3);
+    assert(BIT_FFS(-1) == 1);
+    assert(BIT_FFS((1LL<<62)-1) == 1);
+
+    assert(BIT_FLS(0) == 0);
+    assert(BIT_FLS(1) == 1);
+    assert(BIT_FLS(0b1100) == 4);
+    assert(BIT_FLS(-1) == 64);
+    assert(BIT_FLS((1LL<<62)-1) == 62);
+
+    assert(BIT_CLRSB(0) == 63);
+    assert(BIT_CLRSB(1) == 62);
+    assert(BIT_CLRSB(0b1100) == 59);
+    assert(BIT_CLRSB(-1) == 63);
+    assert(BIT_CLRSB((1LL<<62)-1) == 1);
+    assert(BIT_CLRSB(-2) == 62);
+
+    assert(BIT_PARITY(0) == 0);
+    assert(BIT_PARITY(1) == 1);
+    assert(BIT_PARITY(0b1100) == 0);
+    assert(BIT_PARITY(-1) == 0);
+    assert(BIT_PARITY((1LL<<62)-1) == 0);
+    assert(BIT_PARITY((1LL<<61)-1) == 1);
+
+    
+}
+
 void test_sqrt() {
     assert(sqrt_ceil(0) == 0);
     assert(sqrt_ceil(1) == 1);
@@ -232,6 +280,8 @@ void test_fmt() {
 }
 
 signed main() {
+    test_bit();
+
     test_sqrt();
     test_log2();
     test_log10();

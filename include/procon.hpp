@@ -75,6 +75,10 @@ i64 BIT_FFS(i64 x) {
     return __builtin_ffsll(x);
 }
 
+i64 BIT_FLS(i64 x) {
+    return 64 - BIT_CLZ(x);
+}
+
 i64 BIT_CLRSB(i64 x) {
     return __builtin_clrsbll(x);
 }
