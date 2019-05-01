@@ -81,34 +81,61 @@ i64 BIT_ASSIGN(i64 x, i64 i, bool b) {
     return b ? BIT_SET(x,i) : BIT_CLEAR(x,i);
 }
 
-i64 BIT_CLZ(i64 x) {
+i64 BIT_COUNT_LEADING_ZEROS(i64 x) {
     if(x == 0) return 64;
     return __builtin_clzll(x);
 }
 
-i64 BIT_CTZ(i64 x) {
+i64 BIT_COUNT_TRAILING_ZEROS(i64 x) {
     if(x == 0) return 64;
     return __builtin_ctzll(x);
 }
 
-i64 BIT_POP(i64 x) {
+i64 BIT_COUNT_ONES(i64 x) {
     return __builtin_popcountll(x);
 }
 
-i64 BIT_FFS(i64 x) {
-    return __builtin_ffsll(x);
-}
-
-i64 BIT_FLS(i64 x) {
-    return 64 - BIT_CLZ(x);
-}
-
-i64 BIT_CLRSB(i64 x) {
+i64 BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(i64 x) {
     return __builtin_clrsbll(x);
 }
 
 i64 BIT_PARITY(i64 x) {
     return __builtin_parityll(x);
+}
+
+// 最右の1を分離する (ex. 0b10110 -> 0b00010)
+// x=0 なら0を返す
+i64 BIT_EXTRACT_FIRST_ONE(i64 x) {
+    return x & (-x);
+}
+
+// 最右の1を0にする (ex. 0b10110 -> 0b10100)
+i64 BIT_CLEAR_FIRST_ONE(i64 x) {
+    return x & (x-1);
+}
+
+// 最右の1の位置(1-based)を得る
+// x=0 なら0を返す
+i64 BIT_FIND_FIRST_ONE(i64 x) {
+    return __builtin_ffsll(x);
+}
+
+// 最左の1を分離する (ex. 0b10110 -> 0b10000)
+// x=0 なら0を返す
+i64 BIT_EXTRACT_LAST_ONE(i64 x) {
+    if(x == 0) return 0;
+    return 1LL << (63 - BIT_COUNT_LEADING_ZEROS(x));
+}
+
+// 最左の1を0にする (ex. 0b10110 -> 0b00110)
+i64 BIT_CLEAR_LAST_ONE(i64 x) {
+    return x & ~BIT_EXTRACT_LAST_ONE(x);
+}
+
+// 最左の1の位置(1-based)を得る
+// x=0なら0を返す
+i64 BIT_FIND_LAST_ONE(i64 x) {
+    return 64 - BIT_COUNT_LEADING_ZEROS(x);
 }
 // }}}
 
@@ -739,13 +766,13 @@ i64 sqrt_ceil(i64 x) {
 // 0 <= log2_ceil(x) <= 63
 i64 log2_ceil(i64 x) {
     assert(x > 0);
-    return 64 - BIT_CLZ(x-1);
+    return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
 }
 
 // 0 <= log2_floor(x) <= 62
 i64 log2_floor(i64 x) {
     assert(x > 0);
-    return 63 - BIT_CLZ(x);
+    return 63 - BIT_COUNT_LEADING_ZEROS(x);
 }
 
 // 0 <= log10_ceil(x) <= 19
