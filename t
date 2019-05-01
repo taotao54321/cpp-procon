@@ -29,7 +29,7 @@ def build_case(case):
 
 def run_case(case):
     cmdline = ( "./t", )
-    proc = subprocess.run(cmdline, cwd=case, stderr=DEVNULL)
+    proc = subprocess.run(cmdline, cwd=case)
     return proc.returncode == 0
 
 def exec_case(case):
