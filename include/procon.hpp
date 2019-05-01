@@ -57,6 +57,8 @@ constexpr f64 PI = 3.14159265358979323846;
 #define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
 // ビット演算 {{{
+// 2の補数を仮定
+
 i64 BIT_GET(i64 x, i64 i) {
     return x & (1LL<<i);
 }
@@ -73,7 +75,7 @@ i64 BIT_CLEAR(i64 x, i64 i) {
     return x & ~(1LL<<i);
 }
 
-i64 BIT_TOGGLE(i64 x, i64 i) {
+i64 BIT_FLIP(i64 x, i64 i) {
     return x ^ (1LL<<i);
 }
 
@@ -115,14 +117,25 @@ i64 BIT_PARITY(i64 x) {
     return __builtin_parityll(x);
 }
 
+// 最右の0を分離する (ex. 0b11001 -> 0b00010)
+// x=-1 なら0を返す
+i64 BIT_EXTRACT_FIRST_ZERO(i64 x) {
+    return ~x & (x+1);
+}
+
 // 最右の1を分離する (ex. 0b10110 -> 0b00010)
 // x=0 なら0を返す
 i64 BIT_EXTRACT_FIRST_ONE(i64 x) {
     return x & (-x);
 }
 
+// 最右の0を1にする (ex. 0b11001 -> 0b11011)
+i64 BIT_FLIP_FIRST_ZERO(i64 x) {
+    return x | (x+1);
+}
+
 // 最右の1を0にする (ex. 0b10110 -> 0b10100)
-i64 BIT_CLEAR_FIRST_ONE(i64 x) {
+i64 BIT_FLIP_FIRST_ONE(i64 x) {
     return x & (x-1);
 }
 
@@ -132,22 +145,10 @@ i64 BIT_FIND_FIRST_ONE(i64 x) {
     return __builtin_ffsll(x);
 }
 
-// 最左の1を分離する (ex. 0b10110 -> 0b10000)
-// x=0 なら0を返す
-i64 BIT_EXTRACT_LAST_ONE(i64 x) {
-    if(x == 0) return 0;
-    return 1LL << (63 - BIT_COUNT_LEADING_ZEROS(x));
-}
-
-// 最左の1を0にする (ex. 0b10110 -> 0b00110)
-i64 BIT_CLEAR_LAST_ONE(i64 x) {
-    return x & ~BIT_EXTRACT_LAST_ONE(x);
-}
-
-// 最左の1の位置(1-based)を得る
-// x=0なら0を返す
-i64 BIT_FIND_LAST_ONE(i64 x) {
-    return 64 - BIT_COUNT_LEADING_ZEROS(x);
+// 最右の0の位置(1-based)を得る
+// x=-1 なら0を返す
+i64 BIT_FIND_FIRST_ZERO(i64 x) {
+    return BIT_FIND_FIRST_ONE(~x);
 }
 // }}}
 

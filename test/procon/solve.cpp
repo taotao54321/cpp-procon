@@ -27,13 +27,13 @@ void test_bit() {  // {{{
     assert(BIT_CLEAR(-1,0) == -2);
     assert(BIT_CLEAR(numeric_limits<i64>::max(),62) == (1LL<<62)-1);
 
-    assert(BIT_TOGGLE(0,0) == 1);
-    assert(BIT_TOGGLE(1,0) == 0);
-    assert(BIT_TOGGLE(0,63) == numeric_limits<i64>::min());
-    assert(BIT_TOGGLE(0b1100,4) == 0b11100);
-    assert(BIT_TOGGLE(0b1100,3) ==  0b0100);
-    assert(BIT_TOGGLE(-1,0) == -2);
-    assert(BIT_TOGGLE(numeric_limits<i64>::max(),63) == -1);
+    assert(BIT_FLIP(0,0) == 1);
+    assert(BIT_FLIP(1,0) == 0);
+    assert(BIT_FLIP(0,63) == numeric_limits<i64>::min());
+    assert(BIT_FLIP(0b1100,4) == 0b11100);
+    assert(BIT_FLIP(0b1100,3) ==  0b0100);
+    assert(BIT_FLIP(-1,0) == -2);
+    assert(BIT_FLIP(numeric_limits<i64>::max(),63) == -1);
 
     assert(BIT_ASSIGN(0,0,0) == 0);
     assert(BIT_ASSIGN(0,0,1) == 1);
@@ -97,6 +97,15 @@ void test_bit() {  // {{{
     assert(BIT_PARITY((1LL<<62)-1) == 0);
     assert(BIT_PARITY((1LL<<61)-1) == 1);
 
+    assert(BIT_EXTRACT_FIRST_ZERO(0) == 1);
+    assert(BIT_EXTRACT_FIRST_ZERO(1) == 2);
+    assert(BIT_EXTRACT_FIRST_ZERO(2) == 1);
+    assert(BIT_EXTRACT_FIRST_ZERO(3) == 4);
+    assert(BIT_EXTRACT_FIRST_ZERO(4) == 1);
+    assert(BIT_EXTRACT_FIRST_ZERO(6) == 1);
+    assert(BIT_EXTRACT_FIRST_ZERO(-1) == 0);
+    assert(BIT_EXTRACT_FIRST_ZERO(-2) == 1);
+
     assert(BIT_EXTRACT_FIRST_ONE(0) == 0);
     assert(BIT_EXTRACT_FIRST_ONE(1) == 1);
     assert(BIT_EXTRACT_FIRST_ONE(2) == 2);
@@ -106,44 +115,36 @@ void test_bit() {  // {{{
     assert(BIT_EXTRACT_FIRST_ONE(-1) == 1);
     assert(BIT_EXTRACT_FIRST_ONE(-2) == 2);
 
-    assert(BIT_CLEAR_FIRST_ONE(0) == 0);
-    assert(BIT_CLEAR_FIRST_ONE(1) == 0);
-    assert(BIT_CLEAR_FIRST_ONE(2) == 0);
-    assert(BIT_CLEAR_FIRST_ONE(3) == 2);
-    assert(BIT_CLEAR_FIRST_ONE(4) == 0);
-    assert(BIT_CLEAR_FIRST_ONE(6) == 4);
-    assert(BIT_CLEAR_FIRST_ONE(-1) == -2);
-    assert(BIT_CLEAR_FIRST_ONE(-2) == -4);
+    assert(BIT_FLIP_FIRST_ZERO(0) == 1);
+    assert(BIT_FLIP_FIRST_ZERO(1) == 3);
+    assert(BIT_FLIP_FIRST_ZERO(2) == 3);
+    assert(BIT_FLIP_FIRST_ZERO(3) == 7);
+    assert(BIT_FLIP_FIRST_ZERO(4) == 5);
+    assert(BIT_FLIP_FIRST_ZERO(6) == 7);
+    assert(BIT_FLIP_FIRST_ZERO(-1) == -1);
+    assert(BIT_FLIP_FIRST_ZERO(-2) == -1);
+
+    assert(BIT_FLIP_FIRST_ONE(0) == 0);
+    assert(BIT_FLIP_FIRST_ONE(1) == 0);
+    assert(BIT_FLIP_FIRST_ONE(2) == 0);
+    assert(BIT_FLIP_FIRST_ONE(3) == 2);
+    assert(BIT_FLIP_FIRST_ONE(4) == 0);
+    assert(BIT_FLIP_FIRST_ONE(6) == 4);
+    assert(BIT_FLIP_FIRST_ONE(-1) == -2);
+    assert(BIT_FLIP_FIRST_ONE(-2) == -4);
+
+    assert(BIT_FIND_FIRST_ZERO(0) == 1);
+    assert(BIT_FIND_FIRST_ZERO(1) == 2);
+    assert(BIT_FIND_FIRST_ZERO(0b1100) == 1);
+    assert(BIT_FIND_FIRST_ZERO(0b1111) == 5);
+    assert(BIT_FIND_FIRST_ZERO(-1) == 0);
+    assert(BIT_FIND_FIRST_ZERO((1LL<<62)-1) == 63);
 
     assert(BIT_FIND_FIRST_ONE(0) == 0);
     assert(BIT_FIND_FIRST_ONE(1) == 1);
     assert(BIT_FIND_FIRST_ONE(0b1100) == 3);
     assert(BIT_FIND_FIRST_ONE(-1) == 1);
     assert(BIT_FIND_FIRST_ONE((1LL<<62)-1) == 1);
-
-    assert(BIT_EXTRACT_LAST_ONE(0) == 0);
-    assert(BIT_EXTRACT_LAST_ONE(1) == 1);
-    assert(BIT_EXTRACT_LAST_ONE(2) == 2);
-    assert(BIT_EXTRACT_LAST_ONE(3) == 2);
-    assert(BIT_EXTRACT_LAST_ONE(4) == 4);
-    assert(BIT_EXTRACT_LAST_ONE(6) == 4);
-    assert(BIT_EXTRACT_LAST_ONE(-1) == numeric_limits<i64>::min());
-    assert(BIT_EXTRACT_LAST_ONE(numeric_limits<i64>::max()) == (1LL<<62));
-
-    assert(BIT_CLEAR_LAST_ONE(0) == 0);
-    assert(BIT_CLEAR_LAST_ONE(1) == 0);
-    assert(BIT_CLEAR_LAST_ONE(2) == 0);
-    assert(BIT_CLEAR_LAST_ONE(3) == 1);
-    assert(BIT_CLEAR_LAST_ONE(4) == 0);
-    assert(BIT_CLEAR_LAST_ONE(6) == 2);
-    assert(BIT_CLEAR_LAST_ONE(-1) == numeric_limits<i64>::max());
-    assert(BIT_CLEAR_LAST_ONE(numeric_limits<i64>::max()) == (1LL<<62)-1);
-
-    assert(BIT_FIND_LAST_ONE(0) == 0);
-    assert(BIT_FIND_LAST_ONE(1) == 1);
-    assert(BIT_FIND_LAST_ONE(0b1100) == 4);
-    assert(BIT_FIND_LAST_ONE(-1) == 64);
-    assert(BIT_FIND_LAST_ONE((1LL<<62)-1) == 62);
 } // }}}
 
 void test_sqrt() {
