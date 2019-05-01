@@ -205,6 +205,23 @@ i64 BIT_FLIP_FIRST_ZEROS(i64 x) {
 i64 BIT_FLIP_FIRST_ONES(i64 x) {
     return ((x|(x-1))+1) & x;
 }
+
+// X ⊆ {0,1,...,n-1}, |X| = k なる部分集合 X を列挙する
+// comb(n,k) 個
+//
+// ex.
+// ```
+// i64 x = (1LL<<3) - 1;
+// do {
+//     // ...
+// } while(BIT_NEXT_SET_SIZED(x, 10));
+// ```
+bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
+    if(x == 0) return false;
+    i64 t = BIT_PROPAGATE_FIRST_ONE(x) + 1;
+    x = t | (BIT_MASK_TRAILING_ZEROS(t) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
+    return x < (1LL<<n);
+}
 // }}}
 
 // BoolArray {{{

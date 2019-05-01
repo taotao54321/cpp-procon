@@ -210,6 +210,18 @@ void test_bit() {  // {{{
     assert(BIT_FLIP_FIRST_ONES(-1) == 0);
     assert(BIT_FLIP_FIRST_ONES(1LL<<50) == 0);
     assert(BIT_FLIP_FIRST_ONES((1LL<<50)-1) == 0);
+
+    {
+        i64 x = 0;
+        assert(!BIT_NEXT_SET_SIZED(x, 3));
+
+        i64 cnt = 0;
+        x = (1LL<<3)-1;
+        do {
+            ++cnt;
+        } while(BIT_NEXT_SET_SIZED(x, 5));
+        assert(cnt == 10);
+    }
 } // }}}
 
 void test_sqrt() {

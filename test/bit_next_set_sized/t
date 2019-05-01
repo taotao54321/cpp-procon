@@ -1,0 +1,3 @@
+#!/bin/sh
+
+oj t 2>/dev/null
