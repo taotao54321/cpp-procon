@@ -127,6 +127,7 @@ i64 BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(i64 x) {
     return __builtin_clrsbll(x);
 }
 
+// 1の個数が奇数なら1, 偶数なら0を返す
 i64 BIT_PARITY(i64 x) {
     return __builtin_parityll(x);
 }
