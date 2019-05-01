@@ -57,6 +57,30 @@ constexpr f64 PI = 3.14159265358979323846;
 #define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
 // ビット演算 {{{
+i64 BIT_GET(i64 x, i64 i) {
+    return x & (1LL<<i);
+}
+
+bool BIT_TEST(i64 x, i64 i) {
+    return BIT_GET(x,i) != 0;
+}
+
+i64 BIT_SET(i64 x, i64 i) {
+    return x | (1LL<<i);
+}
+
+i64 BIT_CLEAR(i64 x, i64 i) {
+    return x & ~(1LL<<i);
+}
+
+i64 BIT_TOGGLE(i64 x, i64 i) {
+    return x ^ (1LL<<i);
+}
+
+i64 BIT_ASSIGN(i64 x, i64 i, bool b) {
+    return b ? BIT_SET(x,i) : BIT_CLEAR(x,i);
+}
+
 i64 BIT_CLZ(i64 x) {
     if(x == 0) return 64;
     return __builtin_clzll(x);

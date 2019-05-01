@@ -1,6 +1,48 @@
 #include "procon.hpp"
 
-void test_bit() {
+void test_bit() {  // {{{
+    assert(BIT_GET(0,0) == 0);
+    assert(BIT_GET(0,63) == 0);
+    assert(BIT_GET(4,2) == 4);
+    assert(BIT_GET(4,1) == 0);
+
+    assert(!BIT_TEST(0,0));
+    assert(!BIT_TEST(0,63));
+    assert( BIT_TEST(4,2));
+    assert(!BIT_TEST(4,1));
+
+    assert(BIT_SET(0,0) == 1);
+    assert(BIT_SET(1,0) == 1);
+    assert(BIT_SET(0,63) == numeric_limits<i64>::min());
+    assert(BIT_SET(0b1100,4) == 0b11100);
+    assert(BIT_SET(0b1100,3) ==  0b1100);
+    assert(BIT_SET(-1,0) == -1);
+    assert(BIT_SET(numeric_limits<i64>::max(),63) == -1);
+
+    assert(BIT_CLEAR(0,0) == 0);
+    assert(BIT_CLEAR(1,0) == 0);
+    assert(BIT_CLEAR(0,63) == 0);
+    assert(BIT_CLEAR(0b1100,4) == 0b1100);
+    assert(BIT_CLEAR(0b1100,3) == 0b0100);
+    assert(BIT_CLEAR(-1,0) == -2);
+    assert(BIT_CLEAR(numeric_limits<i64>::max(),62) == (1LL<<62)-1);
+
+    assert(BIT_TOGGLE(0,0) == 1);
+    assert(BIT_TOGGLE(1,0) == 0);
+    assert(BIT_TOGGLE(0,63) == numeric_limits<i64>::min());
+    assert(BIT_TOGGLE(0b1100,4) == 0b11100);
+    assert(BIT_TOGGLE(0b1100,3) ==  0b0100);
+    assert(BIT_TOGGLE(-1,0) == -2);
+    assert(BIT_TOGGLE(numeric_limits<i64>::max(),63) == -1);
+
+    assert(BIT_ASSIGN(0,0,0) == 0);
+    assert(BIT_ASSIGN(0,0,1) == 1);
+    assert(BIT_ASSIGN(0,63,1) == numeric_limits<i64>::min());
+    assert(BIT_ASSIGN(0b1100,3,1) == 0b1100);
+    assert(BIT_ASSIGN(0b1100,3,0) == 0b0100);
+    assert(BIT_ASSIGN(-1,0,0) == -2);
+    assert(BIT_ASSIGN(numeric_limits<i64>::max(),63,1) == -1);
+
     assert(BIT_CLZ(0) == 64);
     assert(BIT_CLZ(1) == 63);
     assert(BIT_CLZ(0b1100) == 60);
@@ -44,9 +86,7 @@ void test_bit() {
     assert(BIT_PARITY(-1) == 0);
     assert(BIT_PARITY((1LL<<62)-1) == 0);
     assert(BIT_PARITY((1LL<<61)-1) == 1);
-
-    
-}
+} // }}}
 
 void test_sqrt() {
     assert(sqrt_ceil(0) == 0);
