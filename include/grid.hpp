@@ -67,6 +67,9 @@ Index2 operator/(const Index2& lhs, i64 rhs) { return Index2(lhs) /= rhs; }
 bool operator==(const Index2& lhs, const Index2& rhs) {
     return lhs.y == rhs.y && lhs.x == rhs.x;
 }
+bool operator!=(const Index2& lhs, const Index2& rhs) {
+    return !(lhs == rhs);
+}
 
 template<>
 struct procon_hash<Index2> {
