@@ -253,6 +253,21 @@ void test_bit() {  // {{{
         } while(BIT_PREV_SUBSET(x, y));
         assert(cnt == 8);
     }
+
+    {
+        i64 n = 8;
+        i64 y = 0b10101;
+        i64 x = 0b10111;
+        assert(BIT_NEXT_SUPERSET(x, n, y));
+        assert(x == 0b11101);
+
+        i64 cnt = 0;
+        x = y;
+        do {
+            ++cnt;
+        } while(BIT_NEXT_SUPERSET(x, n, y));
+        assert(cnt == 32);
+    }
 } // }}}
 
 void test_sqrt() {

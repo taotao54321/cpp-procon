@@ -264,6 +264,22 @@ bool BIT_PREV_SUBSET(i64& x, i64 y) {
     x = (x-1) & y;
     return true;
 }
+
+// 集合 Y を包含する集合 X ⊆ {0,1,...,n-1} を昇順に列挙する
+// 2^(n-|Y|) 個
+//
+// ex.
+// ```
+// i64 y = 0b00010101;
+// i64 x = y;
+// do {
+//     // ...
+// } while(BIT_NEXT_SUPERSET(x, 8, y));
+// ```
+bool BIT_NEXT_SUPERSET(i64& x, i64 n, i64 y) {
+    x = (x+1) | y;
+    return x < BIT_I(n);
+}
 // }}}
 
 // BoolArray {{{
