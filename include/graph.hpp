@@ -67,7 +67,6 @@ tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g
     vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
 
-    BoolArray done(n, false);
     MinHeap<pair<T,i64>> que;
 
     d[start] = T(0);
@@ -79,12 +78,10 @@ tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g
 
         if(d[vmin] < dmin) continue;
 
-        done[vmin] = true;
         if(--n_remain == 0) break;
 
         for(const auto& p : g[vmin]) {
             i64 to,cost; tie(to,cost) = p;
-            if(done[to]) continue;
 
             i64 d_new = dmin + cost;
             if(d_new < d[to]) {
