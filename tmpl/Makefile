@@ -15,6 +15,8 @@ CXXFLAGS := \
     -Wnull-dereference \
     -Wold-style-cast \
     -Wshadow \
+    -Wswitch-default \
+    -Wswitch-enum \
     -Wundef \
     -Wuseless-cast \
     -Wvla \

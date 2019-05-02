@@ -16,6 +16,7 @@ signed main() {
         case CONT_IN:  PRINTLN(2); break;
         case CONT_ON:  PRINTLN(1); break;
         case CONT_OUT: PRINTLN(0); break;
+        default: assert(false);
         }
     }
 

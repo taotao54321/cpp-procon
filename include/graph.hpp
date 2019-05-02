@@ -366,6 +366,7 @@ vector<i64> graph_euler_trail_list(vector<vector<i64>>& g, i64 start, bool digra
         case RESUME:
             res.emplace_back(v);
             break;
+        default: assert(false);
         }
     }
 
@@ -404,6 +405,7 @@ vector<i64> graph_euler_trail_matrix(vector<vector<i64>>& g, i64 start, bool dig
         case RESUME:
             res.emplace_back(v);
             break;
+        default: assert(false);
         }
     }
 
