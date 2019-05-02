@@ -19,7 +19,7 @@ signed main() {
     i64 N; RD(N);
     i64 M; RD(M);
 
-    vector<vector<pair<i64,i64>>> G(1000000);
+    vector<vector<pair<i64,i64>>> G(N+2*M);
     vector<vector<i64>> companies(N);
     REP(_, M) {
         i64 p,q; RD1(p); RD1(q);
