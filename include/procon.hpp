@@ -230,6 +230,40 @@ bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
     x = t | (BIT_MASK_TRAILING_ZEROS(t) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
     return x < BIT_I(n);
 }
+
+// 集合 Y の部分集合 X を昇順に列挙する
+// 2^|Y| 個
+//
+// ex.
+// ```
+// i64 y = 0b10101;
+// i64 x = 0;
+// do {
+//     // ...
+// } while(BIT_NEXT_SUBSET(x, y));
+// ```
+bool BIT_NEXT_SUBSET(i64& x, i64 y) {
+    if(x == y) return false;
+    x = (x-y) & y;
+    return true;
+}
+
+// 集合 Y の部分集合 X を降順に列挙する
+// 2^|Y| 個
+//
+// ex.
+// ```
+// i64 y = 0b10101;
+// i64 x = y;
+// do {
+//     // ...
+// } while(BIT_PREV_SUBSET(x, y));
+// ```
+bool BIT_PREV_SUBSET(i64& x, i64 y) {
+    if(x == 0) return false;
+    x = (x-1) & y;
+    return true;
+}
 // }}}
 
 // BoolArray {{{
