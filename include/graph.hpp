@@ -95,6 +95,49 @@ tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g
     return make_tuple(d, parent);
 }
 
+// 辺のコストが非負かつ小さい場合の最良優先探索(01-BFS の一般化)
+// 全ての辺のコストは [0,k] であること
+//
+// (d,parent) を返す
+// d[i]: start から点 i への最短距離(到達不能な点は INF)
+// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+template<typename T>
+tuple<vector<T>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,T>>>& g, i64 k, i64 start) {
+    i64 n = SIZE(g);
+    vector<T> d(n, PROCON_INF<T>());
+    vector<i64> parent(n, -1);
+
+    vector<queue<i64>> ques(k+1);
+    auto enqueue = [&ques](i64 to, i64 cost) {
+        ques[cost].emplace(to);
+    };
+    auto dequeue = [&ques]() -> i64 {
+        for(auto& que : ques)
+            if(!que.empty())
+                return POP(que);
+        return -1;
+    };
+
+    enqueue(start, 0);
+    d[start] = 0;
+
+    i64 v;
+    while((v = dequeue()) != -1) {
+        for(const auto& p : g[v]) {
+            i64 to,cost; tie(to,cost) = p;
+
+            i64 d_new = d[v] + cost;
+            if(d_new < d[to]) {
+                d[to] = d_new;
+                parent[to] = v;
+                enqueue(to, cost);
+            }
+        }
+    }
+
+    return make_tuple(d, parent);
+}
+
 // ベルマンフォード法
 //
 // 負閉路が存在する場合、最短距離が負の無限大になる点が生じる。

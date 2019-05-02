@@ -79,4 +79,6 @@ syntax keyword Function RD_TUPLE  RD1_TUPLE
 syntax keyword Function PRINT PRINTLN
 
 syntax keyword Function EXIT
+
+syntax keyword Function POP POP_BACK POP_FRONT
 " }}}
