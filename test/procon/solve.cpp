@@ -1,6 +1,16 @@
 #include "procon.hpp"
 
 void test_bit() {  // {{{
+    assert(BIT_I(0) == 1);
+    assert(BIT_I(1) == 2);
+    assert(BIT_I(4) == 16);
+    assert(BIT_I(50) == 1LL<<50);
+
+    assert(BIT_I_1(0) == 0);
+    assert(BIT_I_1(1) == 1);
+    assert(BIT_I_1(4) == 15);
+    assert(BIT_I_1(50) == (1LL<<50)-1);
+
     assert(BIT_GET(0,0) == 0);
     assert(BIT_GET(0,63) == 0);
     assert(BIT_GET(4,2) == 4);

@@ -60,8 +60,16 @@ constexpr f64 PI = 3.14159265358979323846;
 // 2の補数を仮定
 // 引数は [-INF,INF] のみ想定
 
+i64 BIT_I(i64 i) {
+    return 1LL << i;
+}
+
+i64 BIT_I_1(i64 i) {
+    return BIT_I(i) - 1;
+}
+
 i64 BIT_GET(i64 x, i64 i) {
-    return x & (1LL<<i);
+    return x & BIT_I(i);
 }
 
 bool BIT_TEST(i64 x, i64 i) {
@@ -69,15 +77,15 @@ bool BIT_TEST(i64 x, i64 i) {
 }
 
 i64 BIT_SET(i64 x, i64 i) {
-    return x | (1LL<<i);
+    return x | BIT_I(i);
 }
 
 i64 BIT_CLEAR(i64 x, i64 i) {
-    return x & ~(1LL<<i);
+    return x & ~BIT_I(i);
 }
 
 i64 BIT_FLIP(i64 x, i64 i) {
-    return x ^ (1LL<<i);
+    return x ^ BIT_I(i);
 }
 
 i64 BIT_ASSIGN(i64 x, i64 i, bool b) {
@@ -211,7 +219,7 @@ i64 BIT_FLIP_FIRST_ONES(i64 x) {
 //
 // ex.
 // ```
-// i64 x = (1LL<<3) - 1;
+// i64 x = BIT_I_1(3);
 // do {
 //     // ...
 // } while(BIT_NEXT_SET_SIZED(x, 10));
@@ -220,7 +228,7 @@ bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
     if(x == 0) return false;
     i64 t = BIT_PROPAGATE_FIRST_ONE(x) + 1;
     x = t | (BIT_MASK_TRAILING_ZEROS(t) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
-    return x < (1LL<<n);
+    return x < BIT_I(n);
 }
 // }}}
 
@@ -932,12 +940,12 @@ bool is_pow2(i64 x) {
 
 // x > 0
 i64 pow2_ceil(i64 x) {
-    return 1LL << log2_ceil(x);
+    return BIT_I(log2_ceil(x));
 }
 
 // x > 0
 i64 pow2_floor(i64 x) {
-    return 1LL << log2_floor(x);
+    return BIT_I(log2_floor(x));
 }
 
 // Haskell の divMod と同じ
