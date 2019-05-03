@@ -299,7 +299,9 @@ bool operator!=(i64 lhs, ModPT<P> rhs) { return !(lhs == rhs); }
 
 template<i64 P>
 istream& operator>>(istream& in, ModPT<P>& x) {
-    return in >> x.v_;
+    i64 t; in >> t;
+    x = t;
+    return in;
 }
 
 template<i64 P>
