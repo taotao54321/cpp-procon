@@ -196,7 +196,11 @@ auto RD1_GRID2(i64 h, i64 w) {
 template<typename T>
 struct Formatter<Grid2<T>> {
     static ostream& write_str(ostream& out, const Grid2<T>& grid) {
-        return write_repr(out, grid);
+        for(const auto& row : grid.cont_) {
+            WRITE_STR(out, row);
+            out << "\n";
+        }
+        return out;
     }
     static ostream& write_repr(ostream& out, const Grid2<T>& grid) {
         out << "\n";
@@ -212,7 +216,11 @@ struct Formatter<Grid2<T>> {
 template<>
 struct Formatter<Grid2<char>> {
     static ostream& write_str(ostream& out, const Grid2<char>& grid) {
-        return write_repr(out, grid);
+        for(const auto& row : grid.cont_) {
+            ALL(copy, row, ostream_iterator<char>(out));
+            out << "\n";
+        }
+        return out;
     }
     static ostream& write_repr(ostream& out, const Grid2<char>& grid) {
         out << "\n";
