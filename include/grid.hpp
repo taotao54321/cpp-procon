@@ -10,6 +10,9 @@ struct Index2 {
     constexpr Index2(i64 yy, i64 xx) : y(yy), x(xx) {}
     constexpr explicit Index2(const pair<i64,i64>& p) : Index2(p.first,p.second) {}
 
+    static const Index2 DIR4[4];
+    static const Index2 DIR8[8];
+
     Index2 operator-() const {
         return Index2(-y,-x);
     }
@@ -56,6 +59,16 @@ struct Index2 {
             { y+1, x+1 },
         };
     }
+};
+const Index2 Index2::DIR4[4] {
+            {-1,0},
+    {0,-1},         {0,1},
+            { 1,0}
+};
+const Index2 Index2::DIR8[8] {
+    {-1,-1}, {-1,0}, {-1,1},
+    { 0,-1},         { 0,1},
+    { 1,-1}, { 1,0}, { 1,1}
 };
 
 Index2 operator+(const Index2& lhs, const Index2& rhs) { return Index2(lhs) += rhs; }
