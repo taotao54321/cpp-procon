@@ -6,9 +6,9 @@ template<typename T> void procon_hash_combine(size_t&, const T&);
 struct Index2 {
     i64 y, x;
 
-    Index2() : Index2(0,0) {}
-    Index2(i64 yy, i64 xx) : y(yy), x(xx) {}
-    explicit Index2(const pair<i64,i64>& p) : Index2(p.first,p.second) {}
+    constexpr Index2() : Index2(0,0) {}
+    constexpr Index2(i64 yy, i64 xx) : y(yy), x(xx) {}
+    constexpr explicit Index2(const pair<i64,i64>& p) : Index2(p.first,p.second) {}
 
     Index2 operator-() const {
         return Index2(-y,-x);
