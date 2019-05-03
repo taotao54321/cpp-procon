@@ -86,6 +86,52 @@ void rotate_right(ForwardIt first, ForwardIt last, i64 n) {
     rotate(rfirst, rfirst+n, rlast);
 }
 
+// 循環検出 (Brent のアルゴリズム)
+//
+// x0: 初期値
+// f: 写像
+// lam_max: 循環の長さの最大値(これより長いものを探さない)
+//
+// (lambda,mu) を返す
+// lambda: 循環の長さ (循環しない場合 -1)
+// mu: 循環の開始位置 (0-based, 循環しない場合 -1)
+template<typename T, typename F>
+pair<i64,i64> cycle_detect(const T& x0, F f, i64 lam_max=INF) {
+    i64 lam;
+    {
+        lam = 1;
+        T tort = x0;
+        T hare = f(x0);
+        for(i64 p = 1; tort != hare; ) {
+            if(p == lam) {
+                tort = hare;
+                p *= 2;
+                lam = 0;
+            }
+            hare = f(hare);
+            ++lam;
+            if(lam > lam_max) return { -1, -1 };
+        }
+    }
+
+    i64 mu;
+    {
+        mu = 0;
+        T tort = x0;
+        T hare = x0;
+        REP(_, lam) {
+            hare = f(hare);
+        }
+        while(tort != hare) {
+            tort = f(tort);
+            hare = f(hare);
+            ++mu;
+        }
+    }
+
+    return { lam, mu };
+}
+
 // [first,last) を隣接2項間で pred が成り立つグループに分ける
 // デフォルトでは同じ値のグループに分ける
 // 返り値はイテレータ対のリスト
