@@ -87,197 +87,197 @@ using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 // set/map/multiset/multimap search {{{
 // set {{{
 template<typename T, typename Comp>
-auto set_search_lt(set<T,Comp>& s, const T& x) {
+auto set_search_lt(set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     auto it = s.lower_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_lt(const set<T,Comp>& s, const T& x) {
+auto set_search_lt(const set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     auto it = s.lower_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_le(set<T,Comp>& s, const T& x) {
+auto set_search_le(set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     auto it = s.upper_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_le(const set<T,Comp>& s, const T& x) {
+auto set_search_le(const set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     auto it = s.upper_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_gt(set<T,Comp>& s, const T& x) {
+auto set_search_gt(set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     return s.upper_bound(x);
 }
 
 template<typename T, typename Comp>
-auto set_search_gt(const set<T,Comp>& s, const T& x) {
+auto set_search_gt(const set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     return s.upper_bound(x);
 }
 
 template<typename T, typename Comp>
-auto set_search_ge(set<T,Comp>& s, const T& x) {
+auto set_search_ge(set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     return s.lower_bound(x);
 }
 
 template<typename T, typename Comp>
-auto set_search_ge(const set<T,Comp>& s, const T& x) {
+auto set_search_ge(const set<T,Comp>& s, const typename set<T,Comp>::key_type& x) {
     return s.lower_bound(x);
 }
 // }}}
 // map {{{
 template<typename K, typename V, typename Comp>
-auto map_search_lt(map<K,V,Comp>& m, const K& x) {
+auto map_search_lt(map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     auto it = m.lower_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_lt(const map<K,V,Comp>& m, const K& x) {
+auto map_search_lt(const map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     auto it = m.lower_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_le(map<K,V,Comp>& m, const K& x) {
+auto map_search_le(map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     auto it = m.upper_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_le(const map<K,V,Comp>& m, const K& x) {
+auto map_search_le(const map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     auto it = m.upper_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_gt(map<K,V,Comp>& m, const K& x) {
+auto map_search_gt(map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     return m.upper_bound(x);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_gt(const map<K,V,Comp>& m, const K& x) {
+auto map_search_gt(const map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     return m.upper_bound(x);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_ge(map<K,V,Comp>& m, const K& x) {
+auto map_search_ge(map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     return m.lower_bound(x);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_ge(const map<K,V,Comp>& m, const K& x) {
+auto map_search_ge(const map<K,V,Comp>& m, const typename map<K,V,Comp>::key_type& x) {
     return m.lower_bound(x);
 }
 // }}}
 // multiset {{{
 template<typename T, typename Comp>
-auto set_search_lt(multiset<T,Comp>& s, const T& x) {
+auto set_search_lt(multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     auto it = s.lower_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_lt(const multiset<T,Comp>& s, const T& x) {
+auto set_search_lt(const multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     auto it = s.lower_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_le(multiset<T,Comp>& s, const T& x) {
+auto set_search_le(multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     auto it = s.upper_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_le(const multiset<T,Comp>& s, const T& x) {
+auto set_search_le(const multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     auto it = s.upper_bound(x);
     if(it == begin(s)) return end(s);
     return prev(it);
 }
 
 template<typename T, typename Comp>
-auto set_search_gt(multiset<T,Comp>& s, const T& x) {
+auto set_search_gt(multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     return s.upper_bound(x);
 }
 
 template<typename T, typename Comp>
-auto set_search_gt(const multiset<T,Comp>& s, const T& x) {
+auto set_search_gt(const multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     return s.upper_bound(x);
 }
 
 template<typename T, typename Comp>
-auto set_search_ge(multiset<T,Comp>& s, const T& x) {
+auto set_search_ge(multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     return s.lower_bound(x);
 }
 
 template<typename T, typename Comp>
-auto set_search_ge(const multiset<T,Comp>& s, const T& x) {
+auto set_search_ge(const multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     return s.lower_bound(x);
 }
 // }}}
 // multimap {{{
 template<typename K, typename V, typename Comp>
-auto map_search_lt(multimap<K,V,Comp>& m, const K& x) {
+auto map_search_lt(multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     auto it = m.lower_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_lt(const multimap<K,V,Comp>& m, const K& x) {
+auto map_search_lt(const multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     auto it = m.lower_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_le(multimap<K,V,Comp>& m, const K& x) {
+auto map_search_le(multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     auto it = m.upper_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_le(const multimap<K,V,Comp>& m, const K& x) {
+auto map_search_le(const multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     auto it = m.upper_bound(x);
     if(it == begin(m)) return end(m);
     return prev(it);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_gt(multimap<K,V,Comp>& m, const K& x) {
+auto map_search_gt(multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     return m.upper_bound(x);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_gt(const multimap<K,V,Comp>& m, const K& x) {
+auto map_search_gt(const multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     return m.upper_bound(x);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_ge(multimap<K,V,Comp>& m, const K& x) {
+auto map_search_ge(multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     return m.lower_bound(x);
 }
 
 template<typename K, typename V, typename Comp>
-auto map_search_ge(const multimap<K,V,Comp>& m, const K& x) {
+auto map_search_ge(const multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     return m.lower_bound(x);
 }
 // }}}

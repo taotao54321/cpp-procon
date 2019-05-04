@@ -75,22 +75,33 @@ void test_map() {
 
 void test_multiset() {
     {
-        multiset<i64> m { 1, 1, 2, 2, 2, 3 };
-        assert(m.count(2) == 3);
-        assert(!multiset_erase_one(m, 4));
-        assert(multiset_erase_one(m, 2));
-        assert(m.count(2) == 2);
-        assert(multiset_erase_one(m, 3));
-        assert(m.count(3) == 0);
+        multiset<i64> s { 1, 1, 2, 2, 2, 5, 6, 6 };
+        assert(set_search_lt(s,2) == next(begin(s),1));
+        assert(set_search_lt(s,3) == next(begin(s),4));
+        assert(set_search_le(s,2) == next(begin(s),4));
+        assert(set_search_le(s,3) == next(begin(s),4));
+        assert(set_search_gt(s,2) == next(begin(s),5));
+        assert(set_search_gt(s,3) == next(begin(s),5));
+        assert(set_search_ge(s,2) == next(begin(s),2));
+        assert(set_search_ge(s,3) == next(begin(s),5));
     }
     {
-        unordered_multiset<i64> m { 1, 1, 2, 2, 2, 3 };
-        assert(m.count(2) == 3);
-        assert(!multiset_erase_one(m, 4));
-        assert(multiset_erase_one(m, 2));
-        assert(m.count(2) == 2);
-        assert(multiset_erase_one(m, 3));
-        assert(m.count(3) == 0);
+        multiset<i64> s { 1, 1, 2, 2, 2, 3 };
+        assert(s.count(2) == 3);
+        assert(!multiset_erase_one(s, 4));
+        assert(multiset_erase_one(s, 2));
+        assert(s.count(2) == 2);
+        assert(multiset_erase_one(s, 3));
+        assert(s.count(3) == 0);
+    }
+    {
+        unordered_multiset<i64> s { 1, 1, 2, 2, 2, 3 };
+        assert(s.count(2) == 3);
+        assert(!multiset_erase_one(s, 4));
+        assert(multiset_erase_one(s, 2));
+        assert(s.count(2) == 2);
+        assert(multiset_erase_one(s, 3));
+        assert(s.count(3) == 0);
     }
 }
 
