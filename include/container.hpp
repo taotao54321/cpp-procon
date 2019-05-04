@@ -184,6 +184,7 @@ auto map_search_ge(const map<K,V,Comp>& m, const typename map<K,V,Comp>::key_typ
 }
 // }}}
 // multiset {{{
+// 等価な値が複数ある場合、lt/le は先頭を、gt/ge は末尾を指す
 template<typename T, typename Comp>
 auto set_search_lt(multiset<T,Comp>& s, const typename multiset<T,Comp>::key_type& x) {
     auto it = s.lower_bound(x);
@@ -233,6 +234,7 @@ auto set_search_ge(const multiset<T,Comp>& s, const typename multiset<T,Comp>::k
 }
 // }}}
 // multimap {{{
+// 等価な値が複数ある場合、lt/le は先頭を、gt/ge は末尾を指す
 template<typename K, typename V, typename Comp>
 auto map_search_lt(multimap<K,V,Comp>& m, const typename multimap<K,V,Comp>::key_type& x) {
     auto it = m.lower_bound(x);
