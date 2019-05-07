@@ -285,6 +285,9 @@ public:
 };
 
 using AutoSeeder = AutoSeederT<Seeder>;
+
+#undef ENTROPY_CPU
+#undef ENTROPY_PID
 // }}}
 
 // UniformDistributionType {{{
