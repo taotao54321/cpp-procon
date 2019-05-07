@@ -1,13 +1,11 @@
 // debug {{{
 
-template<typename T,
-         enable_if_t<0 == rank<T>::value, nullptr_t> = nullptr>
+template<typename T, SFINAE(rank<T>::value == 0)>
 ostream& DBG_CARRAYN_HELPER(ostream& out, const T& e) {
     return WRITE_REPR(out, e);
 }
 
-template<typename T,
-         enable_if_t<0 != rank<T>::value, nullptr_t> = nullptr>
+template<typename T, SFINAE(rank<T>::value != 0)>
 ostream& DBG_CARRAYN_HELPER(ostream& out, const T& e) {
     out << "[";
     for(auto it = begin(e); it != end(e); ++it) {
@@ -30,13 +28,13 @@ void DBG_CARRAYN_IMPL(i64 line, const char* expr, const T& ary) {
 }
 
 template<typename T, typename... Offs, typename... Sizes,
-         enable_if_t<0 == rank<T>::value && 0 == sizeof...(Offs) && 0 == sizeof...(Sizes), nullptr_t> = nullptr>
+         SFINAE(rank<T>::value == 0 && sizeof...(Offs) == 0 && sizeof...(Sizes) == 0)>
 ostream& DBG_CARRAYN_SLICE_HELPER(ostream& out, const T& e, const tuple<Offs...>&, const tuple<Sizes...>&) {
     return WRITE_REPR(out, e);
 }
 
 template<typename T, typename... Offs, typename... Sizes,
-         enable_if_t<0 != rank<T>::value && 0 < sizeof...(Offs) && 0 < sizeof...(Sizes), nullptr_t> = nullptr>
+         SFINAE(rank<T>::value != 0 && sizeof...(Offs) > 0 && sizeof...(Sizes) > 0)>
 ostream& DBG_CARRAYN_SLICE_HELPER(ostream& out, const T& e, const tuple<Offs...>& offs, const tuple<Sizes...>& sizes) {
     static_assert(rank<T>::value == sizeof...(Offs));
     out << "[";

@@ -31,10 +31,10 @@ size_t procon_hash_range(InputIt first, InputIt last) {
     return seed;
 }
 
-template<typename... TS, enable_if_t<0 == sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) == 0)>
 void procon_hash_tuple(size_t&, const tuple<TS...>&) {}
 
-template<typename... TS, enable_if_t<0 < sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) > 0)>
 void procon_hash_tuple(size_t& seed, const tuple<TS...>& t) {
     procon_hash_combine(seed, tuple_head(t));
     procon_hash_tuple(seed, tuple_tail(t));

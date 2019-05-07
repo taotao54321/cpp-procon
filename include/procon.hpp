@@ -11,6 +11,8 @@ using namespace std;
 #define CPP_STR_I(args...) #args
 #define CPP_CAT_I(x,y) x ## y
 
+#define SFINAE(pred) std::enable_if_t<(pred), std::nullptr_t> = nullptr
+
 using i8   = int8_t;
 using u8   = uint8_t;
 using i16  = int16_t;
@@ -438,44 +440,43 @@ auto arrayn_make(i64 n, T x) {
     return Cont(n, x);
 }
 
-template<typename T, typename... Args,
-         enable_if_t<2 <= sizeof...(Args), nullptr_t> = nullptr>
+template<typename T, typename... Args, SFINAE(sizeof...(Args) >= 2)>
 auto arrayn_make(i64 n, Args... args) {
     auto inner = arrayn_make<T>(args...);
     return vector<decltype(inner)>(n, inner);
 }
 
-template<typename T, typename F>
-enable_if_t<!is_arrayn_container<T>::value> arrayn_foreach(T& e, F f) {
+template<typename T, typename F, SFINAE(!is_arrayn_container<T>::value)>
+void arrayn_foreach(T& e, F f) {
     f(e);
 }
 
-template<typename T, typename F>
-enable_if_t<is_arrayn_container<T>::value> arrayn_foreach(T& ary, F f) {
+template<typename T, typename F, SFINAE(is_arrayn_container<T>::value)>
+void arrayn_foreach(T& ary, F f) {
     for(auto& e : ary)
         arrayn_foreach(e, f);
 }
 
-template<typename T, typename U>
-enable_if_t<is_arrayn_container<T>::value> arrayn_fill(T& ary, const U& x) {
+template<typename T, typename U, SFINAE(is_arrayn_container<T>::value)>
+void arrayn_fill(T& ary, const U& x) {
     arrayn_foreach(ary, [&x](auto& e) { e = x; });
 }
 // }}}
 
 // 多次元生配列 {{{
-template<typename T, typename F>
-enable_if_t<rank<T>::value==0> CARRAY_FOREACH(T& e, F f) {
+template<typename T, typename F, SFINAE(rank<T>::value==0)>
+void CARRAY_FOREACH(T& e, F f) {
     f(e);
 }
 
-template<typename Array, typename F>
-enable_if_t<rank<Array>::value!=0> CARRAY_FOREACH(Array& ary, F f) {
+template<typename Array, typename F, SFINAE(rank<Array>::value!=0)>
+void CARRAY_FOREACH(Array& ary, F f) {
     for(auto& e : ary)
         CARRAY_FOREACH(e, f);
 }
 
-template<typename Array, typename U>
-enable_if_t<rank<Array>::value!=0> CARRAY_FILL(Array& ary, const U& v) {
+template<typename Array, typename U, SFINAE(rank<Array>::value!=0)>
+void CARRAY_FILL(Array& ary, const U& v) {
     CARRAY_FOREACH(ary, [&v](auto& e) { e = v; });
 }
 // }}}
@@ -690,8 +691,7 @@ decltype(auto) FIX(F&& f) {
 // }}}
 
 // tuple {{{
-template<typename... TS,
-         enable_if_t<0 < sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) > 0)>
 constexpr auto tuple_head(const tuple<TS...>& t) {
     return get<0>(t);
 }
@@ -701,14 +701,12 @@ constexpr auto tuple_tail_helper(const tuple<TS...>& t, index_sequence<i,is...>)
     return make_tuple(get<is>(t)...);
 }
 
-template<typename... TS,
-         enable_if_t<1 == sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) == 1)>
 constexpr auto tuple_tail(const tuple<TS...>&) {
     return make_tuple();
 }
 
-template<typename... TS,
-         enable_if_t<1 < sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) > 1)>
 constexpr auto tuple_tail(const tuple<TS...>& t) {
     return tuple_tail_helper(t, make_index_sequence<sizeof...(TS)>());
 }
@@ -735,44 +733,42 @@ const T2& SND(const pair<T1,T2>& p) {
     return p.second;
 }
 
-template<typename... TS, enable_if_t<1 <= sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) >= 1)>
 auto& FST(tuple<TS...>& t) {
     return get<0>(t);
 }
 
-template<typename... TS, enable_if_t<1 <= sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) >= 1)>
 const auto& FST(const tuple<TS...>& t) {
     return get<0>(t);
 }
 
-template<typename... TS, enable_if_t<2 <= sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) >= 2)>
 auto& SND(tuple<TS...>& t) {
     return get<1>(t);
 }
 
-template<typename... TS, enable_if_t<2 <= sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) >= 2)>
 const auto& SND(const tuple<TS...>& t) {
     return get<1>(t);
 }
 // }}}
 
 template<typename T1, typename T2, typename Comp=less<>,
-         enable_if_t<
+         SFINAE(
              is_integral<T1>::value &&
              is_integral<T2>::value &&
-             is_signed<T1>::value != is_unsigned<T2>::value,
-             nullptr_t
-         > = nullptr>
+             is_signed<T1>::value != is_unsigned<T2>::value
+         )>
 common_type_t<T1,T2> MAX(T1 x, T2 y, Comp comp={}) {
     return max<common_type_t<T1,T2>>(x, y, comp);
 }
 
 template<typename T1, typename T2, typename Comp=less<>,
-         enable_if_t<
+         SFINAE(
              is_floating_point<T1>::value &&
-             is_floating_point<T2>::value,
-             nullptr_t
-         > = nullptr>
+             is_floating_point<T2>::value
+         )>
 common_type_t<T1,T2> MAX(T1 x, T2 y, Comp comp={}) {
     return max<common_type_t<T1,T2>>(x, y, comp);
 }
@@ -788,22 +784,20 @@ T MAX(initializer_list<T> ilist, Comp comp={}) {
 }
 
 template<typename T1, typename T2, typename Comp=less<>,
-         enable_if_t<
+         SFINAE(
              is_integral<T1>::value &&
              is_integral<T2>::value &&
-             is_signed<T1>::value != is_unsigned<T2>::value,
-             nullptr_t
-         > = nullptr>
+             is_signed<T1>::value != is_unsigned<T2>::value
+         )>
 common_type_t<T1,T2> MIN(T1 x, T2 y, Comp comp={}) {
     return min<common_type_t<T1,T2>>(x, y, comp);
 }
 
 template<typename T1, typename T2, typename Comp=less<>,
-         enable_if_t<
+         SFINAE(
              is_floating_point<T1>::value &&
-             is_floating_point<T2>::value,
-             nullptr_t
-         > = nullptr>
+             is_floating_point<T2>::value
+         )>
 common_type_t<T1,T2> MIN(T1 x, T2 y, Comp comp={}) {
     return min<common_type_t<T1,T2>>(x, y, comp);
 }
@@ -1502,23 +1496,23 @@ struct Formatter<pair<T1,T2>> {
 
 template<typename... TS>
 struct Formatter<tuple<TS...>> {
-    template<size_t I=0, enable_if_t<I == sizeof...(TS), nullptr_t> = nullptr>
+    template<size_t I=0, SFINAE(sizeof...(TS) == I)>
     static ostream& write_str_impl(ostream& out, const tuple<TS...>&) {
         return out;
     }
-    template<size_t I=0, enable_if_t<I < sizeof...(TS), nullptr_t> = nullptr>
+    template<size_t I=0, SFINAE(sizeof...(TS) > I)>
     static ostream& write_str_impl(ostream& out, const tuple<TS...>& t) {
         if(I != 0) out << ' ';
         WRITE_STR(out, get<I>(t));
         return write_str_impl<I+1>(out, t);
     }
 
-    template<size_t I=0, enable_if_t<I == sizeof...(TS), nullptr_t> = nullptr>
+    template<size_t I=0, SFINAE(sizeof...(TS) == I)>
     static ostream& write_repr_impl(ostream& out, const tuple<TS...>&) {
         if(sizeof...(TS) == 0) out << "(";
         return out << ")";
     }
-    template<size_t I=0, enable_if_t<I < sizeof...(TS), nullptr_t> = nullptr>
+    template<size_t I=0, SFINAE(sizeof...(TS) > I)>
     static ostream& write_repr_impl(ostream& out, const tuple<TS...>& t) {
         if(I == 0)
             out << "(";
@@ -1592,8 +1586,7 @@ pair<T1,T2> RD1_PAIR() {
     return { x, y };
 }
 
-template<typename... TS,
-         enable_if_t<0 == sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) == 0)>
 auto RD_TUPLE() {
     return make_tuple();
 }
@@ -1604,8 +1597,7 @@ auto RD_TUPLE() {
     return tuple_cat(make_tuple(x), RD_TUPLE<TS...>());
 }
 
-template<typename... TS,
-         enable_if_t<0 == sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) == 0)>
 auto RD1_TUPLE() {
     return make_tuple();
 }
@@ -1643,7 +1635,7 @@ void PRINTLN(const TS& ...args) {
 #endif
 }
 
-template<typename... TS, enable_if_t<1 == sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) == 1)>
 void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
 #ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
@@ -1653,7 +1645,7 @@ void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
 #endif
 }
 
-template<typename... TS, enable_if_t<2 <= sizeof...(TS), nullptr_t> = nullptr>
+template<typename... TS, SFINAE(sizeof...(TS) >= 2)>
 void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
 #ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
