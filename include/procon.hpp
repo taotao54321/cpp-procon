@@ -1683,7 +1683,7 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
 #endif
 }
 
-#define DBG(args...) DBG_IMPL(__LINE__, CPP_STR_I(args), make_tuple(args))
+#define DBG(args...) DBG_IMPL(__LINE__, CPP_STR_I(args), std::make_tuple(args))
 #define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, CPP_STR(expr), (expr))
 #define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, CPP_STR(first), CPP_STR(last), (first), (last))
 
