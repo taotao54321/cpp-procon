@@ -15,6 +15,7 @@ public:
     Thread(const Thread&)            = delete;
     Thread& operator=(const Thread&) = delete;
 
+    // TODO: ムーブ元を無効にすべき
     Thread(Thread&& other) noexcept : f_(other.f_), id_(other.id_) {}
     Thread& operator=(Thread&& other) noexcept {
         if(this == &other) return *this;
