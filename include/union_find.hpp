@@ -2,8 +2,11 @@
 
 struct UnionFind {
     vector<i64> ps_;  // 親ノード。ただし根の場合 -(集合の要素数)
+    i64 size_;
 
-    explicit UnionFind(i64 n) : ps_(n,-1) {}
+    explicit UnionFind(i64 n) : ps_(n,-1), size_(n) {}
+
+    i64 size() const { return size_; }
 
     i64 root(i64 x) {
         i64 p = ps_[x];
@@ -26,14 +29,19 @@ struct UnionFind {
         if(kx < ky) swap(rx, ry);
         ps_[rx] = -(kx + ky);
         ps_[ry] = rx;
+
+        --size_;
     }
 };
 
 struct WeightedUnionFind {
     vector<i64> ps_;  // 親ノード。ただし根の場合 -(集合の要素数)
     vector<i64> ws_;  // 親ノードに対する重み(負もOK)。根の場合0
+    i64 size_;
 
-    explicit WeightedUnionFind(i64 n) : ps_(n,-1), ws_(n,0) {}
+    explicit WeightedUnionFind(i64 n) : ps_(n,-1), ws_(n,0), size_(n) {}
+
+    i64 size() const { return size_; }
 
     i64 root(i64 x) {
         return get<0>(compress(x));
@@ -69,6 +77,9 @@ struct WeightedUnionFind {
         ps_[rx] = -(kx + ky);
         ps_[ry] = rx;
         ws_[ry] = wx - wy + d;
+
+        --size_;
+
         return true;
     }
 
