@@ -13,8 +13,8 @@ signed main() {
 
     REP(n, H) REP(r, W) {
         ModP ans = combination_count_fac(n, r, fac, ifac);
-        assert(ans == comb[n][r]);
-        assert(ans == comb_f(n,r));
+        ASSERT(ans == comb[n][r]);
+        ASSERT(ans == comb_f(n,r));
     }
 
     EXIT();

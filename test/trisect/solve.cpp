@@ -10,11 +10,11 @@ T f(T x) {
 signed main() {
     {
         i64 x = trisect_max_integer(-100, 100, f<i64>);
-        assert(x == 2);
+        ASSERT(x == 2);
     }
     {
         f64 x = trisect_max_real(-100.0, 100.0, f<f64>);
-        assert(feq(x, 2.0, 1e-5));
+        ASSERT(feq(x, 2.0, 1e-5));
     }
 
     EXIT();

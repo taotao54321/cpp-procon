@@ -13,7 +13,7 @@ private:
 
 public:
     explicit DynamicLibrary(const char* path) : handle_(__libc_dlopen_mode(path,OPEN_MODE)) {
-        assert(handle_);
+        ASSERT(handle_);
     }
     ~DynamicLibrary() {
         if(handle_)
@@ -35,7 +35,7 @@ public:
 
     void* sym(const char* name) {
         void* res = __libc_dlsym(handle_, name);
-        assert(res);
+        ASSERT(res);
         return res;
     }
 };

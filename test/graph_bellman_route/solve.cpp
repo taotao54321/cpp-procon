@@ -17,7 +17,7 @@ signed main() {
     vector<i64> d;
     vector<i64> parent;
     tie(d,parent) = graph_bellman(G, N-1);
-    assert(ALL(find, d, -INF) == end(d));
+    ASSERT(ALL(find, d, -INF) == end(d));
 
     vector<i64> route;
     for(i64 v = 0; v != -1; v = parent[v]) {

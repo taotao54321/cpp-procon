@@ -51,7 +51,7 @@ struct SegTree {
     }
 
     T query(i64 i, i64 k) const {
-        assert(0 <= i && i+k <= n_orig_);
+        ASSERT(0 <= i && i+k <= n_orig_);
         return query_impl(i, i+k, 1, 0, n_);
     }
 

@@ -381,7 +381,7 @@ Vector geo_crosspoint(const Line& la, const Line& lb) {
     f64 d2 = geo_cross(b, a);
     if(feq(d2, 0)) {  // 2直線が平行
         if(feq(d1, 0)) return la.p1;  // 2直線が重なっている
-        assert(false);
+        ASSERT(false);
     }
     return la.p1 + d1/d2*a;
 }
@@ -414,7 +414,7 @@ vector<Vector> geo_crosspoints(const Circle& cir1, const Circle& cir2) {
 // * 辺上の点を含む
 Polygon geo_convex_hull(vector<Vector> ps) {
     i64 n = SIZE(ps);
-    assert(n >= 3);
+    ASSERT(n >= 3);
 
     vector<Vector> res;
     res.reserve(n);
@@ -538,7 +538,7 @@ tuple<f64,RandomIt,RandomIt> geo_closest_pair_sq_impl(RandomIt first, RandomIt l
 // SIZE(ps) < 2 ならエラー
 // O(nlogn)
 tuple<f64,i64,i64> geo_closest_pair_sq(vector<Vector> ps) {
-    assert(SIZE(ps) >= 2);
+    ASSERT(SIZE(ps) >= 2);
 
     ALL(sort, ps, LT_ON([](const Vector& p) { return p.x; }));
 

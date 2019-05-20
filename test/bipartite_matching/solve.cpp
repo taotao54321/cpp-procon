@@ -18,8 +18,8 @@ signed main() {
     tie(k,match) = bipartite_matching(G);
 
     i64 k2 = ALL(count_if, match, [](i64 e) { return e != -1; });
-    assert(is_even(k2));
-    assert(k == k2 / 2);
+    ASSERT(is_even(k2));
+    ASSERT(k == k2 / 2);
 
     PRINTLN(k);
 

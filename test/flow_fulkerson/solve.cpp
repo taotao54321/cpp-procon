@@ -25,7 +25,7 @@ signed main() {
         s_out += flow[0][w];
         t_in  += flow[w][N-1];
     }
-    assert(f == s_out && s_out == t_in);
+    ASSERT(f == s_out && s_out == t_in);
 
     // 始点/終点以外で入る量と出る量が等しいか
     FOR(v, 1, N-1) {
@@ -35,7 +35,7 @@ signed main() {
             f_in  += flow[w][v];
             f_out += flow[v][w];
         }
-        assert(f_in == f_out);
+        ASSERT(f_in == f_out);
     }
 
     PRINTLN(f);

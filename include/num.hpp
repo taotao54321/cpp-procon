@@ -50,7 +50,7 @@ vector<i64> divisors(i64 n) {
 // n >= 1 でなければならない
 // n == 1 の場合、空リストを返す
 vector<pair<i64,i64>> factorize(i64 n) {
-    assert(n >= 1);
+    ASSERT(n >= 1);
 
     vector<pair<i64,i64>> res;
 
@@ -185,14 +185,14 @@ bool is_prime_u64(u64 n) {
 }
 
 bool is_prime(i64 n) {
-    assert(n >= 0);
+    ASSERT(n >= 0);
     return is_prime_u64(static_cast<u64>(n));
 }
 
 // 二分累乗
 template<typename Monoid>
 Monoid pow_binary(Monoid x, i64 e) {
-    assert(e >= 0);
+    ASSERT(e >= 0);
 
     Monoid res(1);  // 行列などの場合はここを適当に変える
     Monoid cur = x;
@@ -209,7 +209,7 @@ Monoid pow_binary(Monoid x, i64 e) {
 // a ⊥ m でなければならない
 i64 inv_mod(i64 a, i64 m) {
     i64 g,x0; tie(g,x0,ignore) = extgcd(a, m);
-    assert(g == 1);
+    ASSERT(g == 1);
     return modulo(x0, m);
 }
 

@@ -13,7 +13,7 @@ signed main() {
 
         auto p = ALL(sa.equal_range, t);
         if(distance(FST(p),SND(p)) > 0)
-            assert(*ALL(sa.find,t) == *FST(p));
+            ASSERT(*ALL(sa.find,t) == *FST(p));
         ans += distance(FST(p), SND(p));
     }
 

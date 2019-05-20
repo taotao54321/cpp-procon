@@ -3,7 +3,7 @@
 // [lo,hi) におけるunimodalな関数 f のargmaxを返す
 template<typename F>
 i64 trisect_max_integer(i64 lo, i64 hi, F f) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     while(lo+2 < hi) {
         i64 x1 = lo + 1*(hi-lo)/3;
@@ -22,7 +22,7 @@ i64 trisect_max_integer(i64 lo, i64 hi, F f) {
 
 template<typename F>
 i64 trisect_min_integer(i64 lo, i64 hi, F f) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     while(lo+2 < hi) {
         i64 x1 = lo + 1*(hi-lo)/3;
@@ -41,7 +41,7 @@ i64 trisect_min_integer(i64 lo, i64 hi, F f) {
 
 template<typename F>
 f64 trisect_max_real(f64 lo, f64 hi, F f, i64 iter=100) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     REP(_, iter) {
         f64 x1 = lo + 1*(hi-lo)/3;
@@ -57,7 +57,7 @@ f64 trisect_max_real(f64 lo, f64 hi, F f, i64 iter=100) {
 
 template<typename F>
 f64 trisect_min_real(f64 lo, f64 hi, F f, i64 iter=100) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     REP(_, iter) {
         f64 x1 = lo + 1*(hi-lo)/3;

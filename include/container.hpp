@@ -457,7 +457,7 @@ struct BiHashMap {
             rev_.insert(end(rev_), make_pair(y,x));
         }
         else {
-            assert(y == it_fwd->second);
+            ASSERT(y == it_fwd->second);
         }
     }
 
@@ -471,13 +471,13 @@ struct BiHashMap {
 
     const T2& at_fwd(const T1& x) const {
         auto it = fwd_.find(x);
-        assert(it != end(fwd_));
+        ASSERT(it != end(fwd_));
         return it->second;
     }
 
     const T1& at_rev(const T2& y) const {
         auto it = rev_.find(y);
-        assert(it != end(rev_));
+        ASSERT(it != end(rev_));
         return it->second;
     }
 

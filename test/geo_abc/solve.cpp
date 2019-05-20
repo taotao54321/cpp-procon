@@ -18,7 +18,7 @@ signed main() {
         case ABC_ON_BACK:    PRINTLN("ONLINE_BACK");       break;
         case ABC_ON_FRONT:   PRINTLN("ONLINE_FRONT");      break;
         case ABC_ON_SEGMENT: PRINTLN("ON_SEGMENT");        break;
-        default: assert(false);
+        default: ASSERT(false);
         }
     }
 

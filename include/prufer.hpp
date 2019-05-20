@@ -8,7 +8,7 @@
 // 長さ n-2 の prufer code を返す
 vector<i64> prufer_from_tree(const vector<vector<i64>>& g) {
     i64 n = SIZE(g);
-    assert(n >= 2);
+    ASSERT(n >= 2);
 
     vector<i64> parent(n, -1);
     auto dfs = FIX([&g,&parent](auto&& self, i64 v) -> void {
@@ -57,7 +57,7 @@ vector<i64> prufer_from_tree(const vector<vector<i64>>& g) {
 // n-1 個の辺を返す
 vector<pair<i64,i64>> prufer_to_tree(const vector<i64>& prufer) {
     i64 n = SIZE(prufer) + 2;
-    assert(n >= 2);
+    ASSERT(n >= 2);
 
     vector<i64> deg(n, 1);
     for(i64 v : prufer)

@@ -128,8 +128,8 @@ struct Grid2 {
     vector<InnerT> cont_;
 
     Grid2(i64 h, i64 w, const T& val) : cont_(arrayn_make<T>(h,w, val)) {
-        assert(h >= 1);
-        assert(w >= 1);
+        ASSERT(h >= 1);
+        ASSERT(w >= 1);
     }
     Grid2(i64 h, i64 w) : Grid2(h, w, T()) {}
 

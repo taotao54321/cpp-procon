@@ -33,7 +33,7 @@ private:
     template<typename Func, typename... Args>
     void call(Func func, Args... args) {
         int st = func(args...);
-        assert(st == 0);
+        ASSERT(st == 0);
     }
 
     static void* run(void* p) {

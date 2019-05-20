@@ -21,7 +21,7 @@ signed main() {
             PRINTLN(same ? 1 : 0);
         }
         else {
-            assert(false);
+            ASSERT(false);
         }
     }
 

@@ -27,7 +27,7 @@ void solve(i64 N) {
     bool ok;
     vector<vector<i64>> nex;
     tie(ok,nex) = graph_floyd(G);
-    assert(ok);
+    ASSERT(ok);
 
     i64 M; RD(M);
     REP(_, M) {

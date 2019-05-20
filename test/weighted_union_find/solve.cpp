@@ -16,7 +16,7 @@ signed main() {
         if(cmd == CMD_RELATE) {
             i64 x,y,z; RD(x); RD(y); RD(z);
             if(!wuf.unite(x, y, z))
-                assert(false);
+                ASSERT(false);
         }
         else if(cmd == CMD_DIFF) {
             i64 x,y; RD(x); RD(y);
@@ -31,7 +31,7 @@ signed main() {
             }
         }
         else {
-            assert(false);
+            ASSERT(false);
         }
     }
 

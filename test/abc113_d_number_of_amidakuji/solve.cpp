@@ -7,7 +7,7 @@ signed main() {
     i64 K; RD1(K);
 
     decltype(auto) fib = fibonacci_table<1000>();
-    assert(SIZE(fib) == 1000);
+    ASSERT(SIZE(fib) == 1000);
 
     auto m = Matrix<ModP>::zeros(W);
     // 左

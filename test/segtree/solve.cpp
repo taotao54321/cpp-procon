@@ -16,13 +16,13 @@ signed main() {
         }
         else if(cmd == 1) {
             i64 s,t; RD1(s); RD1(t);
-            assert(s <= t);
+            ASSERT(s <= t);
             i64 n = t-s+1;
             i64 ans = segtree.query(s, n);
             PRINTLN(ans);
         }
         else {
-            assert(false);
+            ASSERT(false);
         }
     }
 

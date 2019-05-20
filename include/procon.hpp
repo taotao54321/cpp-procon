@@ -850,7 +850,7 @@ i64 GCD(i64 a, i64 b) {
 
 // LCM(0,x) は未定義
 i64 LCM(i64 a, i64 b) {
-    assert(a != 0 && b != 0);
+    ASSERT(a != 0 && b != 0);
     a = ABS(a);
     b = ABS(b);
     return a / gcd_impl(a,b) * b;
@@ -859,7 +859,7 @@ i64 LCM(i64 a, i64 b) {
 // lo:OK, hi:NG
 template<typename Pred>
 i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     while(lo+1 < hi) {
         i64 mid = (lo+hi) / 2;
@@ -873,7 +873,7 @@ i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
 
 template<typename Pred>
 f64 bisect_real(f64 lo, f64 hi, Pred pred, i64 iter=100) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     REP(_, iter) {
         f64 mid = (lo+hi) / 2;
@@ -886,7 +886,7 @@ f64 bisect_real(f64 lo, f64 hi, Pred pred, i64 iter=100) {
 }
 
 i64 ipow(i64 x, i64 e) {
-    assert(e >= 0);
+    ASSERT(e >= 0);
     i64 res = 1;
     REP(_, e) {
         res *= x;
@@ -895,7 +895,7 @@ i64 ipow(i64 x, i64 e) {
 }
 
 i64 sqrt_floor(i64 x) {
-    assert(x >= 0);
+    ASSERT(x >= 0);
 
     i64 lo = 0;
     i64 hi = MIN(x/2+2, 3037000500LL);
@@ -909,19 +909,19 @@ i64 sqrt_ceil(i64 x) {
 
 // 0 <= log2_ceil(x) <= 63
 i64 log2_ceil(i64 x) {
-    assert(x > 0);
+    ASSERT(x > 0);
     return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
 }
 
 // 0 <= log2_floor(x) <= 62
 i64 log2_floor(i64 x) {
-    assert(x > 0);
+    ASSERT(x > 0);
     return 63 - BIT_COUNT_LEADING_ZEROS(x);
 }
 
 // 0 <= log10_ceil(x) <= 19
 i64 log10_ceil(i64 x) {
-    assert(x > 0);
+    ASSERT(x > 0);
     static constexpr i64 TABLE[19] {
         1LL,
         10LL,
@@ -951,7 +951,7 @@ i64 log10_ceil(i64 x) {
 
 // 0 <= log10_floor(x) <= 18
 i64 log10_floor(i64 x) {
-    assert(x > 0);
+    ASSERT(x > 0);
     static constexpr i64 TABLE[18] {
         9LL,
         99LL,
@@ -980,12 +980,12 @@ i64 log10_floor(i64 x) {
 
 // 2^n - 1 の形かどうか
 bool is_mersenne(i64 x) {
-    assert(x >= 0);
+    ASSERT(x >= 0);
     return (x&(x+1)) == 0;
 }
 
 bool is_pow2(i64 x) {
-    assert(x > 0);
+    ASSERT(x > 0);
     return (x&(x-1)) == 0;
 }
 
@@ -1028,13 +1028,13 @@ i64 modulo(i64 a, i64 b) {
 
 // x を align の倍数に切り上げる
 i64 align_ceil(i64 x, i64 align) {
-    assert(align > 0);
+    ASSERT(align > 0);
     return div_ceil(x,align) * align;
 }
 
 // x を align の倍数に切り下げる
 i64 align_floor(i64 x, i64 align) {
-    assert(align > 0);
+    ASSERT(align > 0);
     return div_floor(x,align) * align;
 }
 
@@ -1062,7 +1062,7 @@ bool chmin(T& xmin, const U& x, Comp comp={}) {
 
 template<typename Pred>
 i64 arg_find(i64 lo, i64 hi, Pred pred) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     FOR(x, lo, hi) {
         if(pred(x)) return x;
@@ -1072,7 +1072,7 @@ i64 arg_find(i64 lo, i64 hi, Pred pred) {
 
 template<typename F>
 i64 arg_max(i64 lo, i64 hi, F f) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     i64 res = lo;
     auto ymax = f(lo);
@@ -1085,7 +1085,7 @@ i64 arg_max(i64 lo, i64 hi, F f) {
 
 template<typename F>
 i64 arg_min(i64 lo, i64 hi, F f) {
-    assert(lo < hi);
+    ASSERT(lo < hi);
 
     i64 res = lo;
     auto ymin = f(lo);
@@ -1553,7 +1553,7 @@ template<typename T>
 void RD(T& x) {
     cin >> x;
 #ifdef PROCON_LOCAL
-    assert(cin);
+    ASSERT(cin);
 #endif
 }
 

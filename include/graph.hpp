@@ -37,7 +37,7 @@ vector<vector<i64>> graph_from_edges(i64 n, const vector<pair<i64,i64>>& es) {
 // g: 隣接リスト表現(頂点数 n > 0)
 bool graph_is_tree(const vector<vector<i64>>& g) {
     i64 n = SIZE(g);
-    assert(n > 0);
+    ASSERT(n > 0);
 
     i64 edge_cnt = 0;
     BoolArray visited(n, false);
@@ -366,7 +366,7 @@ vector<i64> graph_euler_trail_list(vector<vector<i64>>& g, i64 start, bool digra
         case RESUME:
             res.emplace_back(v);
             break;
-        default: assert(false);
+        default: ASSERT(false);
         }
     }
 
@@ -405,7 +405,7 @@ vector<i64> graph_euler_trail_matrix(vector<vector<i64>>& g, i64 start, bool dig
         case RESUME:
             res.emplace_back(v);
             break;
-        default: assert(false);
+        default: ASSERT(false);
         }
     }
 

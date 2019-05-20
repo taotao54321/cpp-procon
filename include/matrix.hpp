@@ -59,7 +59,7 @@ public:
 
     // 正方行列であること
     Matrix pow(i64 e) const {
-        assert(e >= 0);
+        ASSERT(e >= 0);
 
         Matrix res = eye(nrow());
         Matrix cur = *this;
