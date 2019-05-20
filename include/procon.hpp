@@ -1019,6 +1019,18 @@ i64 modulo(i64 a, i64 b) {
     return divmod(a,b).second;
 }
 
+// x を align の倍数に切り上げる
+i64 align_ceil(i64 x, i64 align) {
+    assert(align > 0);
+    return div_ceil(x,align) * align;
+}
+
+// x を align の倍数に切り下げる
+i64 align_floor(i64 x, i64 align) {
+    assert(align > 0);
+    return div_floor(x,align) * align;
+}
+
 bool feq(f64 x, f64 y, f64 eps=EPS) {
     return fabs(x-y) < eps;
 }

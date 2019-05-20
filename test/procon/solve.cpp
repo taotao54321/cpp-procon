@@ -371,6 +371,32 @@ void test_pow2() {
     assert(pow2_floor((1LL<<62)-1) == (1LL<<61));
 }
 
+void test_align() {
+    assert(align_ceil(0,1) == 0);
+    assert(align_ceil(1,1) == 1);
+    assert(align_ceil(2,1) == 2);
+    assert(align_ceil(6,3) == 6);
+    assert(align_ceil(9,10) == 10);
+    assert(align_ceil(11,10) == 20);
+    assert(align_ceil(-1,1) == -1);
+    assert(align_ceil(-2,1) == -2);
+    assert(align_ceil(-6,3) == -6);
+    assert(align_ceil(-9,10) == 0);
+    assert(align_ceil(-11,10) == -10);
+
+    assert(align_floor(0,1) == 0);
+    assert(align_floor(1,1) == 1);
+    assert(align_floor(2,1) == 2);
+    assert(align_floor(6,3) == 6);
+    assert(align_floor(9,10) == 0);
+    assert(align_floor(11,10) == 10);
+    assert(align_floor(-1,1) == -1);
+    assert(align_floor(-2,1) == -2);
+    assert(align_floor(-6,3) == -6);
+    assert(align_floor(-9,10) == -10);
+    assert(align_floor(-11,10) == -20);
+}
+
 void test_max_min() {
     {
         i64 x = 5;
@@ -517,8 +543,8 @@ signed main() {
     test_sqrt();
     test_log2();
     test_log10();
-
     test_pow2();
+    test_align();
 
     test_max_min();
 
