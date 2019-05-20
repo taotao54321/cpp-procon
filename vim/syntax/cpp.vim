@@ -29,7 +29,7 @@ syntax keyword cppConstant PI
 " }}}
 
 " statement {{{
-syntax keyword cppStatement assert
+syntax keyword cppStatement assert ASSERT
 
 syntax keyword cRepeat REP FOR
 
