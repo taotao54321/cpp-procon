@@ -325,6 +325,46 @@ bool map_contains(const unordered_multimap<K,V,Hash,Eq>& m, const typename unord
     return m.find(k) != end(m);
 }
 
+template<typename K, typename V, typename Comp>
+V map_get(const map<K,V,Comp>& m,
+          const typename map<K,V,Comp>::key_type& k,
+          const typename map<K,V,Comp>::mapped_type& def)
+{
+    auto it = m.find(k);
+    return it == end(m) ? def : it->second;
+}
+
+template<typename K, typename V, typename Hash, typename Eq>
+V map_get(const unordered_map<K,V,Hash,Eq>& m,
+          const typename unordered_map<K,V,Hash,Eq>::key_type& k,
+          const typename unordered_map<K,V,Hash,Eq>::mapped_type& def)
+{
+    auto it = m.find(k);
+    return it == end(m) ? def : it->second;
+}
+
+template<typename K, typename V, typename Comp>
+V& map_setdefault(map<K,V,Comp>& m,
+                  const typename map<K,V,Comp>::key_type& k,
+                  const typename map<K,V,Comp>::mapped_type& def)
+{
+    auto it = m.find(k);
+    if(it == end(m))
+        it = m.emplace_hint(it, k, def);
+    return it->second;
+}
+
+template<typename K, typename V, typename Hash, typename Eq>
+V& map_setdefault(unordered_map<K,V,Hash,Eq>& m,
+                  const typename unordered_map<K,V,Hash,Eq>::key_type& k,
+                  const typename unordered_map<K,V,Hash,Eq>::mapped_type& def)
+{
+    auto it = m.find(k);
+    if(it == end(m))
+        it = m.emplace_hint(it, k, def);
+    return it->second;
+}
+
 template<typename K, typename Comp>
 bool multiset_erase_one(multiset<K,Comp>& m, const typename multiset<K,Comp>::key_type& k) {
     auto it = m.find(k);
