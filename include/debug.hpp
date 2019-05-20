@@ -19,12 +19,10 @@ ostream& DBG_CARRAYN_HELPER(ostream& out, const T& e) {
 
 template<typename T>
 void DBG_CARRAYN_IMPL(i64 line, const char* expr, const T& ary) {
-#ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
     DBG_CARRAYN_HELPER(cerr, ary);
     cerr << "\n";
-#endif
 }
 
 template<typename T, typename... Offs, typename... Sizes,
@@ -51,7 +49,6 @@ ostream& DBG_CARRAYN_SLICE_HELPER(ostream& out, const T& e, const tuple<Offs...>
 
 template<typename T, typename... Offs, typename... Sizes>
 void DBG_CARRAYN_SLICE_IMPL(i64 line, const char* expr, const T& ary, const tuple<Offs...>& offs, const tuple<Sizes...>& sizes) {
-#ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << expr << "(";
     WRITE_REPR(cerr, offs);
@@ -60,10 +57,14 @@ void DBG_CARRAYN_SLICE_IMPL(i64 line, const char* expr, const T& ary, const tupl
     cerr << ") = ";
     DBG_CARRAYN_SLICE_HELPER(cerr, ary, offs, sizes);
     cerr << "\n";
-#endif
 }
 
-#define DBG_CARRAYN(expr) DBG_CARRAYN_IMPL(__LINE__, CPP_STR(expr), (expr))
-#define DBG_CARRAYN_SLICE(expr, offs, sizes) DBG_CARRAYN_SLICE_IMPL(__LINE__, CPP_STR(expr), (expr), (offs), (sizes))
+#ifdef PROCON_LOCAL
+    #define DBG_CARRAYN(expr) DBG_CARRAYN_IMPL(__LINE__, CPP_STR(expr), (expr))
+    #define DBG_CARRAYN_SLICE(expr, offs, sizes) DBG_CARRAYN_SLICE_IMPL(__LINE__, CPP_STR(expr), (expr), (offs), (sizes))
+#else
+    #define DBG_CARRAYN(expr)
+    #define DBG_CARRAYN_SLICE(expr, offs, sizes)
+#endif
 
 // }}}

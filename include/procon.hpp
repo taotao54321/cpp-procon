@@ -1637,47 +1637,45 @@ void PRINTLN(const TS& ...args) {
 
 template<typename... TS, SFINAE(sizeof...(TS) == 1)>
 void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
-#ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
     WRITE_REPR(cerr, get<0>(value));
     cerr << "\n";
-#endif
 }
 
 template<typename... TS, SFINAE(sizeof...(TS) >= 2)>
 void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
-#ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << "(" << expr << ") = ";
     WRITE_REPR(cerr, value);
     cerr << "\n";
-#endif
 }
 
 template<typename T, size_t N>
 void DBG_CARRAY_IMPL(i64 line, const char* expr, const T (&ary)[N]) {
-#ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
     WRITE_RANGE_REPR(cerr, begin(ary), end(ary));
     cerr << "\n";
-#endif
 }
 
 template<typename InputIt>
 void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt first, InputIt last) {
-#ifdef PROCON_LOCAL
     cerr << "[L " << line << "]: ";
     cerr << expr1 << "," << expr2 << " = ";
     WRITE_RANGE_REPR(cerr, first, last);
     cerr << "\n";
-#endif
 }
 
-#define DBG(args...) DBG_IMPL(__LINE__, CPP_STR_I(args), std::make_tuple(args))
-#define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, CPP_STR(expr), (expr))
-#define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, CPP_STR(first), CPP_STR(last), (first), (last))
+#ifdef PROCON_LOCAL
+    #define DBG(args...) DBG_IMPL(__LINE__, CPP_STR_I(args), std::make_tuple(args))
+    #define DBG_CARRAY(expr) DBG_CARRAY_IMPL(__LINE__, CPP_STR(expr), (expr))
+    #define DBG_RANGE(first,last) DBG_RANGE_IMPL(__LINE__, CPP_STR(first), CPP_STR(last), (first), (last))
+#else
+    #define DBG(args...)
+    #define DBG_CARRAY(expr)
+    #define DBG_RANGE(first,last)
+#endif
 
 #define PAIR  make_pair
 #define TUPLE make_tuple
