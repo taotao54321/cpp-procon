@@ -13,6 +13,13 @@ using namespace std;
 
 #define SFINAE(pred) std::enable_if_t<(pred), std::nullptr_t> = nullptr
 
+void ASSERT_IMPL(bool ok) { assert(ok); }
+#ifdef NDEBUG
+    #define ASSERT(args...)
+#else
+    #define ASSERT(args...) ASSERT_IMPL(args)
+#endif
+
 using i8   = int8_t;
 using u8   = uint8_t;
 using i16  = int16_t;
