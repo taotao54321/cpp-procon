@@ -66,7 +66,6 @@ constexpr f64 PI = 3.14159265358979323846;
 #define GENERIC(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
 // ビット演算 {{{
-// 2の補数を仮定
 // 引数は [-INF,INF] のみ想定
 
 i64 BIT_I(i64 i) {
