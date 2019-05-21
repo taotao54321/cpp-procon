@@ -111,6 +111,43 @@ void test_map() {
         ASSERT(m.at(2) == vector<i64>{3});
         ASSERT(SIZE(m) == 2);
     }
+
+    {
+        map<i64,i64> m;
+        auto f = []() {
+            static i64 x = 0;
+            return x++;
+        };
+        map_setdefault_with(m, 1, f) += 1;
+        ASSERT(SIZE(m) == 1);
+        ASSERT(m.at(1) == 1);
+        map_setdefault_with(m, 1, f) += 1;
+        ASSERT(SIZE(m) == 1);
+        ASSERT(m.at(1) == 2);
+        map_setdefault_with(m, 2, f);
+        map_setdefault_with(m, 3, f);
+        ASSERT(SIZE(m) == 3);
+        ASSERT(m.at(2) == 1);
+        ASSERT(m.at(3) == 2);
+    }
+    {
+        unordered_map<i64,i64> m;
+        auto f = []() {
+            static i64 x = 0;
+            return x++;
+        };
+        map_setdefault_with(m, 1, f) += 1;
+        ASSERT(SIZE(m) == 1);
+        ASSERT(m.at(1) == 1);
+        map_setdefault_with(m, 1, f) += 1;
+        ASSERT(SIZE(m) == 1);
+        ASSERT(m.at(1) == 2);
+        map_setdefault_with(m, 2, f);
+        map_setdefault_with(m, 3, f);
+        ASSERT(SIZE(m) == 3);
+        ASSERT(m.at(2) == 1);
+        ASSERT(m.at(3) == 2);
+    }
 }
 
 void test_multiset() {

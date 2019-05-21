@@ -365,6 +365,28 @@ V& map_setdefault(unordered_map<K,V,Hash,Eq>& m,
     return it->second;
 }
 
+template<typename K, typename V, typename Comp, typename F>
+V& map_setdefault_with(map<K,V,Comp>& m,
+                       const typename map<K,V,Comp>::key_type& k,
+                       F&& f)
+{
+    auto it = m.find(k);
+    if(it == end(m))
+        it = m.emplace_hint(it, k, f());
+    return it->second;
+}
+
+template<typename K, typename V, typename Hash, typename Eq, typename F>
+V& map_setdefault_with(unordered_map<K,V,Hash,Eq>& m,
+                       const typename unordered_map<K,V,Hash,Eq>::key_type& k,
+                       F&& f)
+{
+    auto it = m.find(k);
+    if(it == end(m))
+        it = m.emplace_hint(it, k, f());
+    return it->second;
+}
+
 template<typename K, typename Comp>
 bool multiset_erase_one(multiset<K,Comp>& m, const typename multiset<K,Comp>::key_type& k) {
     auto it = m.find(k);
