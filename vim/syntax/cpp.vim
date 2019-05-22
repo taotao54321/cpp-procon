@@ -31,6 +31,8 @@ syntax keyword cppConstant PI
 " statement {{{
 syntax keyword cppStatement assert ASSERT
 
+syntax keyword cppStatement SFINAE
+
 syntax keyword cRepeat REP FOR
 
 syntax keyword cppStatement DBG DBG_CARRAY DBG_RANGE
