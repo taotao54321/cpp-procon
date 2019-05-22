@@ -829,6 +829,14 @@ T ABS(T x) {
     return x < 0 ? -x : x;
 }
 
+f64 ROUND(f64 x) {
+    return round(x);
+}
+
+i64 IROUND(f64 x) {
+    return llround(x);
+}
+
 template<typename C>
 i64 SIZE(const C& c) { return static_cast<i64>(c.size()); }
 
