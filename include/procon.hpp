@@ -11,7 +11,7 @@ using namespace std;
 #define CPP_STR_I(args...) #args
 #define CPP_CAT_I(x,y) x ## y
 
-#define SFINAE(pred) std::enable_if_t<(pred), std::nullptr_t> = nullptr
+#define SFINAE(pred...) std::enable_if_t<(pred), std::nullptr_t> = nullptr
 
 void ASSERT_IMPL(bool ok) { assert(ok); }
 #ifdef NDEBUG
