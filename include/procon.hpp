@@ -15,9 +15,9 @@ using namespace std;
 
 void ASSERT_IMPL(bool ok) { assert(ok); }
 #ifdef NDEBUG
-    #define ASSERT(args...)
+    #define ASSERT(expr...)
 #else
-    #define ASSERT(args...) ASSERT_IMPL(!!(args))
+    #define ASSERT(expr...) ASSERT_IMPL(!!(expr))
 #endif
 
 using i8   = int8_t;
