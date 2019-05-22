@@ -37,6 +37,11 @@ using f32  = float;
 using f64  = double;
 using f80  = __float80;
 using f128 = __float128;
+
+using complex32 = complex<f32>;
+using complex64 = complex<f64>;
+using complex80 = complex<f80>;
+using complex128 = complex<f128>;
 // }}}
 
 template<typename T> constexpr T PROCON_INF();
