@@ -28,12 +28,7 @@ struct IDENTITY {
 
 #define SFINAE(pred...) std::enable_if_t<(pred), std::nullptr_t> = nullptr
 
-void ASSERT_IMPL(bool ok) { assert(ok); }
-#ifdef NDEBUG
-    #define ASSERT(expr...)
-#else
-    #define ASSERT(expr...) ASSERT_IMPL(!!(expr))
-#endif
+#define ASSERT(expr...) assert((expr))
 
 using i8   = int8_t;
 using u8   = uint8_t;
