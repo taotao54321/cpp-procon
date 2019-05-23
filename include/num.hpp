@@ -248,14 +248,10 @@ struct ModPT {
         return *this -= 1;
     }
     ModPT operator++(int) {
-        ModPT res(*this);
-        ++*this;
-        return res;
+        return exchange(*this, *this+1);
     }
     ModPT operator--(int) {
-        ModPT res(*this);
-        --*this;
-        return res;
+        return exchange(*this, *this-1);
     }
 
     explicit operator i64() const { return v_; }
