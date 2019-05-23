@@ -292,30 +292,30 @@ using AutoSeeder = AutoSeederT<Seeder>;
 
 // UniformDistributionType {{{
 template<typename T>
-struct IsUniformInt {
-    static constexpr bool value = std::is_same<T,short             >::value ||
-                                  std::is_same<T,int               >::value ||
-                                  std::is_same<T,long              >::value ||
-                                  std::is_same<T,long long         >::value ||
-                                  std::is_same<T,unsigned short    >::value ||
-                                  std::is_same<T,unsigned int      >::value ||
-                                  std::is_same<T,unsigned long     >::value ||
-                                  std::is_same<T,unsigned long long>::value;
-};
+struct IsUniformInt : std::integral_constant<bool,
+    std::is_same<T,short             >::value ||
+    std::is_same<T,int               >::value ||
+    std::is_same<T,long              >::value ||
+    std::is_same<T,long long         >::value ||
+    std::is_same<T,unsigned short    >::value ||
+    std::is_same<T,unsigned int      >::value ||
+    std::is_same<T,unsigned long     >::value ||
+    std::is_same<T,unsigned long long>::value
+> {};
 
 template<typename T>
-struct IsUniformReal {
-    static constexpr bool value = std::is_same<T,float      >::value ||
-                                  std::is_same<T,double     >::value ||
-                                  std::is_same<T,long double>::value;
-};
+struct IsUniformReal : std::integral_constant<bool,
+    std::is_same<T,float      >::value ||
+    std::is_same<T,double     >::value ||
+    std::is_same<T,long double>::value
+> {};
 
 template<typename T>
-struct IsUniformByte {
-    static constexpr bool value = std::is_same<T,char         >::value ||
-                                  std::is_same<T,signed char  >::value ||
-                                  std::is_same<T,unsigned char>::value;
-};
+struct IsUniformByte : std::integral_constant<bool,
+    std::is_same<T,char         >::value ||
+    std::is_same<T,signed char  >::value ||
+    std::is_same<T,unsigned char>::value
+> {};
 
 template<typename T, typename Enable=void>
 struct UniformDistribution {};

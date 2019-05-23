@@ -6,6 +6,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// C++17 polyfill {{{
+template<bool B>
+using BoolConstant = integral_constant<bool, B>;
+// }}}
+
+// C++20 polyfill {{{
+struct IDENTITY {
+    using is_transparent = void;
+    template<typename T>
+    constexpr T&& operator()(T&& x) const noexcept {
+        return forward<T>(x);
+    }
+};
+// }}}
+
 #define CPP_STR(x) CPP_STR_I(x)
 #define CPP_CAT(x,y) CPP_CAT_I(x,y)
 #define CPP_STR_I(args...) #args
@@ -433,17 +448,11 @@ struct Array1Container<bool> {
 
 // イテレート用
 template<typename T>
-struct is_arrayn_container {
-    static constexpr bool value = false;
-};
+struct is_arrayn_container : false_type {};
 template<typename T>
-struct is_arrayn_container<vector<T>> {
-    static constexpr bool value = true;
-};
+struct is_arrayn_container<vector<T>> : true_type {};
 template<>
-struct is_arrayn_container<BoolArray> {
-    static constexpr bool value = true;
-};
+struct is_arrayn_container<BoolArray> : true_type {};
 
 template<typename T>
 auto arrayn_make(i64 n, T x) {
@@ -1223,14 +1232,6 @@ auto EQUIV(Comp comp={}) {
         return !comp(lhs,rhs) && !comp(rhs,lhs);
     };
 }
-
-struct IDENTITY {
-    using is_transparent = void;
-    template<typename T>
-    constexpr T&& operator()(T&& x) const noexcept {
-        return forward<T>(x);
-    }
-};
 
 template<typename T=void>
 struct OpMax {
