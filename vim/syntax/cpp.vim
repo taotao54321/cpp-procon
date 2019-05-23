@@ -6,6 +6,8 @@ syntax keyword cppType u8 u16 u32 u64 u128
 
 syntax keyword cppType f32 f64 f80 f128
 
+syntax keyword cppType complex32 complex64 complex80
+
 syntax keyword cppType Formatter
 
 syntax keyword cppType BoolArray
