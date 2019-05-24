@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import argparse
+import itertools
+from pathlib import Path
+import subprocess
+
+def generate(gen):
+    cmdline = ( gen, )
+    proc = subprocess.run(cmdline, check=True, text=True, stdout=subprocess.PIPE)
+    return proc.stdout
+
+def solve(sol, case):
+    cmdline = ( sol, )
+    proc = subprocess.run(cmdline, text=True, input=case, stdout=subprocess.PIPE)
+    return proc.returncode, proc.stdout
+
+def save_case(case, ans_naive):
+    dir_ = Path("test/")
+    name = "dbg"
+    for i in itertools.count(1):
+        path_in  = dir_ / f"{name}-{i}.in"
+        path_out = dir_ / f"{name}-{i}.out"
+        try:
+            with open(path_in, "x") as out:
+                print(case, end="", file=out)
+        except FileExistsError:
+            continue
+        with open(path_out, "x") as out:
+            print(ans_naive, end="", file=out)
+        break
+    return path_in
+
+def parse_args():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("generator")
+    ap.add_argument("solver")
+    ap.add_argument("solver_naive")
+    return ap.parse_args()
+
+def main():
+    args = parse_args()
+
+    while True:
+        case = generate(args.generator)
+        st,       ans       = solve(args.solver,       case)
+        st_naive, ans_naive = solve(args.solver_naive, case)
+        if st != 0 or st_naive != 0: break
+        if ans != ans_naive: break
+
+    if st != 0 or st_naive != 0:
+        print("ERROR!")
+        print("[solver]      ", "OK" if st       == 0 else "NG")
+        print("[solver_naive]", "OK" if st_naive == 0 else "NG")
+    else:
+        print("DIFFER!")
+        print("[ans]")
+        print(ans)
+        print()
+        print("[ans_naive]")
+        print(ans_naive)
+        print()
+
+    path_in = save_case(case, ans_naive)
+    print(f"Saved: {path_in}")
+
+if __name__ == "__main__": main()
