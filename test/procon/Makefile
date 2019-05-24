@@ -21,7 +21,7 @@ CXXFLAGS := \
     -Wuseless-cast \
     -Wvla \
     -Wzero-as-null-pointer-constant \
-    -g -fsanitize=undefined -D_GLIBCXX_DEBUG \
+    -g -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG \
     -I../../include/
 LDFLAGS :=
 

@@ -28,7 +28,7 @@ LDFLAGS :=
 ifdef OPTIMIZE
     CXXFLAGS += -O2
 else
-    CXXFLAGS += -g -fsanitize=undefined -D_GLIBCXX_DEBUG
+    CXXFLAGS += -g -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG
 endif
 
 SRC_SOLVE := solve.cpp
