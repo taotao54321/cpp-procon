@@ -23,6 +23,7 @@ CXXFLAGS := \
     -Wzero-as-null-pointer-constant \
     -g -fsanitize=undefined -D_GLIBCXX_DEBUG \
     -I../../include/
+LDFLAGS :=
 
 TARGET := a.out
 
@@ -31,7 +32,7 @@ all: $(TARGET)
 -include solve.d
 
 $(TARGET): solve.o
-	$(CXX) $(CXXFLAGS) $<
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -MMD -MP $<

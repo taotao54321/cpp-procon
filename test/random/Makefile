@@ -23,6 +23,7 @@ CXXFLAGS := \
     -Wzero-as-null-pointer-constant \
     -O2 \
     -I../../include/
+LDFLAGS := -ltestu01 -ltestu01mylib -ltestu01probdist
 
 TARGET := a.out
 
@@ -31,9 +32,9 @@ all: $(TARGET)
 -include solve.d
 
 $(TARGET): solve.o
-	$(CXX) $(CXXFLAGS) $< -ltestu01 -ltestu01mylib -ltestu01probdist
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS)
 
-%.o: %.c
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -MMD -MP $<
 
 clean:

@@ -23,6 +23,7 @@ CXXFLAGS := \
     -Wzero-as-null-pointer-constant \
     -pg \
     -DPROCON_LOCAL
+LDFLAGS :=
 
 ifdef OPTIMIZE
     CXXFLAGS += -O2
@@ -41,11 +42,11 @@ endif
 all: $(TARGET)
 
 a.out: $(SRC_SOLVE)
-	$(CXX) $(CXXFLAGS) $<
+	$(CXX) $(CXXFLAGS) $< $(LDFLAGS)
 
 bin/%: %.cpp
 	mkdir -p -v bin
-	$(CXX) $(CXXFLAGS) -o $@ $<
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
 clean:
 	-$(RM) $(TARGET) gmon.out
