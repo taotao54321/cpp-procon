@@ -826,6 +826,40 @@ T MIN(initializer_list<T> ilist, Comp comp={}) {
     return min(ilist, comp);
 }
 
+template<typename T1, typename T2, typename T3, typename Comp=less<>, SFINAE(
+    is_integral<T1>::value &&
+    is_integral<T2>::value &&
+    is_integral<T3>::value &&
+    is_signed<T1>::value != is_unsigned<T2>::value &&
+    is_signed<T2>::value != is_unsigned<T3>::value
+)>
+common_type_t<T1,T2,T3> CLAMP(T1 x, T2 xmin, T3 xmax, Comp comp={}) {
+    ASSERT(!comp(xmax, xmin));
+    if(comp(x, xmin)) return xmin;
+    if(comp(xmax, x)) return xmax;
+    return x;
+}
+
+template<typename T1, typename T2, typename T3, typename Comp=less<>, SFINAE(
+    is_floating_point<T1>::value &&
+    is_floating_point<T2>::value &&
+    is_floating_point<T3>::value
+)>
+common_type_t<T1,T2,T3> CLAMP(T1 x, T2 xmin, T3 xmax, Comp comp={}) {
+    ASSERT(!comp(xmax, xmin));
+    if(comp(x, xmin)) return xmin;
+    if(comp(xmax, x)) return xmax;
+    return x;
+}
+
+template<typename T, typename Comp=less<>>
+const T& CLAMP(const T& x, const T& xmin, const T& xmax, Comp comp={}) {
+    ASSERT(!comp(xmax, xmin));
+    if(comp(x, xmin)) return xmin;
+    if(comp(xmax, x)) return xmax;
+    return x;
+}
+
 template<typename T>
 T ABS(T x) {
     static_assert(is_signed<T>::value, "ABS(): argument must be signed");

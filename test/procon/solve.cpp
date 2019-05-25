@@ -397,7 +397,7 @@ void test_align() {
     ASSERT(align_floor(-11,10) == -20);
 }
 
-void test_max_min() {
+void test_max_min_clamp() {
     {
         i64 x = 5;
         i64 y = 6;
@@ -447,6 +447,25 @@ void test_max_min() {
         //MIN(0, 0U);
         //MIN("", 0);
         //MIN(0, string{});
+    }
+    {
+        i64 x = 3;
+        ASSERT(CLAMP(x, 0, 5) == 3);
+        ASSERT(CLAMP(x, 5, 9) == 5);
+        ASSERT(CLAMP(x, 0, 1) == 1);
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+        f64 y = 3.0;
+        ASSERT(CLAMP(y, 0.0, 5.0) == 3.0);
+        ASSERT(CLAMP(y, 5.0, 9.0) == 5.0);
+        ASSERT(CLAMP(y, 0.0, 1.0) == 1.0);
+#pragma GCC diagnostic pop
+
+        string s("foo");
+        ASSERT(CLAMP(s, string("a"), string("z")) == "foo");
+        ASSERT(CLAMP(s, string("h"), string("z")) == "h");
+        ASSERT(CLAMP(s, string("a"), string("d")) == "d");
     }
 }
 
@@ -546,7 +565,7 @@ signed main() {
     test_pow2();
     test_align();
 
-    test_max_min();
+    test_max_min_clamp();
 
     test_fst_snd();
 
