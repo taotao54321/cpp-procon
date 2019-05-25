@@ -42,19 +42,24 @@ def parse_args():
 def main():
     args = parse_args()
 
-    while True:
+    for i in itertools.count(1):
+        print(f"Case #{i}: ", end="")
         case = generate(args.generator)
         st,       ans       = solve(args.solver,       case)
         st_naive, ans_naive = solve(args.solver_naive, case)
-        if st != 0 or st_naive != 0: break
-        if ans != ans_naive: break
+        if st != 0 or st_naive != 0:
+            print("ERROR!")
+            break
+        if ans != ans_naive:
+            print("DIFFER!")
+            break
+        print("OK")
 
+    print()
     if st != 0 or st_naive != 0:
-        print("ERROR!")
         print("[solver]      ", "OK" if st       == 0 else "NG")
         print("[solver_naive]", "OK" if st_naive == 0 else "NG")
     else:
-        print("DIFFER!")
         print("[ans]")
         print(ans)
         print()
