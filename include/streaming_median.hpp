@@ -6,10 +6,10 @@ struct StreamingMedian {
     T med_;
     priority_queue<T,vector<T>,less<T>>    los_;
     priority_queue<T,vector<T>,greater<T>> his_;
-    T norm_lo_;
-    T norm_hi_;
+    T sum_lo_;
+    T sum_hi_;
 
-    explicit StreamingMedian(const T& med) : med_(med), norm_lo_(), norm_hi_() {}
+    explicit StreamingMedian(const T& med) : med_(med), sum_lo_(), sum_hi_() {}
 
     i64 size() const { return 1 + SIZE(los_) + SIZE(his_); }
 
@@ -22,39 +22,32 @@ struct StreamingMedian {
     }
 
     T norm() const {
-        return norm_lo_ + norm_hi_;
+        return sum_hi_ - sum_lo_ + (SIZE(los_)-SIZE(his_))*med_;
     }
 
     void push(const T& x) {
-        if(x == med_) {
-            if(SIZE(los_) <= SIZE(his_))
-                los_.emplace(x);
-            else
-                his_.emplace(x);
-        }
-        else if(x < med_) {
+        if(x < med_) {
             los_.emplace(x);
-            norm_lo_ += med_ - x;
-            if(SIZE(los_) == SIZE(his_)+2) {
-                T med_new = los_.top(); los_.pop();
-                T d = med_ - med_new;
-                norm_lo_ -= (SIZE(los_)+1) * d;
-                norm_hi_ += (SIZE(his_)+1) * d;
-                his_.emplace(med_);
-                med_ = med_new;
-            }
+            sum_lo_ += x;
         }
-        else {  // x > med_
+        else {
             his_.emplace(x);
-            norm_hi_ += x - med_;
-            if(SIZE(los_)+2 == SIZE(his_)) {
-                T med_new = his_.top(); his_.pop();
-                T d = med_new - med_;
-                norm_hi_ -= (SIZE(his_)+1) * d;
-                norm_lo_ += (SIZE(los_)+1) * d;
-                los_.emplace(med_);
-                med_ = med_new;
-            }
+            sum_hi_ += x;
+        }
+
+        if(SIZE(los_) == SIZE(his_)+2) {
+            T med_new = los_.top(); los_.pop();
+            sum_lo_ -= med_new;
+            his_.emplace(med_);
+            sum_hi_ += med_;
+            med_ = med_new;
+        }
+        else if(SIZE(los_)+2 == SIZE(his_)) {
+            T med_new = his_.top(); his_.pop();
+            sum_hi_ -= med_new;
+            los_.emplace(med_);
+            sum_lo_ += med_;
+            med_ = med_new;
         }
     }
 };
@@ -69,8 +62,8 @@ struct Formatter<StreamingMedian<T>> {
         out << "  med_: "; WRITE_REPR(out, sm.med_) << "\n";
         out << "  los_: "; WRITE_REPR(out, sm.los_) << "\n";
         out << "  his_: "; WRITE_REPR(out, sm.his_) << "\n";
-        out << "  norm_lo_: "; WRITE_REPR(out, sm.norm_lo_) << "\n";
-        out << "  norm_hi_: "; WRITE_REPR(out, sm.norm_hi_) << "\n";
+        out << "  sum_lo_: "; WRITE_REPR(out, sm.sum_lo_) << "\n";
+        out << "  sum_hi_: "; WRITE_REPR(out, sm.sum_hi_) << "\n";
         out << "}";
         return out;
     }
