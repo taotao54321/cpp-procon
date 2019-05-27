@@ -22,9 +22,10 @@ private:
     // 0 <= l <= r <= n が保証される
     virtual bool on_found(i64 l, i64 r) = 0;
 
-public:
+protected:
     explicit TwoPointer(i64 n) : n_(n) {}
 
+public:
     void run() {
         init();
 
