@@ -263,6 +263,7 @@ tuple<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
 
 // TODO: 重みあり/なし両対応
 // トポロジカルソート
+// queue を MinHeap に変えると辞書順最小のものが求まる
 //
 // (ok,res) を返す
 // ok: DAGであったかどうか
@@ -284,7 +285,7 @@ tuple<bool,vector<i64>> graph_tsort(const vector<vector<i64>>& g) {
     }
 
     while(!que.empty()) {
-        i64 v = que.front(); que.pop();
+        i64 v = POP(que);
 
         res.emplace_back(v);
 
