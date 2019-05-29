@@ -262,6 +262,43 @@ tuple<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
 }
 
 // TODO: 重みあり/なし両対応
+// トポロジカルソート
+//
+// (ok,res) を返す
+// ok: DAGであったかどうか
+// res: 結果
+tuple<bool,vector<i64>> graph_tsort(const vector<vector<i64>>& g) {
+    i64 n = SIZE(g);
+    vector<i64> res;
+    res.reserve(n);
+
+    vector<i64> deg_in(n, 0);
+    for(const auto& tos : g)
+        for(auto to : tos)
+            ++deg_in[to];
+
+    queue<i64> que;
+    REP(v, n) {
+        if(deg_in[v] == 0)
+            que.emplace(v);
+    }
+
+    while(!que.empty()) {
+        i64 v = que.front(); que.pop();
+
+        res.emplace_back(v);
+
+        for(auto to : g[v]) {
+            if(--deg_in[to] > 0) continue;
+            que.emplace(to);
+        }
+    }
+
+    bool ok = SIZE(res) == n;
+    return make_tuple(ok, res);
+}
+
+// TODO: 重みあり/なし両対応
 // (関節点リスト,橋リスト) を返す
 tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>& g) {
     i64 n = SIZE(g);
