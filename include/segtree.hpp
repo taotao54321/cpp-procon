@@ -145,6 +145,78 @@ auto make_segtree_rq_range(
 }
 // }}}
 
+// 区間更新/1点クエリ {{{
+// 更新は可換でなければならない
+template<typename T, typename F>
+struct SegTreeRU {
+    F f_;
+    T unity_;
+    i64 n_;
+    vector<T> data_;  // 1-based
+
+    SegTreeRU(F&& f, const T& unity, i64 n)
+        : f_(forward<F>(f)), unity_(unity), n_(pow2_ceil(n)), data_(2*n_,unity_) {}
+
+    SegTreeRU(F&& f, const T& unity, i64 n, const T& x)
+        : SegTreeRU(forward<F>(f), unity, n)
+    {
+        SLICE(fill, data_, n_, n_+n, x);
+    }
+
+    template<typename ForwardIt>
+    SegTreeRU(F&& f, const T& unity, ForwardIt first, ForwardIt last)
+        : SegTreeRU(forward<F>(f), unity, distance(first,last))
+    {
+        copy(first, last, begin(data_)+n_);
+    }
+
+    void update(i64 i, i64 k, const T& x) {
+        for(i64 l=node_leaf(i), r=node_leaf(i)+k; l < r; l=node_par(l), r=node_par(r)) {
+            if(l & 1) {
+                data_[l] = f_(data_[l], x);
+                ++l;
+            }
+            if(r & 1) {
+                --r;
+                data_[r] = f_(data_[r], x);
+            }
+        }
+    }
+
+    T query(i64 i) {
+        T res = unity_;
+        for(i64 v = node_leaf(i); v >= 1; v = node_par(v)) {
+            res = f_(res, data_[v]);
+        }
+        return res;
+    }
+
+private:
+    static i64 node_par(i64 v) {
+        return v/2;
+    }
+
+    i64 node_leaf(i64 i) const {
+        return i + n_;
+    }
+};
+
+template<typename T, typename F, typename U>
+auto make_segtree_ru(F&& f, const U& unity, i64 n) {
+    return SegTreeRU<T,F>(forward<F>(f), unity, n);
+}
+
+template<typename T, typename F, typename U1, typename U2>
+auto make_segtree_ru(F&& f, const U1& unity, i64 n, const U2& x) {
+    return SegTreeRU<T,F>(forward<F>(f), unity, n, x);
+}
+
+template<typename T, typename F, typename U, typename ForwardIt>
+auto make_segtree_ru_range(F&& f, const U& unity, ForwardIt first, ForwardIt last) {
+    return SegTreeRU<T,F>(forward<F>(f), unity, first, last);
+}
+// }}}
+
 // 区間更新/区間クエリ {{{
 template<
     typename Monoid, typename Action,
