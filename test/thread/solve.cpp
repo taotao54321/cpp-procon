@@ -3,9 +3,9 @@
 #include "thread.hpp"
 
 void solve() {
-    i64 N; RD(N);
-    i64 K; RD(K);
-    auto A = RD_ARRAY<i64>(N);
+    i64 N = RD();
+    i64 K = RD();
+    auto A = RD_ARRAY(N);
 
     auto f = MEMOIZE<100001>([&A](auto&& self, i64 n) -> bool {
         for(i64 a : A) {

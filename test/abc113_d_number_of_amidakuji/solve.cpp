@@ -3,8 +3,9 @@
 #include "num.hpp"
 
 signed main() {
-    i64 H, W; RD(H); RD(W);
-    i64 K; RD1(K);
+    i64 H = RD();
+    i64 W = RD();
+    i64 K = RD1();
 
     decltype(auto) fib = fibonacci_table<1000>();
     ASSERT(SIZE(fib) == 1000);

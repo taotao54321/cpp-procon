@@ -4,7 +4,7 @@
 void solve(i64 N) {
     Cum1<i64> cum(N);
     REP(i, N) {
-        i64 a; RD(a);
+        i64 a = RD();
         cum.add(i, a);
     }
     cum.build();
@@ -20,7 +20,7 @@ void solve(i64 N) {
 
 signed main() {
     for(;;) {
-        i64 N; RD(N);
+        i64 N = RD();
         if(N == 0) break;
         solve(N);
     }

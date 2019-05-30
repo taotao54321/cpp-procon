@@ -2,7 +2,7 @@
 #include "num.hpp"
 
 signed main() {
-    i64 N; RD(N);
+    i64 N = RD();
 
     auto ts = factorize(N);
     vector<i64> ans;

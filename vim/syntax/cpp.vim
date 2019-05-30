@@ -8,7 +8,7 @@ syntax keyword cppType f32 f64 f80 f128
 
 syntax keyword cppType complex32 complex64 complex80
 
-syntax keyword cppType Formatter
+syntax keyword cppType Formatter Scanner
 
 syntax keyword cppType BoolArray
 
@@ -77,8 +77,6 @@ syntax keyword Function JOIN
 syntax keyword Function RD        RD1
 syntax keyword Function RD_ARRAY  RD1_ARRAY
 syntax keyword Function RD_ARRAY2 RD1_ARRAY2
-syntax keyword Function RD_PAIR   RD1_PAIR
-syntax keyword Function RD_TUPLE  RD1_TUPLE
 
 syntax keyword Function PRINT PRINTLN
 

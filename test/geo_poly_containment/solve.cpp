@@ -2,13 +2,13 @@
 #include "geometry.hpp"
 
 signed main() {
-    i64 N; RD(N);
+    i64 N = RD();
     auto ps = RD_ARRAY<Vector>(N);
     Polygon poly(ps);
 
-    i64 Q; RD(Q);
+    i64 Q = RD();
     REP(_, Q) {
-        Vector p; RD(p);
+        auto p = RD<Vector>();
 
         Containment ans = poly.containment(p);
 

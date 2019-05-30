@@ -3,16 +3,17 @@
 #include "graph.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    i64 M; RD(M);
+    i64 N = RD();
+    i64 M = RD();
 
     auto G = graph_make_matrix<i64>(N);
     REP(i, N) {
         G[i][i] = 0;
     }
     REP(_, M) {
-        i64 from,to; RD(from); RD(to);
-        i64 cost; RD(cost);
+        i64 from = RD();
+        i64 to   = RD();
+        i64 cost = RD();
         G[from][to] = cost;
     }
 

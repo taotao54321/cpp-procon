@@ -1,8 +1,8 @@
 #include "procon.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    i64 K; RD(K);
+    i64 N = RD();
+    i64 K = RD();
 
     i64 x = (1LL<<K)-1;
     do {

@@ -7,19 +7,22 @@ enum {
 };
 
 signed main() {
-    i64 N; RD(N);
-    i64 Q; RD(Q);
+    i64 N = RD();
+    i64 Q = RD();
 
     WeightedUnionFind wuf(N);
     REP(_, Q) {
-        i64 cmd; RD(cmd);
+        i64 cmd = RD();
         if(cmd == CMD_RELATE) {
-            i64 x,y,z; RD(x); RD(y); RD(z);
+            i64 x = RD();
+            i64 y = RD();
+            i64 z = RD();
             if(!wuf.unite(x, y, z))
                 ASSERT(false);
         }
         else if(cmd == CMD_DIFF) {
-            i64 x,y; RD(x); RD(y);
+            i64 x = RD();
+            i64 y = RD();
             i64 rx = wuf.root(x);
             i64 ry = wuf.root(y);
             if(rx != ry) {

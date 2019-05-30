@@ -294,11 +294,11 @@ template<i64 P>
 bool operator!=(i64 lhs, ModPT<P> rhs) { return !(lhs == rhs); }
 
 template<i64 P>
-istream& operator>>(istream& in, ModPT<P>& x) {
-    i64 t; in >> t;
-    x = t;
-    return in;
-}
+struct Scanner<ModPT<P>> {
+    static ModPT<P> read(istream& in) {
+        return READ<i64>(in);
+    }
+};
 
 template<i64 P>
 struct Formatter<ModPT<P>> {

@@ -25,7 +25,8 @@ void solve(i64 H, i64 W) {
 
 signed main() {
     for(;;) {
-        i64 W,H; RD(W); RD(H);
+        i64 W = RD();
+        i64 H = RD();
         if(H == 0 && W == 0) break;
         solve(H, W);
     }

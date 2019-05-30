@@ -4,13 +4,14 @@
 #include "coord_compress.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    i64 M; RD(M);
+    i64 N = RD();
+    i64 M = RD();
 
     vector<pair<i64,i64>> yxs;
     yxs.reserve(N);
     REP(_, N) {
-        i64 x,y; RD(x); RD(y);
+        i64 x = RD();
+        i64 y = RD();
         yxs.emplace_back(y,x);
     }
 
@@ -41,8 +42,8 @@ signed main() {
     cum.build();
 
     REP(_, M) {
-        i64 x1,y1; RD(x1); RD(y1);
-        i64 x2,y2; RD(x2); RD(y2);
+        i64 x1 = RD(); i64 y1 = RD();
+        i64 x2 = RD(); i64 y2 = RD();
         i64 yy1 = map_search_ge(ycomp,y1)->second;
         i64 xx1 = map_search_ge(xcomp,x1)->second;
         i64 yy2 = map_search_le(ycomp,y2)->second;

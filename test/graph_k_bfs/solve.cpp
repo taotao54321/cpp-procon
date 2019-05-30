@@ -16,14 +16,15 @@ i64 vertex(i64 station, i64 company) {
 }
 
 signed main() {
-    i64 N; RD(N);
-    i64 M; RD(M);
+    i64 N = RD();
+    i64 M = RD();
 
     vector<vector<pair<i64,i64>>> G(N+2*M);
     vector<vector<i64>> companies(N);
     REP(_, M) {
-        i64 p,q; RD1(p); RD1(q);
-        i64 c; RD1(c);
+        i64 p = RD1();
+        i64 q = RD1();
+        i64 c = RD1();
         G[vertex(p,c)].emplace_back(vertex(q,c), 0);
         G[vertex(q,c)].emplace_back(vertex(p,c), 0);
         companies[p].emplace_back(c);

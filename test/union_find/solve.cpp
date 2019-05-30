@@ -7,12 +7,14 @@ enum {
 };
 
 signed main() {
-    i64 N; RD(N);
-    i64 Q; RD(Q);
+    i64 N = RD();
+    i64 Q = RD();
 
     UnionFind uf(N);
     REP(_, Q) {
-        i64 cmd,x,y; RD(cmd); RD(x); RD(y);
+        i64 cmd = RD();
+        i64 x   = RD();
+        i64 y   = RD();
         if(cmd == CMD_UNITE) {
             uf.unite(x,y);
         }

@@ -9,8 +9,9 @@ struct Pos {
 void solve(i64 N) {
     vector<Pos> ps(N);
     REP(_, N) {
-        i64 b; RD1(b);
-        i64 x,y; RD(x); RD(y);
+        i64 b = RD1();
+        i64 x = RD();
+        i64 y = RD();
         ps[b] = { x, y };
     }
 
@@ -29,9 +30,10 @@ void solve(i64 N) {
     tie(ok,nex) = graph_floyd(G);
     ASSERT(ok);
 
-    i64 M; RD(M);
+    i64 M = RD();
     REP(_, M) {
-        i64 s,g; RD1(s); RD1(g);
+        i64 s = RD1();
+        i64 g = RD1();
         if(nex[s][g] == -1) {
             PRINTLN("NA");
             continue;
@@ -50,7 +52,7 @@ void solve(i64 N) {
 
 signed main() {
     for(;;) {
-        i64 N; RD(N);
+        i64 N = RD();
         if(N == 0) break;
         solve(N);
     }

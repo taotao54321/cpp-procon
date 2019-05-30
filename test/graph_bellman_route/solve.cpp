@@ -3,13 +3,14 @@
 #include "graph.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    i64 M; RD(M);
+    i64 N = RD();
+    i64 M = RD();
 
     vector<vector<pair<i64,i64>>> G(N);
     REP(_, M) {
-        i64 from,to; RD1(from); RD1(to);
-        i64 cost; RD(cost);
+        i64 from = RD1();
+        i64 to   = RD1();
+        i64 cost = RD();
         G[from].emplace_back(to,cost);
         G[to].emplace_back(from,cost);
     }

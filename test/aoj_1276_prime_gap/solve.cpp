@@ -5,7 +5,7 @@ signed main() {
     decltype(auto) prime = is_prime_table<1299710>();
 
     for(;;) {
-        i64 K; RD(K);
+        i64 K = RD();
         if(K == 0) break;
 
         if(prime[K]) {

@@ -2,9 +2,11 @@
 #include "geometry.hpp"
 
 signed main() {
-    Vector c1; f64 r1; RD(c1); RD(r1);
+    auto c1 = RD<Vector>();
+    auto r1 = RD<f64>();
     Circle cir1(c1,r1);
-    Vector c2; f64 r2; RD(c2); RD(r2);
+    auto c2 = RD<Vector>();
+    auto r2 = RD<f64>();
     Circle cir2(c2,r2);
 
     CircleRelation ans = geo_circle_relation(cir1, cir2);

@@ -2,8 +2,9 @@
 #include "geometry.hpp"
 
 signed main() {
-    Vector p; RD(p);
-    Vector c; f64 r; RD(c); RD(r);
+    auto p = RD<Vector>();
+    auto c = RD<Vector>();
+    auto r = RD<f64>();
     Circle cir(c, r);
 
     vector<Line> ans = geo_tangent(cir, p);

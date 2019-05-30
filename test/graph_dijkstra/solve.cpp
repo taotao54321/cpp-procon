@@ -3,14 +3,15 @@
 #include "graph.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    i64 M; RD(M);
-    i64 S; RD(S);
+    i64 N = RD();
+    i64 M = RD();
+    i64 S = RD();
 
     auto G = graph_make_weighted<i64>(N);
     REP(_, M) {
-        i64 from,to; RD(from); RD(to);
-        i64 cost; RD(cost);
+        i64 from = RD();
+        i64 to   = RD();
+        i64 cost = RD();
         G[from].emplace_back(to,cost);
     }
 

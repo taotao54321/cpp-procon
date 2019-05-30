@@ -1332,12 +1332,6 @@ ostream& WRITE_RANGE_REPR(ostream& out, InputIt first, InputIt last) {
 }
 
 template<typename T>
-void FROM_STR(const string& s, T& x) {
-    istringstream in(s);
-    in >> x;
-}
-
-template<typename T>
 string TO_STR(const T& x) {
     ostringstream out;
     WRITE_STR(out, x);
@@ -1485,83 +1479,132 @@ struct Formatter<tuple<TS...>> {
     }
 };
 
+template<typename T, typename Enable=void>
+struct Scanner {
+    static_assert(!is_same<T,bool>::value, "Scanner<bool> is not supported");
+    static T read(istream& in) {
+        T res;
+        in >> res;
+        return res;
+    }
+};
+
 template<typename T>
-void RD(T& x) {
-    cin >> x;
+struct Scanner<T, enable_if_t<is_integral<T>::value && !is_same<T,bool>::value>> {
+    static T read(istream& in) {
+        T res;
+        in >> res;
+        return res;
+    }
+    static T read1(istream& in) {
+        return read(in) - 1;
+    }
+};
+
+template<typename T>
+T READ(istream& in) {
+    return Scanner<T>::read(in);
+}
+
+template<typename T>
+T READ1(istream& in) {
+    return Scanner<T>::read1(in);
+}
+
+template<typename T>
+T FROM_STR(const string& s) {
+    istringstream in(s);
+    return READ<T>(in);
+}
+
+template<typename T=i64>
+T RD() {
+    T res = READ<T>(cin);
 #ifdef PROCON_LOCAL
     ASSERT(cin);
 #endif
-}
-
-template<typename T>
-void RD1(T& x) {
-    RD(x);
-    --x;
-}
-
-template<typename T>
-auto RD_ARRAY(i64 n) {
-    auto res = arrayn_make<T>(n, T());
-    arrayn_foreach(res, [](T& e) { RD(e); });
     return res;
 }
 
-template<typename T>
+template<typename T=i64>
+T RD1() {
+    T res = READ1<T>(cin);
+#ifdef PROCON_LOCAL
+    ASSERT(cin);
+#endif
+    return res;
+}
+
+template<typename T=i64>
+auto RD_ARRAY(i64 n) {
+    vector<T> res;
+    res.reserve(n);
+    REP(_, n) {
+        res.emplace_back(RD<T>());
+    }
+    return res;
+}
+
+template<typename T=i64>
 auto RD1_ARRAY(i64 n) {
-    auto res = arrayn_make<T>(n, T());
-    arrayn_foreach(res, [](T& e) { RD1(e); });
+    vector<T> res;
+    res.reserve(n);
+    REP(_, n) {
+        res.emplace_back(RD1<T>());
+    }
     return res;
 }
 
 template<typename T>
 auto RD_ARRAY2(i64 h, i64 w) {
-    auto res = arrayn_make<T>(h,w, T());
-    arrayn_foreach(res, [](T& e) { RD(e); });
+    vector<vector<T>> res(h);
+    for(auto& row : res) {
+        row.reserve(w);
+        REP(_, w) {
+            row.emplace_back(RD<T>());
+        }
+    }
     return res;
 }
 
 template<typename T>
 auto RD1_ARRAY2(i64 h, i64 w) {
-    auto res = arrayn_make<T>(h,w, T());
-    arrayn_foreach(res, [](T& e) { RD1(e); });
+    vector<vector<T>> res(h);
+    for(auto& row : res) {
+        row.reserve(w);
+        REP(_, w) {
+            row.emplace_back(RD1<T>());
+        }
+    }
     return res;
 }
 
 template<typename T1, typename T2>
-pair<T1,T2> RD_PAIR() {
-    T1 x; RD(x);
-    T2 y; RD(y);
-    return { x, y };
-}
+struct Scanner<pair<T1,T2>> {
+    static pair<T1,T2> read(istream& in) {
+        T1 x = READ<T1>(in);
+        T2 y = READ<T2>(in);
+        return {x,y};
+    }
+};
 
-template<typename T1, typename T2>
-pair<T1,T2> RD1_PAIR() {
-    T1 x; RD1(x);
-    T2 y; RD1(y);
-    return { x, y };
-}
+template<typename... TS>
+struct Scanner<tuple<TS...>> {
+    template<size_t I, SFINAE(sizeof...(TS) == I)>
+    static auto read_impl(istream&) {
+        return make_tuple();
+    }
+    template<size_t I, SFINAE(sizeof...(TS) > I)>
+    static auto read_impl(istream& in) {
+        using T = tuple_element_t<I,tuple<TS...>>;
+        auto head = make_tuple(READ<T>(in));
+        return tuple_cat(head, read_impl<I+1>(in));
+    }
 
-template<typename... TS, SFINAE(sizeof...(TS) == 0)>
-auto RD_TUPLE() {
-    return make_tuple();
-}
-
-template<typename T, typename... TS>
-auto RD_TUPLE() {
-    T x; RD(x);
-    return tuple_cat(make_tuple(x), RD_TUPLE<TS...>());
-}
-
-template<typename... TS, SFINAE(sizeof...(TS) == 0)>
-auto RD1_TUPLE() {
-    return make_tuple();
-}
-
-template<typename T, typename... TS>
-auto RD1_TUPLE() {
-    T x; RD1(x);
-    return tuple_cat(make_tuple(x), RD_TUPLE<TS...>());
-}
+    static tuple<TS...> read(istream& in) {
+        return read_impl<0>(in);
+    }
+};
 
 void PRINT() {}
 

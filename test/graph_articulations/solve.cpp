@@ -3,12 +3,13 @@
 #include "graph.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    i64 M; RD(M);
+    i64 N = RD();
+    i64 M = RD();
 
     auto G = graph_make_unweighted(N);
     REP(_, M) {
-        i64 s,t; RD(s); RD(t);
+        i64 s = RD();
+        i64 t = RD();
         G[s].emplace_back(t);
         G[t].emplace_back(s);
     }

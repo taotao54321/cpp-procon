@@ -2,7 +2,7 @@
 #include "geometry.hpp"
 
 signed main() {
-    i64 N; RD(N);
+    i64 N = RD();
     auto ps = RD_ARRAY<Vector>(N);
     Polygon convex(ps);
 

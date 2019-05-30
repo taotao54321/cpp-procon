@@ -2,12 +2,12 @@
 #include "geometry.hpp"
 
 signed main() {
-    i64 Q; RD(Q);
+    i64 Q = RD();
     REP(_, Q) {
-        Vector p0; RD(p0);
-        Vector p1; RD(p1);
-        Vector p2; RD(p2);
-        Vector p3; RD(p3);
+        auto p0 = RD<Vector>();
+        auto p1 = RD<Vector>();
+        auto p2 = RD<Vector>();
+        auto p3 = RD<Vector>();
         bool ans = geo_intersect(Segment(p0,p1), Segment(p2,p3));
         PRINTLN(ans ? 1 : 0);
     }

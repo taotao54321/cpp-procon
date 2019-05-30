@@ -2,13 +2,14 @@
 #include "flow.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    i64 M; RD(M);
+    i64 N = RD();
+    i64 M = RD();
 
     auto G = arrayn_make<i64>(N,N, 0);
     REP(_, M) {
-        i64 from,to; RD(from); RD(to);
-        RD(G[from][to]);
+        i64 from = RD();
+        i64 to   = RD();
+        G[from][to] = RD();
     }
     //DBG(G);
 

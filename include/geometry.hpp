@@ -577,9 +577,13 @@ vector<Line> geo_tangent(const Circle& cir, const Vector& p) {
     return res;
 }
 
-void RD(Vector& v) {
-    RD(v.x);
-    RD(v.y);
-}
+template<>
+struct Scanner<Vector> {
+    static Vector read(istream& in) {
+        auto x = READ<f64>(in);
+        auto y = READ<f64>(in);
+        return {x,y};
+    }
+};
 
 // }}}

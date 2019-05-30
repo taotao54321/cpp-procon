@@ -94,15 +94,19 @@ struct procon_hash<Index2> {
     }
 };
 
-void RD(Index2& idx) {
-    RD(idx.y);
-    RD(idx.x);
-}
-
-void RD1(Index2& idx) {
-    RD1(idx.y);
-    RD1(idx.x);
-}
+template<>
+struct Scanner<Index2> {
+    static Index2 read(istream& in) {
+        i64 y = READ<i64>(in);
+        i64 x = READ<i64>(in);
+        return {y,x};
+    }
+    static Index2 read1(istream& in) {
+        i64 y = READ1<i64>(in);
+        i64 x = READ1<i64>(in);
+        return {y,x};
+    }
+};
 
 template<>
 struct Formatter<Index2> {
@@ -179,7 +183,7 @@ template<typename T>
 auto RD_GRID2(i64 h, i64 w) {
     Grid2<T> grid(h, w);
     REP(y, grid.h()) REP(x, grid.w()) {
-        RD(grid.at(y,x));
+        grid.at(y,x) = RD<T>();
     }
     return grid;
 }
@@ -188,7 +192,7 @@ template<typename T>
 auto RD1_GRID2(i64 h, i64 w) {
     Grid2<T> grid(h, w);
     REP(y, grid.h()) REP(x, grid.w()) {
-        RD1(grid.at(y,x));
+        grid.at(y,x) = RD1<T>();
     }
     return grid;
 }

@@ -2,13 +2,13 @@
 #include "geometry.hpp"
 
 signed main() {
-    i64 Q; RD(Q);
+    i64 Q = RD();
     REP(_, Q) {
-        Vector p0; RD(p0);
-        Vector p1; RD(p1);
+        auto p0 = RD<Vector>();
+        auto p1 = RD<Vector>();
         Segment seg1(p0,p1);
-        Vector p2; RD(p2);
-        Vector p3; RD(p3);
+        auto p2 = RD<Vector>();
+        auto p3 = RD<Vector>();
         Segment seg2(p2,p3);
 
         f64 ans = geo_distance(seg1, seg2);

@@ -3,8 +3,8 @@
 #include "fenwick.hpp"
 
 signed main() {
-    i64 N; RD(N);
-    auto A = RD_ARRAY<i64>(N);
+    i64 N = RD();
+    auto A = RD_ARRAY(N);
 
     // A を座標圧縮して [0,N) にする
     vector<i64> xs(A);
