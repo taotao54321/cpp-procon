@@ -16,13 +16,13 @@ template<typename T, typename U>
 struct HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,U,false> : false_type {};
 
 template<typename T>
-struct IS_INPUT_ITERATOR : public HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,input_iterator_tag> {};
+struct IS_INPUT_ITERATOR : HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,input_iterator_tag> {};
 template<typename T>
-struct IS_FORWARD_ITERATOR : public HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,forward_iterator_tag> {};
+struct IS_FORWARD_ITERATOR : HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,forward_iterator_tag> {};
 template<typename T>
-struct IS_BIDIRECTIONAL_ITERATOR : public HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,bidirectional_iterator_tag> {};
+struct IS_BIDIRECTIONAL_ITERATOR : HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,bidirectional_iterator_tag> {};
 template<typename T>
-struct IS_RANDOM_ACCESS_ITERATOR : public HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,random_access_iterator_tag> {};
+struct IS_RANDOM_ACCESS_ITERATOR : HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,random_access_iterator_tag> {};
 
 template<typename ForwardIt>
 ForwardIt next_bounded(ForwardIt last, ForwardIt it, i64 n=1) {
