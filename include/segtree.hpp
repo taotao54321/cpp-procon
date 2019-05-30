@@ -168,8 +168,7 @@ template<
 auto make_segtree_lazy(
     FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
     const T1& unity_monoid, const T2& unity_action,
-    i64 n,
-    const T3& x
+    i64 n, const T3& x
 ) {
     return SegTreeLazy<Monoid,Action,FuncMonoid,FuncAction,FuncLazy>(
         forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),
