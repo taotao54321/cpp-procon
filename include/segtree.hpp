@@ -49,7 +49,7 @@ struct SegTreeRQ {
         init_merge();
     }
 
-    void update(i64 i, Action x) {
+    void update(i64 i, const Action& x) {
         i64 v = node_leaf(i);
         data_[v] = fa_(data_[v], x);
         while(v > 1) {
@@ -203,7 +203,7 @@ struct SegTreeLazy {
         init_merge();
     }
 
-    void update(i64 i, i64 k, Action x) {
+    void update(i64 i, i64 k, const Action& x) {
         update_impl(i, i+k, x, 1, 0, n_);
     }
 
@@ -219,7 +219,7 @@ private:
 
     // [a,b): 要求区間
     // [l,r): ノード v の区間
-    void update_impl(i64 a, i64 b, Action x, i64 v, i64 l, i64 r) {
+    void update_impl(i64 a, i64 b, const Action& x, i64 v, i64 l, i64 r) {
         // まず現ノードを評価
         // ここで lazy_[v] が空になる
         eval(v);
