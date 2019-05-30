@@ -78,7 +78,7 @@ struct SuffixArray {
 
         pair<ForwardIt,ForwardIt> get_range(i64 i, i64 n) const {
             auto first1 = first_+i;
-            auto last1  = next_bounded(last_, first_+i, n);
+            auto last1  = next(first1, MIN(n,distance(first1,last_)));
             return make_pair(first1, last1);
         }
     };

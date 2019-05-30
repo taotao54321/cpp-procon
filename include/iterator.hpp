@@ -24,4 +24,28 @@ struct IS_BIDIRECTIONAL_ITERATOR : public HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T
 template<typename T>
 struct IS_RANDOM_ACCESS_ITERATOR : public HAS_ITERATOR_CATEGORY_CONVERTIBLE_TO<T,random_access_iterator_tag> {};
 
+template<typename ForwardIt>
+ForwardIt next_bounded(ForwardIt last, ForwardIt it, i64 n=1) {
+    auto bound = distance(it, last);
+    return next(it, MIN(n, bound));
+}
+
+template<typename ForwardIt>
+ForwardIt prev_bounded(ForwardIt first, ForwardIt it, i64 n=1) {
+    auto bound = distance(first, it);
+    return prev(it, MIN(n, bound));
+}
+
+template<typename ForwardIt>
+void advance_bounded(ForwardIt first, ForwardIt last, ForwardIt& it, i64 n) {
+    if(n > 0) {
+        auto bound = distance(it, last);
+        advance(it, MIN(n, bound));
+    }
+    else if(n < 0) {
+        auto bound = distance(it, first);
+        advance(it, MAX(n, bound));
+    }
+}
+
 // }}}
