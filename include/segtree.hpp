@@ -23,8 +23,7 @@ struct SegTreeLazy {
         unity_monoid_(unity_monoid), unity_action_(unity_action),
         n_(pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
     {
-        for(i64 i = n_-1; i >= 1; --i)
-            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
+        init_merge();
     }
 
     SegTreeLazy(
@@ -39,8 +38,7 @@ struct SegTreeLazy {
         )
     {
         SLICE(fill, data_, n_, n_+n, x);
-        for(i64 i = n_-1; i >= 1; --i)
-            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
+        init_merge();
     }
 
     template<typename ForwardIt>
@@ -56,8 +54,7 @@ struct SegTreeLazy {
         )
     {
         copy(first, last, begin(data_)+n_);
-        for(i64 i = n_-1; i >= 1; --i)
-            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
+        init_merge();
     }
 
     void update(i64 i, i64 k, Action x) {
@@ -69,6 +66,11 @@ struct SegTreeLazy {
     }
 
 private:
+    void init_merge() {
+        for(i64 i = n_-1; i >= 1; --i)
+            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
+    }
+
     // [a,b): 要求区間
     // [l,r): ノード v の区間
     void update_impl(i64 a, i64 b, Action x, i64 v, i64 l, i64 r) {
