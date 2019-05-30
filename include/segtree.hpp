@@ -1,99 +1,195 @@
-// segtree (monoid が必要) {{{
+// segtree {{{
 
-template<typename T, typename Op>
-struct SegTree {
-    using M = Monoid<T,Op>;
-
-    i64 n_orig_;
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction, typename FuncLazy
+>
+struct SegTreeLazy {
+    FuncMonoid fm_;
+    FuncAction fa_;
+    FuncLazy   fl_;
+    Monoid unity_monoid_;
+    Action unity_action_;
     i64 n_;
-    vector<T> v_;
-    Op op_;
+    vector<Monoid> data_;  // 1-based
+    vector<Action> lazy_;  // 1-based
 
-    explicit SegTree(i64 n) {
-        init(n);
-        ALL(fill, v_, M::UNITY());
+    SegTreeLazy(
+        FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
+        const Monoid& unity_monoid, const Action& unity_action,
+        i64 n
+    ) :
+        fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)),
+        unity_monoid_(unity_monoid), unity_action_(unity_action),
+        n_(pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
+    {
+        for(i64 i = n_-1; i >= 1; --i)
+            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
     }
 
-    SegTree(i64 n, const T& x) {
-        init(n);
-        i64 i = n_;
-        for(; i < n_+n_orig_; ++i)
-            v_[i] = x;
-        for(; i < 2*n_; ++i)
-            v_[i] = M::UNITY();
-        for(i = n_-1; i >= 1; --i)
-            v_[i] = op_(v_[2*i], v_[2*i+1]);
+    SegTreeLazy(
+        FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
+        const Monoid& unity_monoid, const Action& unity_action,
+        i64 n, const Monoid& x
+    ) :
+        SegTreeLazy(
+            forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),
+            unity_monoid, unity_action,
+            n
+        )
+    {
+        SLICE(fill, data_, n_, n_+n, x);
+        for(i64 i = n_-1; i >= 1; --i)
+            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
     }
 
     template<typename ForwardIt>
-    SegTree(ForwardIt first, ForwardIt last) {
-        init(distance(first, last));
-        i64 i = n_;
-        for(; first != last; ++i, ++first)
-            v_[i] = *first;
-        for(; i < 2*n_; ++i)
-            v_[i] = M::UNITY();
-        for(i = n_-1; i >= 1; --i)
-            v_[i] = op_(v_[2*i], v_[2*i+1]);
+    SegTreeLazy(
+        FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
+        const Monoid& unity_monoid, const Action& unity_action,
+        ForwardIt first, ForwardIt last
+    ) :
+        SegTreeLazy(
+            forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),
+            unity_monoid, unity_action,
+            distance(first,last)
+        )
+    {
+        copy(first, last, begin(data_)+n_);
+        for(i64 i = n_-1; i >= 1; --i)
+            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
     }
 
-    void add(i64 i, const T& x) {
-        update(i, v_[n_+i]+x);
+    void update(i64 i, i64 k, Action x) {
+        update_impl(i, i+k, x, 1, 0, n_);
     }
 
-    void update(i64 i, const T& x) {
-        i += n_;
-        v_[i] = x;
-        while(i > 1) {
-            i /= 2;
-            v_[i] = op_(v_[2*i], v_[2*i+1]);
-        }
-    }
-
-    T query(i64 i, i64 k) const {
-        ASSERT(0 <= i && i+k <= n_orig_);
+    Monoid query(i64 i, i64 k) {
         return query_impl(i, i+k, 1, 0, n_);
     }
 
 private:
-    void init(i64 n) {
-        n_orig_ = n;
-        n_ = pow2_ceil(n_orig_);
-        v_.resize(2*n_);
-    }
+    // [a,b): 要求区間
+    // [l,r): ノード v の区間
+    void update_impl(i64 a, i64 b, Action x, i64 v, i64 l, i64 r) {
+        // まず現ノードを評価
+        // ここで lazy_[v] が空になる
+        eval(v);
 
-    T query_impl(i64 a, i64 b, i64 i, i64 l, i64 r) const {
-        if(r <= a || b <= l) return M::UNITY();
-        if(a <= l && r <= b) return v_[i];
+        // [a,b), [l,r) が共通部分を持たなければ何もしない
+        if(b <= l || r <= a) return;
 
-        i64 xl = query_impl(a, b, 2*i,   l, (l+r)/2);
-        i64 xr = query_impl(a, b, 2*i+1, (l+r)/2, r);
-        return op_(xl, xr);
-    }
-};
-
-template<typename T, typename Op>
-struct Formatter<SegTree<T,Op>> {
-    static ostream& write_str(ostream& out, const SegTree<T,Op>& segtree) {
-        return WRITE_RANGE_STR(out, begin(segtree.v_), end(segtree.v_));
-    }
-    // TODO: 桁数が多くなると崩れる
-    static ostream& write_repr(ostream& out, const SegTree<T,Op>& segtree) {
-        out << "SegTree {\n";
-        auto it = begin(segtree.v_) + 1;
-        i64 k_ini = log2_floor(segtree.n_);
-        for(i64 k = k_ini; k >= 0; --k) {
-            i64 m = 1LL<<(k_ini-k);
-            string margin((1LL<<k)-1, ' ');
-            string space((1LL<<(k+1))-1, ' ');
-            out << margin;
-            WRITE_JOIN_REPR(out, it, it+m, space);
-            out << "\n";
-            it += m;
+        // [a,b) が [l,r) を完全に被覆するなら lazy_[v] に値を入れた後に評価
+        if(a <= l && r <= b) {
+            lazy_[v] = fl_(lazy_[v], x);
+            eval(v);
         }
-        out << "}";
-        return out;
+        // [a,b) が [l,r) と部分的に交わるなら子ノードを更新
+        // 最後に data_[v] を更新
+        else {
+            i64 vl = node_l(v);
+            i64 vr = node_r(v);
+            update_impl(a, b, x, vl, l, (l+r)/2);
+            update_impl(a, b, x, vr, (l+r)/2, r);
+            data_[v] = fm_(data_[vl], data_[vr]);
+        }
+    }
+
+    // [a,b): 要求区間
+    // [l,r): ノード v の区間
+    Monoid query_impl(i64 a, i64 b, i64 v, i64 l, i64 r) {
+        // [a,b), [l,r) が共通部分を持たなければ単位元を返す
+        if(b <= l || r <= a) return unity_monoid_;
+
+        // 現ノードを評価
+        eval(v);
+
+        // [a,b) が [l,r) を完全に被覆するなら data_[v] を返す
+        if(a <= l && r <= b) return data_[v];
+
+        // [a,b) が [l,r) と部分的に交わるなら子ノードの値をマージして返す
+        Monoid ml = query_impl(a, b, node_l(v), l, (l+r)/2);
+        Monoid mr = query_impl(a, b, node_r(v), (l+r)/2, r);
+        return fm_(ml, mr);
+    }
+
+    void eval(i64 v) {
+        if(lazy_[v] == unity_action_) return;
+
+        data_[v] = fa_(data_[v], lazy_[v]);
+        if(!node_is_leaf(v)) {
+            i64 vl = node_l(v);
+            i64 vr = node_r(v);
+            lazy_[vl] = fl_(lazy_[vl], lazy_[v]);
+            lazy_[vr] = fl_(lazy_[vr], lazy_[v]);
+        }
+
+        lazy_[v] = unity_action_;
+    }
+
+    static i64 node_l(i64 v) {
+        return 2*v;
+    }
+
+    static i64 node_r(i64 v) {
+        return 2*v + 1;
+    }
+
+    bool node_is_leaf(i64 v) const {
+        return v >= n_;
     }
 };
+
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction, typename FuncLazy,
+    typename T1, typename T2
+>
+auto make_segtree_lazy(
+    FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
+    const T1& unity_monoid, const T2& unity_action,
+    i64 n
+) {
+    return SegTreeLazy<Monoid,Action,FuncMonoid,FuncAction,FuncLazy>(
+        forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),
+        unity_monoid, unity_action,
+        n
+    );
+}
+
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction, typename FuncLazy,
+    typename T1, typename T2, typename T3
+>
+auto make_segtree_lazy(
+    FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
+    const T1& unity_monoid, const T2& unity_action,
+    i64 n,
+    const T3& x
+) {
+    return SegTreeLazy<Monoid,Action,FuncMonoid,FuncAction,FuncLazy>(
+        forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),
+        unity_monoid, unity_action,
+        n, x
+    );
+}
+
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction, typename FuncLazy,
+    typename T1, typename T2, typename ForwardIt
+>
+auto make_segtree_lazy_range(
+    FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
+    const T1& unity_monoid, const T2& unity_action,
+    ForwardIt first, ForwardIt last
+) {
+    return SegTreeLazy<Monoid,Action,FuncMonoid,FuncAction,FuncLazy>(
+        forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),
+        unity_monoid, unity_action,
+        first, last
+    );
+}
 
 // }}}
