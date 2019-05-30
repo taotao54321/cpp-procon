@@ -6,11 +6,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// C++17 polyfill {{{
-template<bool B>
-using BoolConstant = integral_constant<bool, B>;
-// }}}
-
 // C++20 polyfill {{{
 struct IDENTITY {
     using is_transparent = void;
