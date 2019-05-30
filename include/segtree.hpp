@@ -1,5 +1,6 @@
 // segtree {{{
 
+// 区間更新/区間クエリ
 template<
     typename Monoid, typename Action,
     typename FuncMonoid, typename FuncAction, typename FuncLazy
