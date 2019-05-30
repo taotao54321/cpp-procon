@@ -1,6 +1,151 @@
 // segtree {{{
 
-// 区間更新/区間クエリ
+// 1点更新/区間クエリ {{{
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction
+>
+struct SegTreeRQ {
+    FuncMonoid fm_;
+    FuncAction fa_;
+    Monoid unity_monoid_;
+    i64 n_;
+    vector<Monoid> data_;  // 1-based
+
+    SegTreeRQ(
+        FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid,
+        i64 n
+    ) :
+        fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), unity_monoid_(unity_monoid),
+        n_(pow2_ceil(n)), data_(2*n_,unity_monoid_)
+    {
+        init_merge();
+    }
+
+    SegTreeRQ(
+        FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid,
+        i64 n, const Monoid& x
+    ) :
+        SegTreeRQ(
+            forward<FuncMonoid>(fm), forward<FuncAction>(fa), unity_monoid,
+            n
+        )
+    {
+        SLICE(fill, data_, n_, n_+n, x);
+        init_merge();
+    }
+
+    template<typename ForwardIt>
+    SegTreeRQ(
+        FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid,
+        ForwardIt first, ForwardIt last
+    ) :
+        SegTreeRQ(
+            forward<FuncMonoid>(fm), forward<FuncAction>(fa), unity_monoid,
+            distance(first,last)
+        )
+    {
+        copy(first, last, begin(data_)+n_);
+        init_merge();
+    }
+
+    void update(i64 i, Action x) {
+        i64 v = node_leaf(i);
+        data_[v] = fa_(data_[v], x);
+        while(v > 1) {
+            v = node_par(v);
+            data_[v] = fm_(data_[node_l(v)], data_[node_r(v)]);
+        }
+    }
+
+    Monoid query(i64 i, i64 k) {
+        return query_impl(i, i+k, 1, 0, n_);
+    }
+
+private:
+    void init_merge() {
+        for(i64 i = n_-1; i >= 1; --i)
+            data_[i] = fm_(data_[node_l(i)], data_[node_r(i)]);
+    }
+
+    Monoid query_impl(i64 a, i64 b, i64 v, i64 l, i64 r) {
+        // [a,b), [l,r) が共通部分を持たなければ単位元を返す
+        if(b <= l || r <= a) return unity_monoid_;
+
+        // [a,b) が [l,r) を完全に被覆するなら data_[v] を返す
+        if(a <= l && r <= b) return data_[v];
+
+        // [a,b) が [l,r) と部分的に交わるなら子ノードの値をマージして返す
+        Monoid ml = query_impl(a, b, node_l(v), l, (l+r)/2);
+        Monoid mr = query_impl(a, b, node_r(v), (l+r)/2, r);
+        return fm_(ml, mr);
+    }
+
+    static i64 node_par(i64 v) {
+        return v/2;
+    }
+
+    static i64 node_l(i64 v) {
+        return 2*v;
+    }
+
+    static i64 node_r(i64 v) {
+        return 2*v + 1;
+    }
+
+    bool node_is_leaf(i64 v) const {
+        return v >= n_;
+    }
+
+    i64 node_leaf(i64 i) const {
+        return i + n_;
+    }
+};
+
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction, typename T1
+>
+auto make_segtree_rq(
+    FuncMonoid&& fm, FuncAction&& fa, const T1& unity_monoid,
+    i64 n
+) {
+    return SegTreeRQ<Monoid,Action,FuncMonoid,FuncAction>(
+        forward<FuncMonoid>(fm), forward<FuncAction>(fa), unity_monoid,
+        n
+    );
+}
+
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction, typename T1, typename T2
+>
+auto make_segtree_rq(
+    FuncMonoid&& fm, FuncAction&& fa, const T1& unity_monoid,
+    i64 n, const T2& x
+) {
+    return SegTreeRQ<Monoid,Action,FuncMonoid,FuncAction>(
+        forward<FuncMonoid>(fm), forward<FuncAction>(fa), unity_monoid,
+        n, x
+    );
+}
+
+template<
+    typename Monoid, typename Action,
+    typename FuncMonoid, typename FuncAction, typename T1, typename ForwardIt
+>
+auto make_segtree_rq_range(
+    FuncMonoid&& fm, FuncAction&& fa, const T1& unity_monoid,
+    ForwardIt first, ForwardIt last
+) {
+    return SegTreeRQ<Monoid,Action,FuncMonoid,FuncAction>(
+        forward<FuncMonoid>(fm), forward<FuncAction>(fa), unity_monoid,
+        first, last
+    );
+}
+// }}}
+
+// 区間更新/区間クエリ {{{
 template<
     typename Monoid, typename Action,
     typename FuncMonoid, typename FuncAction, typename FuncLazy
@@ -193,5 +338,6 @@ auto make_segtree_lazy_range(
         first, last
     );
 }
+// }}}
 
 // }}}
