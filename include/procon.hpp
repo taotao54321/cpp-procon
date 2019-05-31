@@ -1555,7 +1555,7 @@ auto RD1_ARRAY(i64 n) {
     return res;
 }
 
-template<typename T>
+template<typename T=i64>
 auto RD_ARRAY2(i64 h, i64 w) {
     vector<vector<T>> res(h);
     for(auto& row : res) {
@@ -1567,7 +1567,7 @@ auto RD_ARRAY2(i64 h, i64 w) {
     return res;
 }
 
-template<typename T>
+template<typename T=i64>
 auto RD1_ARRAY2(i64 h, i64 w) {
     vector<vector<T>> res(h);
     for(auto& row : res) {
