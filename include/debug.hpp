@@ -1,5 +1,23 @@
 // debug {{{
 
+#include <cxxabi.h>
+
+string DEMANGLE(const char* mangled) {
+    int st;
+    char* s = abi::__cxa_demangle(mangled, nullptr, nullptr, &st);
+    ASSERT(st == 0);
+    string res(s);
+    free(s);
+    return res;
+}
+
+template<typename T>
+string TYPE_NAME() {
+    return DEMANGLE(typeid(T).name());
+}
+
+#define TYPE_NAME_OF(expr) (DEMANGLE(typeid(expr).name()))
+
 template<typename T, SFINAE(rank<T>::value == 0)>
 ostream& DBG_CARRAYN_HELPER(ostream& out, const T& e) {
     return WRITE_REPR(out, e);
