@@ -11,12 +11,7 @@ string DEMANGLE(const char* mangled) {
     return res;
 }
 
-template<typename T>
-string TYPE_NAME() {
-    return DEMANGLE(typeid(T).name());
-}
-
-#define TYPE_NAME_OF(expr) (DEMANGLE(typeid(expr).name()))
+#define TYPE_NAME(x) (DEMANGLE(typeid(x).name()))
 
 template<typename T, SFINAE(rank<T>::value == 0)>
 ostream& DBG_CARRAYN_HELPER(ostream& out, const T& e) {
