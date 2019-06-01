@@ -1633,6 +1633,22 @@ void PRINTLN(const TS& ...args) {
 #endif
 }
 
+u64 splitmix64(u64 x) {
+    x += 0x9e3779b97f4a7c15;
+    x  = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+    x  = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+    return x ^ (x >> 31);
+}
+
+u64 RANDOM_SEED() {
+    int dummy;
+    static const u64 res =
+        splitmix64(chrono::high_resolution_clock::now().time_since_epoch().count()) +
+        splitmix64(reinterpret_cast<u64>(&dummy)) +
+        splitmix64(reinterpret_cast<u64>(new char));
+    return res;
+}
+
 template<typename... TS, SFINAE(sizeof...(TS) == 1)>
 void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
     cerr << "[L " << line << "]: ";
