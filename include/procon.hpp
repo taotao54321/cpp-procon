@@ -719,6 +719,24 @@ template<typename... TS, SFINAE(sizeof...(TS) > 1)>
 constexpr auto tuple_tail(const tuple<TS...>& t) {
     return tuple_tail_helper(t, make_index_sequence<sizeof...(TS)>());
 }
+
+template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) == I)>
+void tuple_enumerate(tuple<TS...>&, F&&) {}
+
+template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) > I)>
+void tuple_enumerate(tuple<TS...>& t, F&& f) {
+    f(I, get<I>(t));
+    tuple_enumerate<I+1>(t, f);
+}
+
+template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) == I)>
+void tuple_enumerate(const tuple<TS...>&, F&&) {}
+
+template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) > I)>
+void tuple_enumerate(const tuple<TS...>& t, F&& f) {
+    f(I, get<I>(t));
+    tuple_enumerate<I+1>(t, f);
+}
 // }}}
 
 // FST/SND {{{
@@ -1445,37 +1463,21 @@ struct Formatter<pair<T1,T2>> {
 
 template<typename... TS>
 struct Formatter<tuple<TS...>> {
-    template<size_t I=0, SFINAE(sizeof...(TS) == I)>
-    static ostream& write_str_impl(ostream& out, const tuple<TS...>&) {
+    static ostream& write_str(ostream& out, const tuple<TS...>& t) {
+        tuple_enumerate(t, [&out](i64 i, const auto& e) {
+            if(i != 0) out << ' ';
+            WRITE_STR(out, e);
+        });
         return out;
     }
-    template<size_t I=0, SFINAE(sizeof...(TS) > I)>
-    static ostream& write_str_impl(ostream& out, const tuple<TS...>& t) {
-        if(I != 0) out << ' ';
-        WRITE_STR(out, get<I>(t));
-        return write_str_impl<I+1>(out, t);
-    }
-
-    template<size_t I=0, SFINAE(sizeof...(TS) == I)>
-    static ostream& write_repr_impl(ostream& out, const tuple<TS...>&) {
-        if(sizeof...(TS) == 0) out << "(";
-        return out << ")";
-    }
-    template<size_t I=0, SFINAE(sizeof...(TS) > I)>
-    static ostream& write_repr_impl(ostream& out, const tuple<TS...>& t) {
-        if(I == 0)
-            out << "(";
-        else
-            out << ",";
-        WRITE_REPR(out, get<I>(t));
-        return write_repr_impl<I+1>(out, t);
-    }
-
-    static ostream& write_str(ostream& out, const tuple<TS...>& t) {
-        return write_str_impl(out, t);
-    }
     static ostream& write_repr(ostream& out, const tuple<TS...>& t) {
-        return write_repr_impl(out, t);
+        out << "(";
+        tuple_enumerate(t, [&out](i64 i, const auto& e) {
+            if(i != 0) out << ",";
+            WRITE_REPR(out, e);
+        });
+        out << ")";
+        return out;
     }
 };
 
