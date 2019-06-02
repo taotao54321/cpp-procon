@@ -1598,11 +1598,11 @@ struct Scanner<pair<T1,T2>> {
 
 template<typename... TS>
 struct Scanner<tuple<TS...>> {
-    template<size_t I, SFINAE(sizeof...(TS) == I)>
+    template<i64 I, SFINAE(sizeof...(TS) == I)>
     static auto read_impl(istream&) {
         return make_tuple();
     }
-    template<size_t I, SFINAE(sizeof...(TS) > I)>
+    template<i64 I, SFINAE(sizeof...(TS) > I)>
     static auto read_impl(istream& in) {
         using T = tuple_element_t<I,tuple<TS...>>;
         auto head = make_tuple(READ<T>(in));
