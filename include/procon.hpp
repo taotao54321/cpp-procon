@@ -2,6 +2,10 @@
  * 
  */
 
+//#pragma GCC optimize("O3")
+//#pragma GCC optimize("unroll-loops")
+//#pragma GCC target("avx")
+
 // header {{{
 #include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
