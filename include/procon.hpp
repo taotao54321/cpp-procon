@@ -4,7 +4,13 @@
 
 // header {{{
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+#include <ext/pb_ds/priority_queue.hpp>
+#include <ext/pb_ds/tag_and_trait.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
+namespace pbds = __gnu_pbds;
 
 // C++20 polyfill {{{
 struct IDENTITY {
