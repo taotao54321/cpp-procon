@@ -990,7 +990,18 @@ i64 log2_floor(i64 x) {
 // 0 <= log10_ceil(x) <= 19
 i64 log10_ceil(i64 x) {
     ASSERT(x > 0);
-    static constexpr i64 TABLE[19] {
+    static constexpr i8 TABLE1[64] {
+        -1, 19, 19, 19, 19, 18, 18, 18,
+        17, 17, 17, 16, 16, 16, 16, 15,
+        15, 15, 14, 14, 14, 13, 13, 13,
+        13, 12, 12, 12, 11, 11, 11, 10,
+        10, 10, 10,  9,  9,  9,  8,  8,
+         8,  7,  7,  7,  7,  6,  6,  6,
+         5,  5,  5,  4,  4,  4,  4,  3,
+         3,  3,  2,  2,  2,  1,  1,  0,
+    };
+    static constexpr i64 TABLE2[20] {
+        0LL,
         1LL,
         10LL,
         100LL,
@@ -1011,39 +1022,48 @@ i64 log10_ceil(i64 x) {
         100000000000000000LL,
         1000000000000000000LL,
     };
-    REP(i, SIZE(TABLE)) {
-        if(x <= TABLE[i]) return i;
-    }
-    return SIZE(TABLE);
+    i64 res = TABLE1[BIT_COUNT_LEADING_ZEROS(x)];
+    if(x <= TABLE2[res]) --res;
+    return res;
 }
 
 // 0 <= log10_floor(x) <= 18
 i64 log10_floor(i64 x) {
     ASSERT(x > 0);
-    static constexpr i64 TABLE[18] {
-        9LL,
-        99LL,
-        999LL,
-        9999LL,
-        99999LL,
-        999999LL,
-        9999999LL,
-        99999999LL,
-        999999999LL,
-        9999999999LL,
-        99999999999LL,
-        999999999999LL,
-        9999999999999LL,
-        99999999999999LL,
-        999999999999999LL,
-        9999999999999999LL,
-        99999999999999999LL,
-        999999999999999999LL,
+    static constexpr i8 TABLE1[64] {
+        -1, 18, 18, 18, 18, 17, 17, 17,
+        16, 16, 16, 15, 15, 15, 15, 14,
+        14, 14, 13, 13, 13, 12, 12, 12,
+        12, 11, 11, 11, 10, 10, 10,  9,
+         9,  9,  9,  8,  8,  8,  7,  7,
+         7,  6,  6,  6,  6,  5,  5,  5,
+         4,  4,  4,  3,  3,  3,  3,  2,
+         2,  2,  1,  1,  1,  0,  0,  0,
     };
-    REP(i, SIZE(TABLE)) {
-        if(x <= TABLE[i]) return i;
-    }
-    return SIZE(TABLE);
+    static constexpr i64 TABLE2[19] {
+        1LL,
+        10LL,
+        100LL,
+        1000LL,
+        10000LL,
+        100000LL,
+        1000000LL,
+        10000000LL,
+        100000000LL,
+        1000000000LL,
+        10000000000LL,
+        100000000000LL,
+        1000000000000LL,
+        10000000000000LL,
+        100000000000000LL,
+        1000000000000000LL,
+        10000000000000000LL,
+        100000000000000000LL,
+        1000000000000000000LL,
+    };
+    i64 res = TABLE1[BIT_COUNT_LEADING_ZEROS(x)];
+    if(x < TABLE2[res]) --res;
+    return res;
 }
 
 // 2^n - 1 の形かどうか
