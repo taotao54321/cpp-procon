@@ -1,6 +1,31 @@
 #include "procon.hpp"
 #include "container.hpp"
 
+void test_priority_queue() {
+    {
+        auto que = make_priority_queue<i64>(GT_ON([](i64 x) { return ABS(x-10); }));
+        que.emplace(10);
+        que.emplace(11);
+        que.emplace(8);
+        que.emplace(13);
+        que.emplace(6);
+        ASSERT(POP(que) == 10);
+        ASSERT(POP(que) == 11);
+        ASSERT(POP(que) == 8);
+        ASSERT(POP(que) == 13);
+        ASSERT(POP(que) == 6);
+    }
+    {
+        i64 v[] { 6, 8, 10, 11, 13 };
+        auto que = make_priority_queue<i64>(begin(v), end(v), LT_ON([](i64 x) { return ABS(x-10); }));
+        ASSERT(POP(que) == 6);
+        ASSERT(POP(que) == 13);
+        ASSERT(POP(que) == 8);
+        ASSERT(POP(que) == 11);
+        ASSERT(POP(que) == 10);
+    }
+}
+
 void test_bool_array() {
     {
         BoolArray a;
@@ -316,6 +341,8 @@ void test_fmt() {
 }
 
 signed main() {
+    test_priority_queue();
+
     test_bool_array();
     test_map();
     test_multiset();

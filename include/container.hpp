@@ -1,5 +1,15 @@
 // container {{{
 
+template<typename T, typename Comp>
+auto make_priority_queue(const Comp& comp) {
+    return priority_queue<T,vector<T>,Comp>(comp);
+}
+
+template<typename T, typename InputIt, typename Comp>
+auto make_priority_queue(InputIt first, InputIt last, const Comp& comp) {
+    return priority_queue<T,vector<T>,Comp>(first, last, comp);
+}
+
 // set/map/multiset/multimap search {{{
 // set {{{
 template<typename T, typename Comp>
