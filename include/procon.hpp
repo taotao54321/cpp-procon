@@ -1635,14 +1635,14 @@ void PRINTLN(const TS& ...args) {
 #endif
 }
 
-u64 splitmix64(u64 x) {
+u64 splitmix64(u64 x) noexcept {
     x += 0x9e3779b97f4a7c15;
     x  = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
     x  = (x ^ (x >> 27)) * 0x94d049bb133111eb;
     return x ^ (x >> 31);
 }
 
-u64 RANDOM_SEED() {
+u64 RANDOM_SEED() noexcept {
     int dummy;
     static const u64 res =
         splitmix64(chrono::high_resolution_clock::now().time_since_epoch().count()) +
@@ -1650,6 +1650,81 @@ u64 RANDOM_SEED() {
         splitmix64(reinterpret_cast<u64>(new char));
     return res;
 }
+
+template<typename T, typename Enable=void>
+struct procon_hash {
+    static_assert(!is_pointer<T>::value, "procon_hash<T*> is not supported");
+    static_assert(!is_floating_point<T>::value, "procon_hash<Real> is not supported");
+    size_t operator()(const T& x) const noexcept {
+        return hash<T>{}(x);
+    }
+};
+
+template<typename T>
+size_t procon_hash_value(const T& x) noexcept {
+    return procon_hash<T>{}(x);
+}
+
+template<typename InputIt>
+size_t procon_hash_range(InputIt first, InputIt last) noexcept {
+    size_t res = 0;
+    for(; first != last; ++first) {
+        res *= 2;
+        res += procon_hash_value(*first);
+    }
+    return res;
+}
+
+template<typename T>
+struct procon_hash<T,enable_if_t<is_integral<T>::value>> {
+    size_t operator()(T x) const noexcept {
+        return splitmix64(x + RANDOM_SEED());
+    }
+};
+
+template<>
+struct procon_hash<string> {
+    static size_t BASE() noexcept {
+        return 14695981039346656037ULL + RANDOM_SEED();
+    }
+    size_t operator()(const string& s) const noexcept {
+        static constexpr size_t P = 1099511628211ULL;
+        size_t res = BASE();
+        for(char c : s) {
+            res ^= c;
+            res *= P;
+        }
+        return res;
+    }
+};
+
+template<typename T1, typename T2>
+struct procon_hash<pair<T1,T2>> {
+    size_t operator()(const pair<T1,T2>& p) const noexcept {
+        size_t h1 = procon_hash_value(FST(p));
+        size_t h2 = procon_hash_value(SND(p));
+        return 2*h1 + h2;
+    }
+};
+
+template<typename... TS>
+struct procon_hash<tuple<TS...>> {
+    size_t operator()(const tuple<TS...>& t) const noexcept {
+        size_t res = 0;
+        tuple_enumerate(t, [&res](i64, const auto& e) noexcept {
+            res *= 2;
+            res += procon_hash_value(e);
+        });
+        return res;
+    }
+};
+
+template<typename T>
+struct procon_hash<vector<T>> {
+    size_t operator()(const vector<T>& v) const noexcept {
+        return ALL(procon_hash_range, v);
+    }
+};
 
 template<typename... TS, SFINAE(sizeof...(TS) == 1)>
 void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
