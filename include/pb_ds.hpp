@@ -1,5 +1,11 @@
 // pb_ds {{{
 
+template<typename T, typename Comp=less<T>>
+using RbTreeSet = pbds::tree<T,pbds::null_type,Comp,pbds::rb_tree_tag,pbds::tree_order_statistics_node_update>;
+
+template<typename K, typename V, typename Comp=less<K>>
+using RbTreeMap = pbds::tree<K,V,Comp,pbds::rb_tree_tag,pbds::tree_order_statistics_node_update>;
+
 template<
     typename T, typename Hash=procon_hash<T>, typename Eq=equal_to<T>,
     typename Comb=pbds::direct_mask_range_hashing<>,
