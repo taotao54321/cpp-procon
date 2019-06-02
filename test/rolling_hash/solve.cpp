@@ -1,5 +1,4 @@
 #include "procon.hpp"
-#include "container.hpp"
 #include "rolling_hash.hpp"
 
 signed main() {

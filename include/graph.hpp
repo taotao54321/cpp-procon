@@ -1,4 +1,4 @@
-// graph (container が必要) {{{
+// graph {{{
 
 template<typename T>
 vector<vector<pair<i64,T>>> graph_make_weighted(i64 n) {
@@ -395,7 +395,7 @@ vector<i64> graph_euler_trail_list(vector<vector<i64>>& g, i64 start, bool digra
         case CALL:
             stk.emplace(RESUME, v);
             while(!g[v].empty()) {
-                i64 to = POP_BACK(g[v]);
+                i64 to = g[v].back(); g[v].pop_back();
                 if(!digraph)
                     g[to].erase(ALL(find, g[to], v));
                 stk.emplace(CALL, to);
