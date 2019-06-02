@@ -1641,6 +1641,7 @@ void PRINTLN(const TS& ...args) {
 #endif
 }
 
+// hash {{{
 u64 splitmix64(u64 x) noexcept {
     x += 0x9e3779b97f4a7c15;
     x  = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
@@ -1732,6 +1733,77 @@ struct procon_hash<vector<T>> {
     }
 };
 
+template<typename T, typename Hash=procon_hash<T>, typename Eq=equal_to<T>>
+using HashSet = unordered_set<T,Hash,Eq>;
+
+template<typename K, typename V, typename Hash=procon_hash<K>, typename Eq=equal_to<K>>
+using HashMap = unordered_map<K,V,Hash,Eq>;
+
+template<typename T, typename Hash=procon_hash<T>, typename Eq=equal_to<T>>
+using HashMultiset = unordered_multiset<T,Hash,Eq>;
+
+template<typename K, typename V, typename Hash=procon_hash<K>, typename Eq=equal_to<K>>
+using HashMultimap = unordered_multimap<K,V,Hash,Eq>;
+
+template<typename T, typename Hash=procon_hash<T>, typename Eq=equal_to<T>>
+auto make_hash_set(i64 cap, f32 load_max=0.25) {
+    HashSet<T,Hash,Eq> res;
+    res.max_load_factor(load_max);
+    res.reserve(cap);
+    return res;
+}
+
+template<typename K, typename V, typename Hash=procon_hash<K>, typename Eq=equal_to<K>>
+auto make_hash_map(i64 cap, f32 load_max=0.25) {
+    HashMap<K,V,Hash,Eq> res;
+    res.max_load_factor(load_max);
+    res.reserve(cap);
+    return res;
+}
+
+template<typename T, typename Hash=procon_hash<T>, typename Eq=equal_to<T>>
+auto make_hash_multiset(i64 cap, f32 load_max=0.25) {
+    HashMultiset<T,Hash,Eq> res;
+    res.max_load_factor(load_max);
+    res.reserve(cap);
+    return res;
+}
+
+template<typename K, typename V, typename Hash=procon_hash<K>, typename Eq=equal_to<K>>
+auto make_hash_multimap(i64 cap, f32 load_max=0.25) {
+    HashMultimap<K,V,Hash,Eq> res;
+    res.max_load_factor(load_max);
+    res.reserve(cap);
+    return res;
+}
+// }}}
+
+// stack/queue/priority_queue {{{
+template<typename T>
+using MaxHeap = priority_queue<T, vector<T>, less<T>>;
+template<typename T>
+using MinHeap = priority_queue<T, vector<T>, greater<T>>;
+
+template<typename T, typename C>
+T POP(stack<T,C>& stk) {
+    T x = stk.top(); stk.pop();
+    return x;
+}
+
+template<typename T, typename C>
+T POP(queue<T,C>& que) {
+    T x = que.front(); que.pop();
+    return x;
+}
+
+template<typename T, typename C, typename Comp>
+T POP(priority_queue<T,C,Comp>& que) {
+    T x = que.top(); que.pop();
+    return x;
+}
+// }}}
+
+// debug {{{
 template<typename... TS, SFINAE(sizeof...(TS) == 1)>
 void DBG_IMPL(i64 line, const char* expr, const tuple<TS...>& value) {
     cerr << "[L " << line << "]: ";
@@ -1773,6 +1845,7 @@ void DBG_RANGE_IMPL(i64 line, const char* expr1, const char* expr2, InputIt firs
     #define DBG_CARRAY(expr)
     #define DBG_RANGE(first,last)
 #endif
+// }}}
 
 #define PAIR  make_pair
 #define TUPLE make_tuple

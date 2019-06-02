@@ -1,24 +1,5 @@
 // container {{{
 
-// hash {{{
-template<typename T, typename Eq=equal_to<T>>
-using HashSet = unordered_set<T,procon_hash<T>,Eq>;
-
-template<typename K, typename V, typename Eq=equal_to<K>>
-using HashMap = unordered_map<K,V,procon_hash<K>,Eq>;
-
-template<typename T, typename Eq=equal_to<T>>
-using HashMultiset = unordered_multiset<T,procon_hash<T>,Eq>;
-
-template<typename K, typename V, typename Eq=equal_to<K>>
-using HashMultimap = unordered_multimap<K,V,procon_hash<K>,Eq>;
-// }}}
-
-template<typename T>
-using MaxHeap = priority_queue<T, vector<T>, less<T>>;
-template<typename T>
-using MinHeap = priority_queue<T, vector<T>, greater<T>>;
-
 // set/map/multiset/multimap search {{{
 // set {{{
 template<typename T, typename Comp>
@@ -379,24 +360,6 @@ T POP_FRONT(list<T>& ls) {
 template<typename T>
 T POP_BACK(list<T>& ls) {
     T x = ls.back(); ls.pop_back();
-    return x;
-}
-
-template<typename T, typename C>
-T POP(stack<T,C>& stk) {
-    T x = stk.top(); stk.pop();
-    return x;
-}
-
-template<typename T, typename C>
-T POP(queue<T,C>& que) {
-    T x = que.front(); que.pop();
-    return x;
-}
-
-template<typename T, typename C, typename Comp>
-T POP(priority_queue<T,C,Comp>& que) {
-    T x = que.top(); que.pop();
     return x;
 }
 // }}}
