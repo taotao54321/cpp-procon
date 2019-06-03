@@ -4,7 +4,9 @@
 
 //#pragma GCC optimize("O3")
 //#pragma GCC optimize("unroll-loops")
-//#pragma GCC target("avx")
+
+// atcoder
+//#pragma GCC target("arch=ivybridge,tune=ivybridge")
 
 // header {{{
 #include <bits/stdc++.h>
