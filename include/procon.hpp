@@ -1467,6 +1467,25 @@ struct Formatter<vector<T>> {
 };
 
 template<>
+struct Formatter<vector<string>> {
+    static ostream& write_str(ostream& out, const vector<string>& v) {
+        for(const auto& row : v) {
+            WRITE_STR(out, row);
+            out << "\n";
+        }
+        return out;
+    }
+    static ostream& write_repr(ostream& out, const vector<string>& v) {
+        out << "\n";
+        for(const auto& row : v) {
+            WRITE_STR(out, row);
+            out << "\n";
+        }
+        return out;
+    }
+};
+
+template<>
 struct Formatter<BoolArray> {
     static ostream& write_str(ostream& out, const BoolArray& a) {
         return WRITE_RANGE_STR(out, begin(a), end(a));
