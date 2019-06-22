@@ -47,7 +47,7 @@ ostream& DBG_CARRAYN_SLICE_HELPER(ostream& out, const T& e, const tuple<Offs...>
 template<typename T, typename... Offs, typename... Sizes,
          SFINAE(rank<T>::value != 0 && sizeof...(Offs) > 0 && sizeof...(Sizes) > 0)>
 ostream& DBG_CARRAYN_SLICE_HELPER(ostream& out, const T& e, const tuple<Offs...>& offs, const tuple<Sizes...>& sizes) {
-    static_assert(rank<T>::value == sizeof...(Offs));
+    static_assert(rank<T>::value == sizeof...(Offs), "");
     out << "[";
     i64 l = tuple_head(offs);
     i64 r = l + tuple_head(sizes);
