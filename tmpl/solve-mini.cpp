@@ -1,6 +1,5 @@
 // header {{{
 #include <bits/stdc++.h>
-
 using namespace std;
 
 #define CPP_STR(x) CPP_STR_I(x)
