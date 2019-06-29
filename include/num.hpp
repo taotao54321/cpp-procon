@@ -429,6 +429,11 @@ ModP combination_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
 // n < k のとき P(n,k) = 0
 // P(n,1) = 1
 // P(n,n) = 1
+//
+// 順序を区別するものは合成(composition)とよばれる。
+// 「n を k 個の順序つき正整数列の和で表す場合の数」は Q(n,k) = comb(n-1,k-1)
+// 「n を k 個の順序つき『非負整数』列の和で表す場合の数」は Q(n+k,k) = comb(n+k-1,k-1) = comb(n+k-1,n)
+// 「n を順序つき正整数列の和で表す場合の数」は 2^(n-1)
 template<i64 H, i64 W>
 ModP (&partition_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
