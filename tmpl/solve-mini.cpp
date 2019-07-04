@@ -70,12 +70,21 @@ constexpr bool chmin(T& xmin, const U& x, Comp comp={}) noexcept {
 
 // tuple {{{
 template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) == I)>
-void tuple_enumerate(tuple<TS...>&&, F&&) {}
+void tuple_enumerate(tuple<TS...>&, F&&) {}
 
 template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) > I)>
-void tuple_enumerate(tuple<TS...>&& t, F&& f) {
+void tuple_enumerate(tuple<TS...>& t, F&& f) {
     f(I, get<I>(t));
-    tuple_enumerate<I+1>(forward<tuple<TS...>>(t), forward<F>(f));
+    tuple_enumerate<I+1>(t, forward<F>(f));
+}
+
+template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) == I)>
+void tuple_enumerate(const tuple<TS...>&, F&&) {}
+
+template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) > I)>
+void tuple_enumerate(const tuple<TS...>& t, F&& f) {
+    f(I, get<I>(t));
+    tuple_enumerate<I+1>(t, forward<F>(f));
 }
 // }}}
 
@@ -123,22 +132,22 @@ template<typename T, size_t... NS>
 using Array = typename ArrayType<T,NS...>::type;
 
 template<typename T, size_t N>
-const T& array_at(const Array<T,N>& ary, i64 i) {
-    return ary[i];
-}
-
-template<typename T, size_t N, size_t... NS, typename... Args>
-const T& array_at(const Array<T,N,NS...>& ary, i64 i, Args... args) {
-    return array_at<T,NS...>(ary[i], args...);
-}
-
-template<typename T, size_t N>
 T& array_at(Array<T,N>& ary, i64 i) {
     return ary[i];
 }
 
 template<typename T, size_t N, size_t... NS, typename... Args>
 T& array_at(Array<T,N,NS...>& ary, i64 i, Args... args) {
+    return array_at<T,NS...>(ary[i], args...);
+}
+
+template<typename T, size_t N>
+const T& array_at(const Array<T,N>& ary, i64 i) {
+    return ary[i];
+}
+
+template<typename T, size_t N, size_t... NS, typename... Args>
+const T& array_at(const Array<T,N,NS...>& ary, i64 i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
 }
 
