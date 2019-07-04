@@ -109,6 +109,39 @@ using MaxHeap = priority_queue<T, vector<T>, less<T>>;
 template<typename T>
 using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
+template<typename T, size_t N, size_t... NS>
+struct ArrayType {
+    using type = array<typename ArrayType<T,NS...>::type,N>;
+};
+
+template<typename T, size_t N>
+struct ArrayType<T,N> {
+    using type = array<T,N>;
+};
+
+template<typename T, size_t... NS>
+using Array = typename ArrayType<T,NS...>::type;
+
+template<typename T, size_t N>
+const T& array_at(const Array<T,N>& ary, i64 i) {
+    return ary[i];
+}
+
+template<typename T, size_t N, size_t... NS, typename... Args>
+const T& array_at(const Array<T,N,NS...>& ary, i64 i, Args... args) {
+    return array_at<T,NS...>(ary[i], args...);
+}
+
+template<typename T, size_t N>
+T& array_at(Array<T,N>& ary, i64 i) {
+    return ary[i];
+}
+
+template<typename T, size_t N, size_t... NS, typename... Args>
+T& array_at(Array<T,N,NS...>& ary, i64 i, Args... args) {
+    return array_at<T,NS...>(ary[i], args...);
+}
+
 template<typename T>
 auto reserve_vec(i64 cap) {
     vector<T> res;
@@ -164,6 +197,54 @@ template<typename T, typename C, typename Comp>
 T POP(priority_queue<T,C,Comp>& que) {
     T x = que.top(); que.pop();
     return x;
+}
+// }}}
+
+// fixpoint {{{
+template<typename F>
+class FixPoint {
+public:
+    explicit constexpr FixPoint(F&& f) : f_(forward<F>(f)) {}
+
+    template<typename... Args>
+    constexpr decltype(auto) operator()(Args&&... args) const {
+        return f_(*this, forward<Args>(args)...);
+    }
+
+private:
+    F f_;
+};
+
+template<typename F>
+constexpr decltype(auto) FIX(F&& f) {
+    return FixPoint<F>(forward<F>(f));
+}
+
+template<typename F, size_t... NS>
+class FixPointMemo {
+public:
+    explicit FixPointMemo(F&& f) : f_(forward<F>(f)) {}
+
+    template<typename... Args>
+    decltype(auto) operator()(Args... args) const {
+        using R = decltype(f_(*this,args...));
+        static Array<bool,NS...> done {};
+        static Array<R,NS...>    memo;
+
+        if(!array_at<bool,NS...>(done,args...)) {
+            array_at<R,NS...>(memo,args...) = f_(*this,args...);
+            array_at<bool,NS...>(done,args...) = true;
+        }
+        return array_at<R,NS...>(memo,args...);
+    }
+
+private:
+    F f_;
+};
+
+template<size_t... NS, typename F>
+decltype(auto) FIXMEMO(F&& f) {
+    return FixPointMemo<F,NS...>(forward<F>(f));
 }
 // }}}
 
