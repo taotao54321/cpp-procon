@@ -118,6 +118,17 @@ using MaxHeap = priority_queue<T, vector<T>, less<T>>;
 template<typename T>
 using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
+template<typename T>
+auto vec_make(i64 n, T x) {
+    return vector<T>(n, x);
+}
+
+template<typename T, typename... Args, SFINAE(sizeof...(Args) >= 2)>
+auto vec_make(i64 n, Args... args) {
+    auto inner = vec_make<T>(args...);
+    return vector<decltype(inner)>(n, inner);
+}
+
 template<typename T, size_t N, size_t... NS>
 struct ArrayType {
     using type = array<typename ArrayType<T,NS...>::type,N>;
