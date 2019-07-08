@@ -288,7 +288,7 @@ T RD1() {
 }
 
 template<typename T=i64>
-auto RD_ARRAY(i64 n) {
+auto RD_VEC(i64 n) {
     auto res = reserve_vec<T>(n);
     REP(_, n) {
         res.emplace_back(RD<T>());
@@ -297,7 +297,7 @@ auto RD_ARRAY(i64 n) {
 }
 
 template<typename T=i64>
-auto RD1_ARRAY(i64 n) {
+auto RD1_VEC(i64 n) {
     auto res = reserve_vec<T>(n);
     REP(_, n) {
         res.emplace_back(RD1<T>());
