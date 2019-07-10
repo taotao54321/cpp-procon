@@ -44,6 +44,8 @@ constexpr f64 PI = 3.14159265358979323846;
 
 #define ALL(f,c,...) (([&](decltype((c)) cccc) { return (f)(std::begin(cccc), std::end(cccc), ## __VA_ARGS__); })(c))
 
+#define LIFT(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
+
 template<typename C>
 constexpr i64 SIZE(const C& c) noexcept { return static_cast<i64>(c.size()); }
 
@@ -66,6 +68,33 @@ constexpr bool chmin(T& xmin, const U& x, Comp comp={}) noexcept {
         return true;
     }
     return false;
+}
+
+template<typename BinaryFunc, typename UnaryFunc>
+auto ON(BinaryFunc&& bf, UnaryFunc&& uf) {
+    return [bf=forward<BinaryFunc>(bf),uf=forward<UnaryFunc>(uf)](const auto& x, const auto& y) {
+        return bf(uf(x), uf(y));
+    };
+}
+
+template<typename F>
+auto LT_ON(F&& f) {
+    return ON(less<>{}, forward<F>(f));
+}
+
+template<typename F>
+auto GT_ON(F&& f) {
+    return ON(greater<>{}, forward<F>(f));
+}
+
+template<typename F>
+auto EQ_ON(F&& f) {
+    return ON(equal_to<>{}, forward<F>(f));
+}
+
+template<typename F>
+auto NE_ON(F&& f) {
+    return ON(not_equal_to<>{}, forward<F>(f));
 }
 
 // tuple {{{
@@ -104,13 +133,71 @@ template<typename... Args> struct is_container<multimap<Args...>> : true_type {}
 template<typename... Args> struct is_container<unordered_map<Args...>> : true_type {};
 template<typename... Args> struct is_container<unordered_multimap<Args...>> : true_type {};
 
-template<typename T, typename Hash=hash<T>, typename Eq=equal_to<T>>
+template<typename T, typename Enable=void>
+struct ProconHash {
+    size_t operator()(const T& x) const noexcept {
+        return hash<T>{}(x);
+    }
+};
+
+template<typename T>
+size_t procon_hash_value(const T& x) noexcept {
+    return ProconHash<T>{}(x);
+}
+
+size_t procon_hash_combine(size_t h1, size_t h2) noexcept {
+    constexpr size_t M = UINT64_C(0xc6a4a7935bd1e995);
+    constexpr int    R = 47;
+
+    h2 *= M;
+    h2 ^= h2 >> R;
+    h2 *= M;
+
+    h1 ^= h2;
+    h1 *= M;
+
+    h1 += 0xe6546b64;
+
+    return h1;
+}
+
+template<typename T1, typename T2>
+struct ProconHash<pair<T1,T2>> {
+    size_t operator()(const pair<T1,T2>& p) const noexcept {
+        size_t h1 = procon_hash_value(p.first);
+        size_t h2 = procon_hash_value(p.second);
+        return procon_hash_combine(h1, h2);
+    }
+};
+
+template<typename... TS>
+struct ProconHash<tuple<TS...>> {
+    size_t operator()(const tuple<TS...>& t) const noexcept {
+        size_t h = 0;
+        tuple_enumerate(t, [&h](const auto& e) {
+            h = procon_hash_combine(h, procon_hash_value(e));
+        });
+        return h;
+    }
+};
+
+template<typename C>
+struct ProconHash<C,enable_if_t<is_container<C>::value>> {
+    size_t operator()(const C& c) const noexcept {
+        size_t h = 0;
+        for(const auto& e : c)
+            h = procon_hash_combine(h, procon_hash_value(e));
+        return h;
+    }
+};
+
+template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
 using HashSet = unordered_set<T,Hash,Eq>;
-template<typename K, typename V, typename Hash=hash<K>, typename Eq=equal_to<K>>
+template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
 using HashMap = unordered_map<K,V,Hash,Eq>;
-template<typename T, typename Hash=hash<T>, typename Eq=equal_to<T>>
+template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
 using HashMultiset = unordered_multiset<T,Hash,Eq>;
-template<typename K, typename V, typename Hash=hash<K>, typename Eq=equal_to<K>>
+template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
 using HashMultimap = unordered_multimap<K,V,Hash,Eq>;
 
 template<typename T>
@@ -169,7 +256,7 @@ auto reserve_vec(i64 cap) {
     return res;
 }
 
-template<typename T, typename Hash=hash<T>, typename Eq=equal_to<T>>
+template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
 auto reserve_hash_set(i64 cap, f32 load_max=0.25) {
     HashSet<T,Hash,Eq> res;
     res.max_load_factor(load_max);
@@ -177,7 +264,7 @@ auto reserve_hash_set(i64 cap, f32 load_max=0.25) {
     return res;
 }
 
-template<typename K, typename V, typename Hash=hash<K>, typename Eq=equal_to<K>>
+template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
 auto reserve_hash_map(i64 cap, f32 load_max=0.25) {
     HashMap<K,V,Hash,Eq> res;
     res.max_load_factor(load_max);
@@ -185,7 +272,7 @@ auto reserve_hash_map(i64 cap, f32 load_max=0.25) {
     return res;
 }
 
-template<typename T, typename Hash=hash<T>, typename Eq=equal_to<T>>
+template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
 auto reserve_hash_multiset(i64 cap, f32 load_max=0.25) {
     HashMultiset<T,Hash,Eq> res;
     res.max_load_factor(load_max);
@@ -193,7 +280,7 @@ auto reserve_hash_multiset(i64 cap, f32 load_max=0.25) {
     return res;
 }
 
-template<typename K, typename V, typename Hash=hash<K>, typename Eq=equal_to<K>>
+template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
 auto reserve_hash_multimap(i64 cap, f32 load_max=0.25) {
     HashMultimap<K,V,Hash,Eq> res;
     res.max_load_factor(load_max);
