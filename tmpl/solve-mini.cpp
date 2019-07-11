@@ -588,12 +588,25 @@ void DBG_DP_IMPL(i64 line, const char* expr, const T& dp,
     cerr << "\n";
 }
 
+template<typename T>
+void DBG_GRID_IMPL(i64 line, const char* expr, const vector<T>& grid) {
+    cerr << "[L " << line << "]: ";
+    cerr << expr << ":\n";
+    for(const auto& row : grid) {
+        dbg_write(cerr, row);
+        cerr << "\n";
+    }
+    cerr << "\n";
+}
+
 #ifdef PROCON_LOCAL
     #define DBG(args...) DBG_IMPL(__LINE__, CPP_STR_I(args), args)
     #define DBG_DP(args...) DBG_DP_IMPL(__LINE__, CPP_STR_I(args), args)
+    #define DBG_GRID(args...) DBG_GRID_IMPL(__LINE__, CPP_STR_I(args), args)
 #else
     #define DBG(args...)
     #define DBG_DP(args...)
+    #define DBG_GRID(args...)
 #endif
 // }}}
 
