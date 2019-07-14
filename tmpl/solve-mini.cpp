@@ -517,12 +517,23 @@ void DBG_IMPL(i64 line, const char* expr, const T& value) {
     cerr << "\n";
 }
 
+void DBG_IMPL_HELPER() {}
+
+template<typename T, typename... TS>
+void DBG_IMPL_HELPER(const T& x, const TS&... args) {
+    dbg_write(cerr, x);
+    if(sizeof...(args) > 0) {
+        cerr << ",";
+        DBG_IMPL_HELPER(args...);
+    }
+}
+
 template<typename... TS>
 void DBG_IMPL(i64 line, const char* expr, const TS&... value) {
     cerr << "[L " << line << "]: ";
-    cerr << "(" << expr << ") = ";
-    dbg_write(cerr, make_tuple(value...));
-    cerr << "\n";
+    cerr << "(" << expr << ") = (";
+    DBG_IMPL_HELPER(value...);
+    cerr << ")\n";
 }
 
 template<size_t N, typename T, SFINAE(rank<T>::value == 0)>
