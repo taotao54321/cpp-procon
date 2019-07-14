@@ -256,42 +256,6 @@ auto reserve_vec(i64 cap) {
     return res;
 }
 
-// 注意: 非常に遅くなることがある!!
-template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
-auto reserve_hash_set(i64 cap, f32 load_max=0.25) {
-    HashSet<T,Hash,Eq> res;
-    res.max_load_factor(load_max);
-    res.reserve(cap);
-    return res;
-}
-
-// 注意: 非常に遅くなることがある!!
-template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
-auto reserve_hash_map(i64 cap, f32 load_max=0.25) {
-    HashMap<K,V,Hash,Eq> res;
-    res.max_load_factor(load_max);
-    res.reserve(cap);
-    return res;
-}
-
-// 注意: 非常に遅くなることがある!!
-template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
-auto reserve_hash_multiset(i64 cap, f32 load_max=0.25) {
-    HashMultiset<T,Hash,Eq> res;
-    res.max_load_factor(load_max);
-    res.reserve(cap);
-    return res;
-}
-
-// 注意: 非常に遅くなることがある!!
-template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
-auto reserve_hash_multimap(i64 cap, f32 load_max=0.25) {
-    HashMultimap<K,V,Hash,Eq> res;
-    res.max_load_factor(load_max);
-    res.reserve(cap);
-    return res;
-}
-
 template<typename T, typename C>
 T POP(stack<T,C>& stk) {
     T x = stk.top(); stk.pop();
