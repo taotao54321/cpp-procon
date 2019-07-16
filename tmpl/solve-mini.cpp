@@ -201,11 +201,6 @@ template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_
 using HashMultimap = unordered_multimap<K,V,Hash,Eq>;
 
 template<typename T>
-using MaxHeap = priority_queue<T, vector<T>, less<T>>;
-template<typename T>
-using MinHeap = priority_queue<T, vector<T>, greater<T>>;
-
-template<typename T>
 auto vec_make(i64 n, T x) {
     return vector<T>(n, x);
 }
@@ -214,6 +209,23 @@ template<typename T, typename... Args, SFINAE(sizeof...(Args) >= 2)>
 auto vec_make(i64 n, Args... args) {
     auto inner = vec_make<T>(args...);
     return vector<decltype(inner)>(n, inner);
+}
+
+template<typename T>
+auto vec_reserve(i64 cap) {
+    vector<T> res;
+    res.reserve(cap);
+    return res;
+}
+
+template<typename T, typename Comp, typename Cont=vector<T>>
+auto priority_queue_make(const Comp& comp, Cont&& cont={}) {
+    return priority_queue<T,remove_reference_t<Cont>,Comp>(comp, forward<Cont>(cont));
+}
+
+template<typename T, typename Comp>
+auto priority_queue_reserve(const Comp& comp, i64 cap) {
+    return priority_queue<T,vector<T>,Comp>(comp, vec_reserve<T>(cap));
 }
 
 template<typename T, size_t N, size_t... NS>
@@ -247,13 +259,6 @@ const T& array_at(const Array<T,N>& ary, i64 i) {
 template<typename T, size_t N, size_t... NS, typename... Args>
 const T& array_at(const Array<T,N,NS...>& ary, i64 i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
-}
-
-template<typename T>
-auto reserve_vec(i64 cap) {
-    vector<T> res;
-    res.reserve(cap);
-    return res;
 }
 
 template<typename T, typename C>
@@ -355,7 +360,7 @@ T RD1() {
 
 template<typename T=i64>
 auto RD_VEC(i64 n) {
-    auto res = reserve_vec<T>(n);
+    auto res = vec_reserve<T>(n);
     REP(_, n) {
         res.emplace_back(RD<T>());
     }
@@ -364,7 +369,7 @@ auto RD_VEC(i64 n) {
 
 template<typename T=i64>
 auto RD1_VEC(i64 n) {
-    auto res = reserve_vec<T>(n);
+    auto res = vec_reserve<T>(n);
     REP(_, n) {
         res.emplace_back(RD1<T>());
     }
