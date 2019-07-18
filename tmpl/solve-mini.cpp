@@ -596,46 +596,46 @@ void DBG_GRID_IMPL(i64 line, const char* expr, const vector<T>& grid) {
 
 // modint {{{
 template<i64 P>
-struct ModPT {
+struct ModIntT {
     static_assert(P >= 2, "P must be a prime");
     i64 v_;  // [0,P)
 
-    ModPT() : v_(0) {}
-    ModPT(i64 v) {
+    ModIntT() : v_(0) {}
+    ModIntT(i64 v) {
         i64 r = v % P;
         v_ = r >= 0 ? r : r+P;
     }
 
-    ModPT operator-() const {
-        return ModPT(-v_);
+    ModIntT operator-() const {
+        return ModIntT(-v_);
     }
-    ModPT& operator+=(ModPT rhs) {
+    ModIntT& operator+=(ModIntT rhs) {
         v_ += rhs.v_;
         v_ %= P;
         return *this;
     }
-    ModPT& operator-=(ModPT rhs) {
+    ModIntT& operator-=(ModIntT rhs) {
         v_ += P;
         v_ -= rhs.v_;
         v_ %= P;
         return *this;
     }
-    ModPT& operator*=(ModPT rhs) {
+    ModIntT& operator*=(ModIntT rhs) {
         v_ *= rhs.v_;
         v_ %= P;
         return *this;
     }
 
-    ModPT& operator++() {
+    ModIntT& operator++() {
         return *this += 1;
     }
-    ModPT& operator--() {
+    ModIntT& operator--() {
         return *this -= 1;
     }
-    ModPT operator++(int) {
+    ModIntT operator++(int) {
         return exchange(*this, *this+1);
     }
-    ModPT operator--(int) {
+    ModIntT operator--(int) {
         return exchange(*this, *this-1);
     }
 
@@ -643,59 +643,59 @@ struct ModPT {
 };
 
 template<i64 P>
-ModPT<P> operator+(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) += rhs; }
+ModIntT<P> operator+(ModIntT<P> lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) += rhs; }
 template<i64 P>
-ModPT<P> operator+(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) += rhs; }
+ModIntT<P> operator+(ModIntT<P> lhs, i64 rhs) { return ModIntT<P>(lhs) += rhs; }
 template<i64 P>
-ModPT<P> operator+(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) += lhs; }
+ModIntT<P> operator+(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(rhs) += lhs; }
 template<i64 P>
-ModPT<P> operator-(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) -= rhs; }
+ModIntT<P> operator-(ModIntT<P> lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) -= rhs; }
 template<i64 P>
-ModPT<P> operator-(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) -= rhs; }
+ModIntT<P> operator-(ModIntT<P> lhs, i64 rhs) { return ModIntT<P>(lhs) -= rhs; }
 template<i64 P>
-ModPT<P> operator-(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) -= lhs; }
+ModIntT<P> operator-(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(rhs) -= lhs; }
 template<i64 P>
-ModPT<P> operator*(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) *= rhs; }
+ModIntT<P> operator*(ModIntT<P> lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) *= rhs; }
 template<i64 P>
-ModPT<P> operator*(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) *= rhs; }
+ModIntT<P> operator*(ModIntT<P> lhs, i64 rhs) { return ModIntT<P>(lhs) *= rhs; }
 template<i64 P>
-ModPT<P> operator*(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) *= lhs; }
+ModIntT<P> operator*(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(rhs) *= lhs; }
 
 template<i64 P>
-bool operator==(ModPT<P> lhs, ModPT<P> rhs) { return lhs.v_ == rhs.v_; }
+bool operator==(ModIntT<P> lhs, ModIntT<P> rhs) { return lhs.v_ == rhs.v_; }
 template<i64 P>
-bool operator==(ModPT<P> lhs, i64 rhs) { return lhs == ModPT<P>(rhs); }
+bool operator==(ModIntT<P> lhs, i64 rhs) { return lhs == ModIntT<P>(rhs); }
 template<i64 P>
-bool operator==(i64 lhs, ModPT<P> rhs) { return ModPT<P>(lhs) == rhs; }
+bool operator==(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) == rhs; }
 template<i64 P>
-bool operator!=(ModPT<P> lhs, ModPT<P> rhs) { return !(lhs == rhs); }
+bool operator!=(ModIntT<P> lhs, ModIntT<P> rhs) { return !(lhs == rhs); }
 template<i64 P>
-bool operator!=(ModPT<P> lhs, i64 rhs) { return !(lhs == rhs); }
+bool operator!=(ModIntT<P> lhs, i64 rhs) { return !(lhs == rhs); }
 template<i64 P>
-bool operator!=(i64 lhs, ModPT<P> rhs) { return !(lhs == rhs); }
+bool operator!=(i64 lhs, ModIntT<P> rhs) { return !(lhs == rhs); }
 
 template<i64 P>
-struct Scan<ModPT<P>> {
-    static ModPT<P> scan(istream& in) {
+struct Scan<ModIntT<P>> {
+    static ModIntT<P> scan(istream& in) {
         return Scan<i64>::scan(in);
     }
 };
 
 template<i64 P>
-struct Fmt<ModPT<P>> {
-    static void fmt(ostream& out, ModPT<P> x) {
+struct Fmt<ModIntT<P>> {
+    static void fmt(ostream& out, ModIntT<P> x) {
         fmt_write(out, x.v_);
     }
 };
 
 template<i64 P>
-struct Dbg<ModPT<P>> {
-    static void dbg(ostream& out, ModPT<P> x) {
+struct Dbg<ModIntT<P>> {
+    static void dbg(ostream& out, ModIntT<P> x) {
         dbg_write(out, x.v_);
     }
 };
 
-using ModP = ModPT<MOD>;
+using ModInt = ModIntT<MOD>;
 // }}}
 // }}}
 
