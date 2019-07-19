@@ -348,6 +348,56 @@ struct Scan1<T,enable_if_t<is_integral<T>::value && !is_same<T,bool>::value>> {
     }
 };
 
+template<typename T1, typename T2>
+struct Scan<pair<T1,T2>> {
+    static pair<T1,T2> scan(istream& in) {
+        return make_pair(Scan<T1>::scan(in), Scan<T2>::scan(in));
+    }
+};
+
+template<typename T1, typename T2>
+struct Scan1<pair<T1,T2>> {
+    static pair<T1,T2> scan1(istream& in) {
+        return make_pair(Scan1<T1>::scan1(in), Scan1<T2>::scan1(in));
+    }
+};
+
+template<typename... TS>
+struct Scan<tuple<TS...>> {
+    static tuple<TS...> scan(istream& in) {
+        return scan_impl<0>(in);
+    }
+private:
+    template<i64 I, SFINAE(sizeof...(TS) == I)>
+    static auto scan_impl(istream&) {
+        return make_tuple();
+    }
+    template<i64 I, SFINAE(sizeof...(TS) > I)>
+    static auto scan_impl(istream& in) {
+        using T = tuple_element_t<I,tuple<TS...>>;
+        auto head = make_tuple(Scan<T>::scan(in));
+        return tuple_cat(head, scan_impl<I+1>(in));
+    }
+};
+
+template<typename... TS>
+struct Scan1<tuple<TS...>> {
+    static tuple<TS...> scan1(istream& in) {
+        return scan1_impl<0>(in);
+    }
+private:
+    template<i64 I, SFINAE(sizeof...(TS) == I)>
+    static auto scan1_impl(istream&) {
+        return make_tuple();
+    }
+    template<i64 I, SFINAE(sizeof...(TS) > I)>
+    static auto scan1_impl(istream& in) {
+        using T = tuple_element_t<I,tuple<TS...>>;
+        auto head = make_tuple(Scan1<T>::scan1(in));
+        return tuple_cat(head, scan1_impl<I+1>(in));
+    }
+};
+
 template<typename T=i64>
 T RD() {
     return Scan<T>::scan(cin);
