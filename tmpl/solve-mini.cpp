@@ -595,15 +595,15 @@ void DBG_GRID_IMPL(i64 line, const char* expr, const vector<T>& grid) {
 // }}}
 
 // modint {{{
-template<i64 P>
+template<i64 M>
 struct ModIntT {
-    static_assert(P >= 2, "P must be a prime");
-    i64 v_;  // [0,P)
+    static_assert(M >= 2, "");
+    i64 v_;  // [0,M)
 
     ModIntT() : v_(0) {}
     ModIntT(i64 v) {
-        i64 r = v % P;
-        v_ = r >= 0 ? r : r+P;
+        i64 r = v % M;
+        v_ = r >= 0 ? r : r+M;
     }
 
     ModIntT operator-() const {
@@ -611,18 +611,18 @@ struct ModIntT {
     }
     ModIntT& operator+=(ModIntT rhs) {
         v_ += rhs.v_;
-        v_ %= P;
+        v_ %= M;
         return *this;
     }
     ModIntT& operator-=(ModIntT rhs) {
-        v_ += P;
+        v_ += M;
         v_ -= rhs.v_;
-        v_ %= P;
+        v_ %= M;
         return *this;
     }
     ModIntT& operator*=(ModIntT rhs) {
         v_ *= rhs.v_;
-        v_ %= P;
+        v_ %= M;
         return *this;
     }
 
@@ -642,55 +642,55 @@ struct ModIntT {
     explicit operator i64() const { return v_; }
 };
 
-template<i64 P>
-ModIntT<P> operator+(ModIntT<P> lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) += rhs; }
-template<i64 P>
-ModIntT<P> operator+(ModIntT<P> lhs, i64 rhs) { return ModIntT<P>(lhs) += rhs; }
-template<i64 P>
-ModIntT<P> operator+(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(rhs) += lhs; }
-template<i64 P>
-ModIntT<P> operator-(ModIntT<P> lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) -= rhs; }
-template<i64 P>
-ModIntT<P> operator-(ModIntT<P> lhs, i64 rhs) { return ModIntT<P>(lhs) -= rhs; }
-template<i64 P>
-ModIntT<P> operator-(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(rhs) -= lhs; }
-template<i64 P>
-ModIntT<P> operator*(ModIntT<P> lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) *= rhs; }
-template<i64 P>
-ModIntT<P> operator*(ModIntT<P> lhs, i64 rhs) { return ModIntT<P>(lhs) *= rhs; }
-template<i64 P>
-ModIntT<P> operator*(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(rhs) *= lhs; }
+template<i64 M>
+ModIntT<M> operator+(ModIntT<M> lhs, ModIntT<M> rhs) { return ModIntT<M>(lhs) += rhs; }
+template<i64 M>
+ModIntT<M> operator+(ModIntT<M> lhs, i64 rhs) { return ModIntT<M>(lhs) += rhs; }
+template<i64 M>
+ModIntT<M> operator+(i64 lhs, ModIntT<M> rhs) { return ModIntT<M>(rhs) += lhs; }
+template<i64 M>
+ModIntT<M> operator-(ModIntT<M> lhs, ModIntT<M> rhs) { return ModIntT<M>(lhs) -= rhs; }
+template<i64 M>
+ModIntT<M> operator-(ModIntT<M> lhs, i64 rhs) { return ModIntT<M>(lhs) -= rhs; }
+template<i64 M>
+ModIntT<M> operator-(i64 lhs, ModIntT<M> rhs) { return ModIntT<M>(rhs) -= lhs; }
+template<i64 M>
+ModIntT<M> operator*(ModIntT<M> lhs, ModIntT<M> rhs) { return ModIntT<M>(lhs) *= rhs; }
+template<i64 M>
+ModIntT<M> operator*(ModIntT<M> lhs, i64 rhs) { return ModIntT<M>(lhs) *= rhs; }
+template<i64 M>
+ModIntT<M> operator*(i64 lhs, ModIntT<M> rhs) { return ModIntT<M>(rhs) *= lhs; }
 
-template<i64 P>
-bool operator==(ModIntT<P> lhs, ModIntT<P> rhs) { return lhs.v_ == rhs.v_; }
-template<i64 P>
-bool operator==(ModIntT<P> lhs, i64 rhs) { return lhs == ModIntT<P>(rhs); }
-template<i64 P>
-bool operator==(i64 lhs, ModIntT<P> rhs) { return ModIntT<P>(lhs) == rhs; }
-template<i64 P>
-bool operator!=(ModIntT<P> lhs, ModIntT<P> rhs) { return !(lhs == rhs); }
-template<i64 P>
-bool operator!=(ModIntT<P> lhs, i64 rhs) { return !(lhs == rhs); }
-template<i64 P>
-bool operator!=(i64 lhs, ModIntT<P> rhs) { return !(lhs == rhs); }
+template<i64 M>
+bool operator==(ModIntT<M> lhs, ModIntT<M> rhs) { return lhs.v_ == rhs.v_; }
+template<i64 M>
+bool operator==(ModIntT<M> lhs, i64 rhs) { return lhs == ModIntT<M>(rhs); }
+template<i64 M>
+bool operator==(i64 lhs, ModIntT<M> rhs) { return ModIntT<M>(lhs) == rhs; }
+template<i64 M>
+bool operator!=(ModIntT<M> lhs, ModIntT<M> rhs) { return !(lhs == rhs); }
+template<i64 M>
+bool operator!=(ModIntT<M> lhs, i64 rhs) { return !(lhs == rhs); }
+template<i64 M>
+bool operator!=(i64 lhs, ModIntT<M> rhs) { return !(lhs == rhs); }
 
-template<i64 P>
-struct Scan<ModIntT<P>> {
-    static ModIntT<P> scan(istream& in) {
+template<i64 M>
+struct Scan<ModIntT<M>> {
+    static ModIntT<M> scan(istream& in) {
         return Scan<i64>::scan(in);
     }
 };
 
-template<i64 P>
-struct Fmt<ModIntT<P>> {
-    static void fmt(ostream& out, ModIntT<P> x) {
+template<i64 M>
+struct Fmt<ModIntT<M>> {
+    static void fmt(ostream& out, ModIntT<M> x) {
         fmt_write(out, x.v_);
     }
 };
 
-template<i64 P>
-struct Dbg<ModIntT<P>> {
-    static void dbg(ostream& out, ModIntT<P> x) {
+template<i64 M>
+struct Dbg<ModIntT<M>> {
+    static void dbg(ostream& out, ModIntT<M> x) {
         dbg_write(out, x.v_);
     }
 };
