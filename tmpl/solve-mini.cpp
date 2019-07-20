@@ -328,6 +328,14 @@ decltype(auto) FIXMEMO(F&& f) {
 }
 // }}}
 
+// string {{{
+auto str_reserve(i64 cap) {
+    string res;
+    res.reserve(cap);
+    return res;
+}
+// }}}
+
 // input {{{
 template<typename T, typename Enable=void>
 struct Scan {
