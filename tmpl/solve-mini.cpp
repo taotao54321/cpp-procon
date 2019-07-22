@@ -579,6 +579,42 @@ struct Dbg<C,enable_if_t<is_container<C>::value>> {
     }
 };
 
+template<typename T, typename C>
+struct Dbg<stack<T,C>> {
+    static void dbg(ostream& out, stack<T,C> stk) {
+        out << "[";
+        while(!stk.empty()) {
+            dbg_write(out,stk.top()); stk.pop();
+            if(!stk.empty()) out << ",";
+        }
+        out << "]";
+    }
+};
+
+template<typename T, typename C>
+struct Dbg<queue<T,C>> {
+    static void dbg(ostream& out, queue<T,C> que) {
+        out << "[";
+        while(!que.empty()) {
+            dbg_write(out,que.front()); que.pop();
+            if(!que.empty()) out << ",";
+        }
+        out << "]";
+    }
+};
+
+template<typename T, typename C, typename Comp>
+struct Dbg<priority_queue<T,C,Comp>> {
+    static void dbg(ostream& out, priority_queue<T,C,Comp> que) {
+        out << "[";
+        while(!que.empty()) {
+            dbg_write(out,que.top()); que.pop();
+            if(!que.empty()) out << ",";
+        }
+        out << "]";
+    }
+};
+
 template<typename T>
 void DBG_IMPL(i64 line, const char* expr, const T& value) {
     cerr << "[L " << line << "]: ";
