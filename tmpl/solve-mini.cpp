@@ -218,6 +218,13 @@ auto vec_reserve(i64 cap) {
     return res;
 }
 
+template<typename T=i64>
+auto vec_iota(i64 n, T init={}) {
+    vector<i64> res(n);
+    ALL(iota, res, init);
+    return res;
+}
+
 template<typename T, typename Comp, typename Cont=vector<T>>
 auto priority_queue_make(const Comp& comp, Cont&& cont={}) {
     return priority_queue<T,remove_reference_t<Cont>,Comp>(comp, forward<Cont>(cont));
