@@ -440,6 +440,24 @@ auto RD1_VEC(i64 n) {
     }
     return res;
 }
+
+template<typename T=i64>
+auto RD_VEC2(i64 h, i64 w) {
+    auto res = vec_reserve<vector<T>>(h);
+    REP(_, h) {
+        res.emplace_back(RD_VEC<T>(w));
+    }
+    return res;
+}
+
+template<typename T=i64>
+auto RD1_VEC2(i64 h, i64 w) {
+    auto res = vec_reserve<vector<T>>(h);
+    REP(_, h) {
+        res.emplace_back(RD1_VEC<T>(w));
+    }
+    return res;
+}
 // }}}
 
 // output {{{
