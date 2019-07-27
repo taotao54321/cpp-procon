@@ -1574,20 +1574,12 @@ T FROM_STR(const string& s) {
 
 template<typename T=i64>
 T RD() {
-    T res = READ<T>(cin);
-#ifdef PROCON_LOCAL
-    ASSERT(cin);
-#endif
-    return res;
+    return READ<T>(cin);
 }
 
 template<typename T=i64>
 T RD1() {
-    T res = READ1<T>(cin);
-#ifdef PROCON_LOCAL
-    ASSERT(cin);
-#endif
-    return res;
+    return READ1<T>(cin);
 }
 
 template<typename T=i64>
@@ -1906,6 +1898,7 @@ struct ProconInit {
     ProconInit() {
         cin.tie(nullptr);
         ios::sync_with_stdio(false);
+        cin.exceptions(ios::failbit | ios::badbit);
         cout << fixed << setprecision(IOS_PREC);
 #ifdef PROCON_LOCAL
         cerr << fixed << setprecision(IOS_PREC);

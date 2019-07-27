@@ -826,9 +826,9 @@ struct ProconInit {
     ProconInit() {
         cin.tie(nullptr);
         ios::sync_with_stdio(false);
+        cin.exceptions(ios::failbit | ios::badbit);
         cout << fixed << setprecision(IOS_PREC);
 #ifdef PROCON_LOCAL
-        cin.exceptions(ios::failbit | ios::badbit);
         cerr << fixed << setprecision(IOS_PREC);
 #endif
         if(AUTOFLUSH)
