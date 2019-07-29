@@ -56,6 +56,34 @@ bool graph_is_tree(const vector<vector<i64>>& g) {
     return edge_cnt == n-1 && connected;
 }
 
+// BFSで重みなしグラフ上の単一始点最短経路を求める
+//
+// (d,parent) を返す
+// d[i]: start から点 i への最短距離(到達不能な点は INF)
+// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+tuple<vector<i64>,vector<i64>> graph_bfs(const vector<vector<i64>>& g, i64 start) {
+    i64 n = SIZE(g);
+    vector<i64> d(n, INF);
+    vector<i64> parent(n, -1);
+
+    queue<i64> que;
+    que.emplace(start);
+    d[start] = 0;
+
+    while(!que.empty()) {
+        i64 v = POP(que);
+
+        for(i64 to : g[v]) {
+            if(d[to] != INF) continue;
+            que.emplace(to);
+            d[to] = d[v] + 1;
+            parent[to] = v;
+        }
+    }
+
+    return make_tuple(d, parent);
+}
+
 // ダイクストラ法
 //
 // (d,parent) を返す
