@@ -366,14 +366,18 @@ struct Scan1<T,enable_if_t<is_integral<T>::value && !is_same<T,bool>::value>> {
 template<typename T1, typename T2>
 struct Scan<pair<T1,T2>> {
     static pair<T1,T2> scan(istream& in) {
-        return make_pair(Scan<T1>::scan(in), Scan<T2>::scan(in));
+        T1 x = Scan<T1>::scan(in);
+        T2 y = Scan<T2>::scan(in);
+        return {x,y};
     }
 };
 
 template<typename T1, typename T2>
 struct Scan1<pair<T1,T2>> {
     static pair<T1,T2> scan1(istream& in) {
-        return make_pair(Scan1<T1>::scan1(in), Scan1<T2>::scan1(in));
+        T1 x = Scan1<T1>::scan1(in);
+        T2 y = Scan1<T2>::scan1(in);
+        return {x,y};
     }
 };
 
