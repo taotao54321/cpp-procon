@@ -2,7 +2,7 @@
 
 [[noreturn]] void PROCON_MLE(size_t size=1U<<31) {
     static constexpr size_t PAGE_SIZE = 4096;
-    char* buf = new char[size];
+    volatile char* buf = new char[size];
     for(size_t i = 0; i < size; i += PAGE_SIZE)
         buf[i] = static_cast<char>(i);
     EXIT();
