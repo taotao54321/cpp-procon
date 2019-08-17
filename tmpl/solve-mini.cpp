@@ -53,6 +53,17 @@ constexpr i64 SIZE(const C& c) noexcept { return static_cast<i64>(c.size()); }
 template<typename T, size_t N>
 constexpr i64 SIZE(const T (&)[N]) noexcept { return static_cast<i64>(N); }
 
+template<typename T, SFINAE(is_signed<T>::value)>
+constexpr T ABS(T x) noexcept {
+    return x < 0 ? -x : x;
+}
+
+template<typename T>
+constexpr i64 CMP(T x, T y) noexcept { return (y<x) - (x<y); }
+
+template<typename T>
+constexpr i64 SGN(T x) noexcept { return CMP(x,T(0)); }
+
 template<typename T, typename U, typename Comp=less<>>
 constexpr bool chmax(T& xmax, const U& x, Comp comp={}) noexcept {
     if(comp(xmax, x)) {
@@ -333,6 +344,39 @@ private:
 template<size_t... NS, typename F>
 decltype(auto) FIXMEMO(F&& f) {
     return FixPointMemo<F,NS...>(forward<F>(f));
+}
+// }}}
+
+// math {{{
+/*constexpr*/ i64 GCD(i64 a, i64 b) noexcept {
+    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) {
+        if(bb == 0) return aa;
+        return self(bb, aa%bb);
+    });
+    return f_gcd(ABS(a), ABS(b));
+}
+
+/*constexpr*/ i64 LCM(i64 a, i64 b) noexcept {
+    ASSERT(a != 0 && b != 0);
+    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) {
+        if(bb == 0) return aa;
+        return self(bb, aa%bb);
+    });
+    a = ABS(a);
+    b = ABS(b);
+    return a / f_gcd(a,b) * b;
+}
+
+/*constexpr*/ tuple<i64,i64,i64> EXTGCD(i64 a, i64 b) noexcept {
+    /*constexpr*/ auto impl = FIX([](auto&& self, i64 aa, i64 bb) -> tuple<i64,i64,i64> {
+        if(bb == 0) return make_tuple(aa, 1, 0);
+        i64 g,x,y; tie(g,x,y) = self(bb, aa%bb);
+        return make_tuple(g, y, x-(aa/bb)*y);
+    });
+    i64 g,x,y; tie(g,x,y) = impl(ABS(a), ABS(b));
+    x *= SGN(a);
+    y *= SGN(b);
+    return make_tuple(g, x, y);
 }
 // }}}
 
@@ -764,6 +808,12 @@ struct ModIntT {
     }
 
     explicit operator i64() const { return v_; }
+
+    ModIntT inv() const {
+        i64 g,x; tie(g,x,ignore) = EXTGCD(v_, M);
+        ASSERT(g == 1);
+        return ModIntT(x);
+    }
 };
 
 template<i64 M>
