@@ -186,7 +186,7 @@ template<typename... TS>
 struct ProconHash<tuple<TS...>> {
     size_t operator()(const tuple<TS...>& t) const noexcept {
         size_t h = 0;
-        tuple_enumerate(t, [&h](const auto& e) {
+        tuple_enumerate(t, [&h](i64, const auto& e) {
             h = procon_hash_combine(h, procon_hash_value(e));
         });
         return h;
