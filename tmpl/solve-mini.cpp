@@ -573,7 +573,7 @@ struct Dbg {
 
 template<typename T>
 void dbg_write(ostream& out, const T& x) {
-    return Dbg<T>::dbg(out, x);
+    Dbg<T>::dbg(out, x);
 }
 
 template<>
