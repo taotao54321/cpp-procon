@@ -615,6 +615,13 @@ struct Dbg<T[N]> {
     }
 };
 
+template<size_t N>
+struct Dbg<char[N]> {
+    static void dbg(ostream& out, const char (&s)[N]) {
+        out << s;
+    }
+};
+
 template<typename... TS>
 struct Dbg<tuple<TS...>> {
     static void dbg(ostream& out, const tuple<TS...>& t) {
