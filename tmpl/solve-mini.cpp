@@ -451,7 +451,7 @@ tuple<> tuple_scan1_impl(istream&) {
 }
 
 template<typename... TS, i64 I, SFINAE(sizeof...(TS) > I)>
-tuple<> tuple_scan1_impl(istream& in) {
+tuple<TS...> tuple_scan1_impl(istream& in) {
     using T = tuple_element_t<I,tuple<TS...>>;
     auto head = make_tuple(Scan1<T>::scan1(in));
     return tuple_cat(head, tuple_scan1_impl<I+1>(in));
