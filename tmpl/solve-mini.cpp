@@ -426,41 +426,39 @@ struct Scan1<pair<T1,T2>> {
     }
 };
 
-template<typename... TS, i64 I, SFINAE(sizeof...(TS) == I)>
-tuple<> tuple_scan_impl(istream&) {
-    return make_tuple();
+template<typename T>
+tuple<T> tuple_scan_impl(istream& in) {
+    return make_tuple(Scan<T>::scan(in));
 }
 
-template<typename... TS, i64 I, SFINAE(sizeof...(TS) > I)>
-tuple<TS...> tuple_scan_impl(istream& in) {
-    using T = tuple_element_t<I,tuple<TS...>>;
+template<typename T, typename... TS, SFINAE(sizeof...(TS) > 0)>
+tuple<T,TS...> tuple_scan_impl(istream& in) {
     auto head = make_tuple(Scan<T>::scan(in));
-    return tuple_cat(head, tuple_scan_impl<I+1>(in));
+    return tuple_cat(head, tuple_scan_impl<TS...>(in));
 }
 
 template<typename... TS>
 struct Scan<tuple<TS...>> {
     static tuple<TS...> scan(istream& in) {
-        return tuple_scan_impl<TS...,0>(in);
+        return tuple_scan_impl<TS...>(in);
     }
 };
 
-template<typename... TS, i64 I, SFINAE(sizeof...(TS) == I)>
-tuple<> tuple_scan1_impl(istream&) {
-    return make_tuple();
+template<typename T>
+tuple<T> tuple_scan1_impl(istream& in) {
+    return make_tuple(Scan1<T>::scan1(in));
 }
 
-template<typename... TS, i64 I, SFINAE(sizeof...(TS) > I)>
-tuple<TS...> tuple_scan1_impl(istream& in) {
-    using T = tuple_element_t<I,tuple<TS...>>;
+template<typename T, typename... TS, SFINAE(sizeof...(TS) > 0)>
+tuple<T,TS...> tuple_scan1_impl(istream& in) {
     auto head = make_tuple(Scan1<T>::scan1(in));
-    return tuple_cat(head, tuple_scan1_impl<I+1>(in));
+    return tuple_cat(head, tuple_scan1_impl<TS...>(in));
 }
 
 template<typename... TS>
 struct Scan1<tuple<TS...>> {
     static tuple<TS...> scan1(istream& in) {
-        return tuple_scan1_impl<TS...,0>(in);
+        return tuple_scan1_impl<TS...>(in);
     }
 };
 
