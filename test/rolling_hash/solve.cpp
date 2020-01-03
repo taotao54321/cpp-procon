@@ -7,7 +7,7 @@ signed main() {
     i64 M = RD();
 
     auto rh = ALL(make_rolling_hash, S);
-    HashMap<vector<i64>,i64> cnts;
+    HashMap<i64,i64> cnts;
     FOR(len, 1, 11) {
         REP(i, N-len+1) {
             ++cnts[rh.get(i,len)];

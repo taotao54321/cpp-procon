@@ -1,49 +1,51 @@
 // rolling_hash {{{
 
 struct RollingHash {
-    static constexpr pair<i64,i64> BMS_DEF[] {
-        {  9973,   999'999'937 },
-        { 10007, 1'000'000'007 },
-    };
+    static constexpr i64 M     = (1LL<<61)-1;
+    static constexpr i64 B_DEF = 10007;
 
-    vector<pair<i64,i64>> bms_;
-    vector<vector<i64>> hs_;
-    vector<vector<i64>> bpows_;
-
-    template<typename ForwardIt>
-    RollingHash(ForwardIt first, ForwardIt last) : RollingHash(first,last,{begin(BMS_DEF),end(BMS_DEF)}) {}
+    i64 n_;
+    i64 b_;
+    vector<i64> bpow_;
+    vector<i64> h_;
 
     template<typename ForwardIt>
-    RollingHash(ForwardIt first, ForwardIt last, const vector<pair<i64,i64>>& bms)
-        : bms_(bms),
-          hs_(SIZE(bms),vector<i64>(distance(first,last)+1,0)),
-          bpows_(SIZE(bms),vector<i64>(distance(first,last)+1,1))
+    RollingHash(ForwardIt first, ForwardIt last) : RollingHash(first,last,B_DEF) {}
+
+    template<typename ForwardIt>
+    RollingHash(ForwardIt first, ForwardIt last, i64 b) :
+        n_(distance(first,last)), b_(b), bpow_(n_+1,1), h_(n_+1,0)
     {
-        REP(i, SIZE(bms_)) {
-            i64 b,m; tie(b,m) = bms_[i];
-            auto& h    = hs_[i];
-            auto& bpow = bpows_[i];
-            auto it = first;
-            REP(j, distance(first,last)) {
-                auto e = *it++;
-                h[j+1]    = modulo(e + h[j]*b, m);
-                bpow[j+1] = modulo(bpow[j]*b, m);
-            }
+        auto it = first;
+        REP(i, n_) {
+            auto e = *it++;
+            h_[i+1]    = mod(e + mul(b_,h_[i]));
+            bpow_[i+1] = mod(mul(b_,bpow_[i]));
         }
     }
 
-    vector<i64> get(i64 j, i64 n) const {
-        vector<i64> res(SIZE(bms_));
-        REP(i, SIZE(bms_)) {
-            i64 m; tie(ignore,m) = bms_[i];
-            const auto& h    = hs_[i];
-            const auto& bpow = bpows_[i];
-            res[i] = modulo(h[j+n] - h[j]*bpow[n], m);
-        }
+    i64 get(i64 i, i64 k) const {
+        return mod(h_[i+k] - mul(h_[i],bpow_[k]));
+    }
+
+private:
+    static i64 mul(i64 x, i64 y) {
+        i64 xh = x >> 31;
+        i64 xl = x & ((1LL<<31)-1);
+        i64 yh = y >> 31;
+        i64 yl = y & ((1LL<<31)-1);
+        i64 mid  = xh*yl + xl*yh;
+        i64 midh = mid >> 30;
+        i64 midl = mid & ((1LL<<30)-1);
+        return 2*xh*yh + xl*yl + midh + midl*(1LL<<31);
+    }
+
+    static i64 mod(i64 x) {
+        i64 res = x % M;
+        if(res < 0) res += M;
         return res;
     }
 };
-constexpr pair<i64,i64> RollingHash::BMS_DEF[];
 
 template<typename ForwardIt>
 RollingHash make_rolling_hash(ForwardIt first, ForwardIt last) {
