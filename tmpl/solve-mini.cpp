@@ -876,6 +876,9 @@ struct Dbg<ModIntT<Mod>> {
         dbg_write(out, i64(x));
     }
 };
+
+template<i64 M>
+using ModInt = ModIntT<integral_constant<i64,M>>;
 // }}}
 // }}}
 
