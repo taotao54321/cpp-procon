@@ -878,7 +878,9 @@ struct Dbg<ModIntT<Mod>> {
 };
 
 template<i64 M>
-using ModInt = ModIntT<integral_constant<i64,M>>;
+using ModIntC = ModIntT<integral_constant<i64,M>>;
+
+using ModInt = ModIntC<MOD>;
 // }}}
 // }}}
 
