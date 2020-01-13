@@ -35,7 +35,7 @@ constexpr f64 FINF = 1e100;
 constexpr i64 MOD = INT64_C(1'000'000'007);
 //constexpr i64 MOD = INT64_C(998'244'353);
 
-constexpr f64 EPS = 1e-12;
+constexpr f64 EPS = 1e-10;
 
 constexpr f64 PI = 3.14159265358979323846;
 

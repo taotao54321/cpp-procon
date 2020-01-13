@@ -71,7 +71,7 @@ constexpr f64 FINF = PROCON_INF<f64>();
 
 constexpr i64 MOD = 1'000'000'007LL;
 
-constexpr f64 EPS = 1e-12;
+constexpr f64 EPS = 1e-10;
 
 constexpr f64 PI = 3.14159265358979323846;
 
