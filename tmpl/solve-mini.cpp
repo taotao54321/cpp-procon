@@ -26,18 +26,18 @@ using u64 = uint64_t;
 
 using f32 = float;
 using f64 = double;
-using f80 = __float80;
+using f80 = long double;
 // }}}
 
 constexpr i64 INF  = INT64_C(1'010'000'000'000'000'017);
-constexpr f64 FINF = 1e100;
+constexpr f80 FINF = 1e100;
 
 constexpr i64 MOD = INT64_C(1'000'000'007);
 //constexpr i64 MOD = INT64_C(998'244'353);
 
-constexpr f64 EPS = 1e-10;
+constexpr f80 EPS = 1e-10;
 
-constexpr f64 PI = 3.14159265358979323846;
+constexpr f80 PI = 3.141592653589793238462643383279502884197L;
 
 // util {{{
 #define FOR(i, start, end) for(i64 i = (start), CPP_CAT(i,xxxx_end)=(end); i < CPP_CAT(i,xxxx_end); ++i)
@@ -589,8 +589,8 @@ struct Dbg<i64> {
 };
 
 template<>
-struct Dbg<f64> {
-    static void dbg(ostream& out, f64 x) {
+struct Dbg<f80> {
+    static void dbg(ostream& out, f80 x) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
         if(x == FINF)
