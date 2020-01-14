@@ -46,6 +46,13 @@ bool LT_EPS(Real lhs, Real rhs, Real eps=EPS) { return lhs < rhs-eps; }
 bool GT_EPS(Real lhs, Real rhs, Real eps=EPS) { return lhs > rhs+eps; }
 bool EQ_EPS(Real lhs, Real rhs, Real eps=EPS) { return std::abs(lhs-rhs) <= eps; }
 
+bool EQ_EXACT(Real lhs, Real rhs) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+    return lhs == rhs;
+#pragma GCC diagnostic pop
+}
+
 #define FOR(i, start, end) for(i64 i = (start), CPP_CAT(i,xxxx_end)=(end); i < CPP_CAT(i,xxxx_end); ++i)
 #define REP(i, n) FOR(i, 0, n)
 
@@ -597,15 +604,12 @@ struct Dbg<i64> {
 template<>
 struct Dbg<Real> {
     static void dbg(ostream& out, Real x) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-        if(x == FINF)
+        if(EQ_EXACT(x, FINF))
             out << "FINF";
-        else if(x == -FINF)
+        else if(EQ_EXACT(x, -FINF))
             out << "-FINF";
         else
             out << x;
-#pragma GCC diagnostic pop
     }
 };
 
