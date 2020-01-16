@@ -1,4 +1,4 @@
-// fold_queue
+// fold_queue {{{
 
 template<typename T, typename F>
 class FoldQueue {
