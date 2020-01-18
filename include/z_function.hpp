@@ -18,6 +18,8 @@ vector<i64> z_function(RandomIt first, RandomIt last) {
             l = i;
     }
 
+    z[0] = n;
+
     return z;
 }
 
