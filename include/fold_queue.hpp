@@ -69,4 +69,10 @@ FoldQueue<T,F> make_fold_queue(F&& f) {
     return FoldQueue<T,F>(forward<F>(f));
 }
 
+template<typename T, typename F>
+T POP(FoldQueue<T,F>& que) {
+    T x = que.front(); que.pop();
+    return x;
+}
+
 // }}}
