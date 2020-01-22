@@ -52,4 +52,9 @@ RollingHash make_rolling_hash(ForwardIt first, ForwardIt last) {
     return RollingHash(first, last);
 }
 
+template<typename ForwardIt>
+RollingHash make_rolling_hash(ForwardIt first, ForwardIt last, i64 b) {
+    return RollingHash(first, last, b);
+}
+
 // }}}
