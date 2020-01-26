@@ -163,6 +163,40 @@ auto GT_ON(F&& f) {
     return ON(greater<>{}, forward<F>(f));
 }
 
+template<class F>
+auto NOT_FN(F&& f) {
+    return [f=forward<F>(f)](auto&&... args) -> bool { return !f(forward<decltype(args)>(args)...); };
+}
+
+// lo:OK, hi:NG
+template<class Pred>
+i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
+    ASSERT(lo < hi);
+
+    while(lo+1 < hi) {
+        i64 mid = (lo+hi) / 2;
+        if(pred(mid))
+            lo = mid;
+        else
+            hi = mid;
+    }
+    return lo;
+}
+
+template<class Pred>
+Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
+    ASSERT(lo < hi);
+
+    REP(_, iter) {
+        Real mid = (lo+hi) / 2;
+        if(pred(mid))
+            lo = mid;
+        else
+            hi = mid;
+    }
+    return lo;
+}
+
 // tuple {{{
 template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(tuple<TS...>&, F&&) {}
