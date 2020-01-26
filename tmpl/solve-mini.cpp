@@ -341,6 +341,10 @@ Monoid fastpow(const Monoid& x, i64 e, const Monoid& unity) {
     return res;
 }
 
+i64 ipow(i64 x, i64 e) {
+    return fastpow<i64>(x,e,1);
+}
+
 i64 sqrt_floor(i64 x) {
     ASSERT(x >= 0);
 
@@ -1148,6 +1152,10 @@ public:
     ModIntT& operator--() { return *this -= 1; }
     ModIntT operator++(int) { return exchange(*this, *this+1); }
     ModIntT operator--(int) { return exchange(*this, *this-1); }
+
+    ModIntT pow(i64 e) const {
+        return fastpow(*this, e, ModIntT(1));
+    }
 
     ModIntT inv() const {
         i64 g,x; tie(g,x,ignore) = EXTGCD(v_, mod());
