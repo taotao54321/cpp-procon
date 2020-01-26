@@ -74,6 +74,9 @@ constexpr i64 SIZE(const C& c) noexcept { return static_cast<i64>(c.size()); }
 template<class T, size_t N>
 constexpr i64 SIZE(const T (&)[N]) noexcept { return static_cast<i64>(N); }
 
+constexpr bool is_odd (i64 x) { return x%2 != 0; }
+constexpr bool is_even(i64 x) { return x%2 == 0; }
+
 template<class T, SFINAE(is_signed<T>::value)>
 constexpr T ABS(T x) noexcept {
     return x < 0 ? -x : x;
@@ -84,6 +87,46 @@ constexpr i64 CMP(T x, T y) noexcept { return (y<x) - (x<y); }
 
 template<class T>
 constexpr i64 SGN(T x) noexcept { return CMP(x,T(0)); }
+
+template<class T1, class T2, class Comp=less<>,
+         SFINAE(
+             is_arithmetic<T1>::value &&
+             is_arithmetic<T2>::value &&
+             is_signed<T1>::value != is_unsigned<T2>::value
+         )>
+constexpr auto MAX(T1 x, T2 y, Comp comp={}) {
+    return max<common_type_t<T1,T2>>({x,y}, comp);
+}
+
+template<class T, class Comp=less<>>
+constexpr const T& MAX(const T& x, const T& y, Comp comp={}) {
+    return max(x, y, comp);
+}
+
+template<class T, class Comp=less<>>
+constexpr T MAX(initializer_list<T> ilist, Comp comp={}) {
+    return max(ilist, comp);
+}
+
+template<class T1, class T2, class Comp=less<>,
+         SFINAE(
+             is_arithmetic<T1>::value &&
+             is_arithmetic<T2>::value &&
+             is_signed<T1>::value != is_unsigned<T2>::value
+         )>
+constexpr auto MIN(T1 x, T2 y, Comp comp={}) {
+    return min<common_type_t<T1,T2>>({x,y}, comp);
+}
+
+template<class T, class Comp=less<>>
+constexpr const T& MIN(const T& x, const T& y, Comp comp={}) {
+    return min(x, y, comp);
+}
+
+template<class T, class Comp=less<>>
+constexpr T MIN(initializer_list<T> ilist, Comp comp={}) {
+    return min(ilist, comp);
+}
 
 template<class T, class U, class Comp=less<>>
 constexpr bool chmax(T& xmax, const U& x, Comp comp={}) noexcept {
