@@ -65,6 +65,11 @@ bool EQ_EXACT(Real lhs, Real rhs) {
 #define REP(i, n) FOR(i, 0, n)
 
 #define ALL(f,c,...) (([&](decltype((c)) cccc) { return (f)(std::begin(cccc), std::end(cccc), ## __VA_ARGS__); })(c))
+#define SLICE(f,c,l,r,...) (([&](decltype((c)) cccc, decltype((l)) llll, decltype((r)) rrrr) {\
+    auto iiii = llll <= rrrr ? std::begin(cccc)+llll : std::end(cccc);\
+    auto jjjj = llll <= rrrr ? std::begin(cccc)+rrrr : std::end(cccc);\
+    return (f)(iiii, jjjj, ## __VA_ARGS__);\
+})(c,l,r))
 
 #define LIFT(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
