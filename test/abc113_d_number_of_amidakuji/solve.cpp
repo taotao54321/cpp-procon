@@ -10,7 +10,7 @@ signed main() {
     decltype(auto) fib = fibonacci_table<1000>();
     ASSERT(SIZE(fib) == 1000);
 
-    auto m = Matrix<ModP>::zeros(W);
+    auto m = Matrix<ModInt>::zeros(W);
     // 左
     FOR(i, 1, W) {
         m.at(i-1,i) = fib[i] * fib[W-i];
@@ -27,11 +27,11 @@ signed main() {
     m = m.pow(H);
 
     // 行列を見れば事足りるが、ベクトルとの乗算のverify用に
-    vector<ModP> dp(W, 0);
+    vector<ModInt> dp(W, 0);
     dp[0] = 1;
-    vector<ModP> v = m * dp;
+    vector<ModInt> v = m * dp;
 
-    ModP ans = v[K];
+    ModInt ans = v[K];
 
     PRINTLN(ans);
 

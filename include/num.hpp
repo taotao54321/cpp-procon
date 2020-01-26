@@ -1,27 +1,5 @@
 // num {{{
 
-// 事前条件: a >= 0, b >= 0
-i64 extgcd_impl(i64 a, i64 b, i64& x, i64& y) {
-    if(b == 0) {
-        x = 1; y = 0;
-        return a;
-    }
-    i64 g = extgcd_impl(b, a%b, y, x);
-    y -= a/b * x;
-    return g;
-}
-
-// g=gcd(a,b), および ax+by=g の整数解 (x0,y0) を求める
-// (g,x0,y0) を返す
-// g!=0 のとき、一般解は (x,y) = (x0+m*b/g, y0-m*a/g) で与えられる(mは整数)
-tuple<i64,i64,i64> extgcd(i64 a, i64 b) {
-    i64 x, y;
-    i64 g = extgcd_impl(ABS(a), ABS(b), x, y);
-    x *= sgn(a);
-    y *= sgn(b);
-    return make_tuple(g, x, y);
-}
-
 vector<i64> divisors_proper(i64 n) {
     if(n == 1) return {};
     vector<i64> res(1, 1);
@@ -189,129 +167,6 @@ bool is_prime(i64 n) {
     return is_prime_u64(static_cast<u64>(n));
 }
 
-// 二分累乗
-template<typename Monoid>
-Monoid pow_binary(Monoid x, i64 e) {
-    ASSERT(e >= 0);
-
-    Monoid res(1);  // 行列などの場合はここを適当に変える
-    Monoid cur = x;
-    while(e > 0) {
-        if(e & 1)
-            res *= cur;
-        cur *= cur;
-        e >>= 1;
-    }
-    return res;
-}
-
-// mod m での a の逆元
-// a ⊥ m でなければならない
-i64 inv_mod(i64 a, i64 m) {
-    i64 g,x0; tie(g,x0,ignore) = extgcd(a, m);
-    ASSERT(g == 1);
-    return modulo(x0, m);
-}
-
-template<i64 P>
-struct ModPT {
-    static_assert(P >= 2, "P must be a prime");
-    i64 v_;  // [0,P)
-
-    ModPT() : v_(0) {}
-    ModPT(i64 v) : v_(modulo(v,P)) {}
-
-    ModPT operator-() const {
-        return ModPT(-v_);
-    }
-    ModPT& operator+=(ModPT rhs) {
-        v_ += rhs.v_;
-        v_ %= P;
-        return *this;
-    }
-    ModPT& operator-=(ModPT rhs) {
-        v_ += P;
-        v_ -= rhs.v_;
-        v_ %= P;
-        return *this;
-    }
-    ModPT& operator*=(ModPT rhs) {
-        v_ *= rhs.v_;
-        v_ %= P;
-        return *this;
-    }
-
-    ModPT& operator++() {
-        return *this += 1;
-    }
-    ModPT& operator--() {
-        return *this -= 1;
-    }
-    ModPT operator++(int) {
-        return exchange(*this, *this+1);
-    }
-    ModPT operator--(int) {
-        return exchange(*this, *this-1);
-    }
-
-    explicit operator i64() const { return v_; }
-
-    ModPT inv() const {
-        return ModPT(inv_mod(v_,P));
-    }
-};
-
-template<i64 P>
-ModPT<P> operator+(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) += rhs; }
-template<i64 P>
-ModPT<P> operator+(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) += rhs; }
-template<i64 P>
-ModPT<P> operator+(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) += lhs; }
-template<i64 P>
-ModPT<P> operator-(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) -= rhs; }
-template<i64 P>
-ModPT<P> operator-(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) -= rhs; }
-template<i64 P>
-ModPT<P> operator-(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) -= lhs; }
-template<i64 P>
-ModPT<P> operator*(ModPT<P> lhs, ModPT<P> rhs) { return ModPT<P>(lhs) *= rhs; }
-template<i64 P>
-ModPT<P> operator*(ModPT<P> lhs, i64 rhs) { return ModPT<P>(lhs) *= rhs; }
-template<i64 P>
-ModPT<P> operator*(i64 lhs, ModPT<P> rhs) { return ModPT<P>(rhs) *= lhs; }
-
-template<i64 P>
-bool operator==(ModPT<P> lhs, ModPT<P> rhs) { return lhs.v_ == rhs.v_; }
-template<i64 P>
-bool operator==(ModPT<P> lhs, i64 rhs) { return lhs == ModPT<P>(rhs); }
-template<i64 P>
-bool operator==(i64 lhs, ModPT<P> rhs) { return ModPT<P>(lhs) == rhs; }
-template<i64 P>
-bool operator!=(ModPT<P> lhs, ModPT<P> rhs) { return !(lhs == rhs); }
-template<i64 P>
-bool operator!=(ModPT<P> lhs, i64 rhs) { return !(lhs == rhs); }
-template<i64 P>
-bool operator!=(i64 lhs, ModPT<P> rhs) { return !(lhs == rhs); }
-
-template<i64 P>
-struct Scanner<ModPT<P>> {
-    static ModPT<P> read(istream& in) {
-        return READ<i64>(in);
-    }
-};
-
-template<i64 P>
-struct Formatter<ModPT<P>> {
-    static ostream& write_str(ostream& out, ModPT<P> x) {
-        return WRITE_STR(out, x.v_);
-    }
-    static ostream& write_repr(ostream& out, ModPT<P> x) {
-        return WRITE_REPR(out, x.v_);
-    }
-};
-
-using ModP = ModPT<MOD>;
-
 // エラトステネスのふるい
 template<i64 N>
 bool (&is_prime_table())[N] {
@@ -336,9 +191,9 @@ bool (&is_prime_table())[N] {
 // // decltype(auto) で受けると SIZE() が使える (auto だとポインタになってしまう)
 // decltype(auto) fib = fibonacci_table<1000>();
 template<i64 N>
-ModP (&fibonacci_table())[N] {
+ModInt (&fibonacci_table())[N] {
     static_assert(N >= 2, "");
-    static ModP fib[N] {};
+    static ModInt fib[N] {};
 
     if(fib[1] != 1) {
         fib[0] = 0;
@@ -351,9 +206,9 @@ ModP (&fibonacci_table())[N] {
 }
 
 template<i64 N>
-ModP (&factorial_table())[N] {
+ModInt (&factorial_table())[N] {
     static_assert(N >= 1, "");
-    static ModP fac[N] {};
+    static ModInt fac[N] {};
 
     if(fac[0] != 1) {
         fac[0] = 1;
@@ -365,9 +220,9 @@ ModP (&factorial_table())[N] {
 }
 
 template<i64 N>
-ModP (&ifactorial_table())[N] {
+ModInt (&ifactorial_table())[N] {
     static_assert(N >= 1, "");
-    static ModP ifac[N] {};
+    static ModInt ifac[N] {};
 
     if(ifac[0] != 1) {
         decltype(auto) fac = factorial_table<N>();
@@ -379,15 +234,15 @@ ModP (&ifactorial_table())[N] {
     return ifac;
 }
 
-ModP permutation_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
+ModInt permutation_count_fac(i64 n, i64 r, const ModInt* fac, const ModInt* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[n-r];
 }
 
 template<i64 H, i64 W>
-ModP (&combination_count_table())[H][W] {
+ModInt (&combination_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
-    static ModP dp[H][W] {};
+    static ModInt dp[H][W] {};
 
     if(dp[0][0] != 1) {
         REP(i, H) {
@@ -404,7 +259,7 @@ ModP (&combination_count_table())[H][W] {
 template<i64 H, i64 W>
 auto combination_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    return MEMOIZE<H,W>([](auto&& self, i64 n, i64 r) -> ModP {
+    return FIXMEMO<H,W>([](auto&& self, i64 n, i64 r) -> ModInt {
         if(n <  r) return 0;
         if(r == 0) return 1;
         if(n == r) return 1;
@@ -412,7 +267,7 @@ auto combination_count_func() {
     });
 }
 
-ModP combination_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
+ModInt combination_count_fac(i64 n, i64 r, const ModInt* fac, const ModInt* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[r] * ifac[n-r];
 }
@@ -435,9 +290,9 @@ ModP combination_count_fac(i64 n, i64 r, const ModP* fac, const ModP* ifac) {
 // 「n を k 個の順序つき『非負整数』列の和で表す場合の数」は Q(n+k,k) = comb(n+k-1,k-1) = comb(n+k-1,n)
 // 「n を順序つき正整数列の和で表す場合の数」は 2^(n-1)
 template<i64 H, i64 W>
-ModP (&partition_count_table())[H][W] {
+ModInt (&partition_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
-    static ModP dp[H][W] {};
+    static ModInt dp[H][W] {};
 
     if(dp[0][0] != 1) {
         REP(j, W) {
@@ -459,7 +314,7 @@ ModP (&partition_count_table())[H][W] {
 template<i64 H, i64 W>
 auto partition_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    return MEMOIZE<H,W>([](auto&& self, i64 n, i64 k) -> ModP {
+    return FIXMEMO<H,W>([](auto&& self, i64 n, i64 k) -> ModInt {
         if(n <  k) return 0;
         if(n == k) return 1;
         if(k == 1) return 1;

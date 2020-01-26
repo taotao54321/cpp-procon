@@ -1,6 +1,6 @@
 // matrix {{{
 
-template<typename T>
+template<class T>
 class Matrix {
 private:
     vector<vector<T>> mat_;
@@ -27,9 +27,11 @@ public:
     const T& at(i64 r, i64 c) const { return mat_[r][c]; }
 
     Matrix operator-() const {
+        Matrix res(*this);
         REP(r, nrow()) REP(c, ncol()) {
-            at(r,c) = -at(r,c);
+            res.at(r,c) = -at(r,c);
         }
+        return res;
     }
     Matrix& operator+=(const Matrix& rhs) {
         REP(r, nrow()) REP(c, ncol()) {
@@ -59,20 +61,49 @@ public:
 
     // 正方行列であること
     Matrix pow(i64 e) const {
-        ASSERT(e >= 0);
+        return fastpow(*this, e, eye(nrow()));
+    }
 
-        Matrix res = eye(nrow());
-        Matrix cur = *this;
-        while(e > 0) {
-            if(e & 1)
-                res *= cur;
-            cur *= cur;
-            e >>= 1;
+    friend Matrix operator+(const Matrix& lhs, const Matrix& rhs) {
+        return Matrix(lhs) += rhs;
+    }
+    friend Matrix operator-(const Matrix& lhs, const Matrix& rhs) {
+        return Matrix(lhs) -= rhs;
+    }
+    friend Matrix operator*(const Matrix& lhs, T rhs) {
+        return Matrix(lhs) *= rhs;
+    }
+    friend Matrix operator*(T lhs, const Matrix& rhs) {
+        return Matrix(rhs) *= lhs;
+    }
+    friend Matrix operator/(const Matrix& lhs, T rhs) {
+        return Matrix(lhs) /= rhs;
+    }
+    friend Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
+        i64 nr = lhs.nrow();
+        i64 nc = rhs.ncol();
+        i64 m  = lhs.ncol();
+        Matrix res(nr,nc);
+        REP(r, nr) REP(c, nc) {
+            REP(i, m) {
+                res.at(r,c) += lhs.at(r,i) * rhs.at(i,c);
+            }
+        }
+        return res;
+    }
+    friend vector<T> operator*(const Matrix& lhs, const vector<T>& rhs) {
+        i64 nr = lhs.nrow();
+        i64 m  = lhs.ncol();
+        vector<T> res(m, T{});
+        REP(r, nr) {
+            REP(i, m) {
+                res[r] += lhs.at(r,i) * rhs[i];
+            }
         }
         return res;
     }
 };
-
+#if 0
 template<typename T>
 Matrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     return Matrix<T>(lhs) += rhs;
@@ -124,26 +155,5 @@ vector<T> operator*(const Matrix<T>& lhs, const vector<T>& rhs) {
     }
     return res;
 }
-
-template<typename T>
-struct Formatter<Matrix<T>> {
-    static ostream& write_str(ostream& out, const Matrix<T>& m) {
-        return write_repr(out, m);
-    }
-    static ostream& write_repr(ostream& out, const Matrix<T>& m) {
-        out << "Matrix[";
-        REP(r, m.nrow()) {
-            if(r != 0) out << ",";
-            out << "[";
-            REP(c, m.ncol()) {
-                if(c != 0) out << ",";
-                WRITE_REPR(out, m.at(r,c));
-            }
-            out << "]";
-        }
-        out << "]";
-        return out;
-    }
-};
-
+#endif
 // }}}
