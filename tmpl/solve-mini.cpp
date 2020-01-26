@@ -197,6 +197,43 @@ Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
     return lo;
 }
 
+// Haskell の divMod と同じ
+pair<i64,i64> divmod(i64 a, i64 b) {
+    i64 q = a / b;
+    i64 r = a % b;
+    if((b>0 && r<0) || (b<0 && r>0)) {
+        --q;
+        r += b;
+    }
+    return {q,r};
+}
+
+i64 div_ceil(i64 a, i64 b) {
+    i64 q = a / b;
+    i64 r = a % b;
+    if((b>0 && r>0) || (b<0 && r<0))
+        ++q;
+    return q;
+}
+
+i64 div_floor(i64 a, i64 b) {
+    return divmod(a,b).first;
+}
+
+i64 modulo(i64 a, i64 b) {
+    return divmod(a,b).second;
+}
+
+i64 align_ceil(i64 x, i64 align) {
+    ASSERT(align > 0);
+    return div_ceil(x,align) * align;
+}
+
+i64 align_floor(i64 x, i64 align) {
+    ASSERT(align > 0);
+    return div_floor(x,align) * align;
+}
+
 // tuple {{{
 template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(tuple<TS...>&, F&&) {}
