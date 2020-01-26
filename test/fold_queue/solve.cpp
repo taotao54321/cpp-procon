@@ -14,7 +14,7 @@ signed main() {
     vector<pair<i64,i64>> v(N+1, make_pair(INF,INF));  // (最短手数,実現する最小歩数)
     v[N] = {0,0};
 
-    auto que = make_fold_queue<pair<i64,i64>>(GENERIC(min));  // (最短手数,インデックス)
+    auto que = make_fold_queue<pair<i64,i64>>({INF,INF}, LIFT(MIN));  // (最短手数,インデックス)
     que.emplace(0, N);
 
     for(i64 i = N-1; i >= 0; --i) {
