@@ -527,6 +527,13 @@ decltype(auto) FIXMEMO(F&& f) {
 // }}}
 
 // string {{{
+char chr_digit(i64 n)  { return char('0'+n); }
+i64  ord_digit(char c) { return c-'0'; }
+char chr_lower(i64 n)  { return char('a'+n); }
+i64  ord_lower(char c) { return c-'a'; }
+char chr_upper(i64 n)  { return char('A'+n); }
+i64  ord_upper(char c) { return c-'A'; }
+
 auto str_reserve(i64 cap) {
     string res;
     res.reserve(cap);
