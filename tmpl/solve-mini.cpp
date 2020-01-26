@@ -234,6 +234,27 @@ i64 align_floor(i64 x, i64 align) {
     return div_floor(x,align) * align;
 }
 
+template<class InputIt, class BinaryOp>
+auto FOLD(InputIt first, InputIt last,
+          typename iterator_traits<InputIt>::value_type init,
+          BinaryOp op)
+{
+    for(; first != last; ++first)
+        init = op(move(init), *first);
+    return init;
+}
+
+template<class InputIt, class BinaryOp>
+auto FOLD1(InputIt first, InputIt last, BinaryOp op) {
+    auto init = *first++;
+    return FOLD(first, last, init, op);
+}
+
+template<class InputIt>
+auto SUM(InputIt first, InputIt last) {
+    return FOLD1(first, last, plus<>{});
+}
+
 // tuple {{{
 template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(tuple<TS...>&, F&&) {}
