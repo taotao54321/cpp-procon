@@ -64,24 +64,24 @@ bool EQ_EXACT(Real lhs, Real rhs) {
 
 #define LIFT(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
-template<typename C>
+template<class C>
 constexpr i64 SIZE(const C& c) noexcept { return static_cast<i64>(c.size()); }
 
-template<typename T, size_t N>
+template<class T, size_t N>
 constexpr i64 SIZE(const T (&)[N]) noexcept { return static_cast<i64>(N); }
 
-template<typename T, SFINAE(is_signed<T>::value)>
+template<class T, SFINAE(is_signed<T>::value)>
 constexpr T ABS(T x) noexcept {
     return x < 0 ? -x : x;
 }
 
-template<typename T>
+template<class T>
 constexpr i64 CMP(T x, T y) noexcept { return (y<x) - (x<y); }
 
-template<typename T>
+template<class T>
 constexpr i64 SGN(T x) noexcept { return CMP(x,T(0)); }
 
-template<typename T, typename U, typename Comp=less<>>
+template<class T, class U, class Comp=less<>>
 constexpr bool chmax(T& xmax, const U& x, Comp comp={}) noexcept {
     if(comp(xmax, x)) {
         xmax = x;
@@ -90,7 +90,7 @@ constexpr bool chmax(T& xmax, const U& x, Comp comp={}) noexcept {
     return false;
 }
 
-template<typename T, typename U, typename Comp=less<>>
+template<class T, class U, class Comp=less<>>
 constexpr bool chmin(T& xmin, const U& x, Comp comp={}) noexcept {
     if(comp(x, xmin)) {
         xmin = x;
@@ -99,47 +99,47 @@ constexpr bool chmin(T& xmin, const U& x, Comp comp={}) noexcept {
     return false;
 }
 
-template<typename BinaryFunc, typename UnaryFunc>
+template<class BinaryFunc, class UnaryFunc>
 auto ON(BinaryFunc&& bf, UnaryFunc&& uf) {
     return [bf=forward<BinaryFunc>(bf),uf=forward<UnaryFunc>(uf)](const auto& x, const auto& y) {
         return bf(uf(x), uf(y));
     };
 }
 
-template<typename F>
+template<class F>
 auto LT_ON(F&& f) {
     return ON(less<>{}, forward<F>(f));
 }
 
-template<typename F>
+template<class F>
 auto GT_ON(F&& f) {
     return ON(greater<>{}, forward<F>(f));
 }
 
-template<typename F>
+template<class F>
 auto EQ_ON(F&& f) {
     return ON(equal_to<>{}, forward<F>(f));
 }
 
-template<typename F>
+template<class F>
 auto NE_ON(F&& f) {
     return ON(not_equal_to<>{}, forward<F>(f));
 }
 
 // tuple {{{
-template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) == I)>
+template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(tuple<TS...>&, F&&) {}
 
-template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) > I)>
+template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) > I)>
 void tuple_enumerate(tuple<TS...>& t, F&& f) {
     f(I, get<I>(t));
     tuple_enumerate<I+1>(t, forward<F>(f));
 }
 
-template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) == I)>
+template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(const tuple<TS...>&, F&&) {}
 
-template<i64 I=0, typename F, typename... TS, SFINAE(sizeof...(TS) > I)>
+template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) > I)>
 void tuple_enumerate(const tuple<TS...>& t, F&& f) {
     f(I, get<I>(t));
     tuple_enumerate<I+1>(t, forward<F>(f));
@@ -147,29 +147,29 @@ void tuple_enumerate(const tuple<TS...>& t, F&& f) {
 // }}}
 
 // container {{{
-template<typename T> struct is_container : false_type {};
-template<typename T, size_t N> struct is_container<array<T,N>> : true_type {};
-template<typename... Args> struct is_container<vector<Args...>> : true_type {};
-template<typename... Args> struct is_container<deque<Args...>> : true_type {};
-template<typename... Args> struct is_container<list<Args...>> : true_type {};
-template<typename... Args> struct is_container<forward_list<Args...>> : true_type {};
-template<typename... Args> struct is_container<set<Args...>> : true_type {};
-template<typename... Args> struct is_container<multiset<Args...>> : true_type {};
-template<typename... Args> struct is_container<unordered_set<Args...>> : true_type {};
-template<typename... Args> struct is_container<unordered_multiset<Args...>> : true_type {};
-template<typename... Args> struct is_container<map<Args...>> : true_type {};
-template<typename... Args> struct is_container<multimap<Args...>> : true_type {};
-template<typename... Args> struct is_container<unordered_map<Args...>> : true_type {};
-template<typename... Args> struct is_container<unordered_multimap<Args...>> : true_type {};
+template<class T> struct is_container : false_type {};
+template<class T, size_t N> struct is_container<array<T,N>> : true_type {};
+template<class... Args> struct is_container<vector<Args...>> : true_type {};
+template<class... Args> struct is_container<deque<Args...>> : true_type {};
+template<class... Args> struct is_container<list<Args...>> : true_type {};
+template<class... Args> struct is_container<forward_list<Args...>> : true_type {};
+template<class... Args> struct is_container<set<Args...>> : true_type {};
+template<class... Args> struct is_container<multiset<Args...>> : true_type {};
+template<class... Args> struct is_container<unordered_set<Args...>> : true_type {};
+template<class... Args> struct is_container<unordered_multiset<Args...>> : true_type {};
+template<class... Args> struct is_container<map<Args...>> : true_type {};
+template<class... Args> struct is_container<multimap<Args...>> : true_type {};
+template<class... Args> struct is_container<unordered_map<Args...>> : true_type {};
+template<class... Args> struct is_container<unordered_multimap<Args...>> : true_type {};
 
-template<typename T, typename Enable=void>
+template<class T, class Enable=void>
 struct ProconHash {
     size_t operator()(const T& x) const noexcept {
         return hash<T>{}(x);
     }
 };
 
-template<typename T>
+template<class T>
 size_t procon_hash_value(const T& x) noexcept {
     return ProconHash<T>{}(x);
 }
@@ -190,7 +190,7 @@ size_t procon_hash_combine(size_t h1, size_t h2) noexcept {
     return h1;
 }
 
-template<typename T1, typename T2>
+template<class T1, class T2>
 struct ProconHash<pair<T1,T2>> {
     size_t operator()(const pair<T1,T2>& p) const noexcept {
         size_t h1 = procon_hash_value(p.first);
@@ -199,7 +199,7 @@ struct ProconHash<pair<T1,T2>> {
     }
 };
 
-template<typename... TS>
+template<class... TS>
 struct ProconHash<tuple<TS...>> {
     size_t operator()(const tuple<TS...>& t) const noexcept {
         size_t h = 0;
@@ -210,7 +210,7 @@ struct ProconHash<tuple<TS...>> {
     }
 };
 
-template<typename C>
+template<class C>
 struct ProconHash<C,enable_if_t<is_container<C>::value>> {
     size_t operator()(const C& c) const noexcept {
         size_t h = 0;
@@ -220,96 +220,96 @@ struct ProconHash<C,enable_if_t<is_container<C>::value>> {
     }
 };
 
-template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
+template<class T, class Hash=ProconHash<T>, class Eq=equal_to<T>>
 using HashSet = unordered_set<T,Hash,Eq>;
-template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
+template<class K, class V, class Hash=ProconHash<K>, class Eq=equal_to<K>>
 using HashMap = unordered_map<K,V,Hash,Eq>;
-template<typename T, typename Hash=ProconHash<T>, typename Eq=equal_to<T>>
+template<class T, class Hash=ProconHash<T>, class Eq=equal_to<T>>
 using HashMultiset = unordered_multiset<T,Hash,Eq>;
-template<typename K, typename V, typename Hash=ProconHash<K>, typename Eq=equal_to<K>>
+template<class K, class V, class Hash=ProconHash<K>, class Eq=equal_to<K>>
 using HashMultimap = unordered_multimap<K,V,Hash,Eq>;
 
-template<typename T>
+template<class T>
 auto vec_make(i64 n, T x) {
     return vector<T>(n, x);
 }
 
-template<typename T, typename... Args, SFINAE(sizeof...(Args) >= 2)>
+template<class T, class... Args, SFINAE(sizeof...(Args) >= 2)>
 auto vec_make(i64 n, Args... args) {
     auto inner = vec_make<T>(args...);
     return vector<decltype(inner)>(n, inner);
 }
 
-template<typename T>
+template<class T>
 auto vec_reserve(i64 cap) {
     vector<T> res;
     res.reserve(cap);
     return res;
 }
 
-template<typename T=i64>
+template<class T=i64>
 auto vec_iota(i64 n, T init={}) {
     vector<i64> res(n);
     ALL(iota, res, init);
     return res;
 }
 
-template<typename T, typename Comp, typename Cont=vector<T>>
+template<class T, class Comp, class Cont=vector<T>>
 auto priority_queue_make(const Comp& comp, Cont&& cont={}) {
     return priority_queue<T,remove_reference_t<Cont>,Comp>(comp, forward<Cont>(cont));
 }
 
-template<typename T, typename Comp>
+template<class T, class Comp>
 auto priority_queue_reserve(const Comp& comp, i64 cap) {
     return priority_queue<T,vector<T>,Comp>(comp, vec_reserve<T>(cap));
 }
 
-template<typename T, size_t N, size_t... NS>
+template<class T, size_t N, size_t... NS>
 struct ArrayType {
-    using type = array<typename ArrayType<T,NS...>::type,N>;
+    using type = array<class ArrayType<T,NS...>::type,N>;
 };
 
-template<typename T, size_t N>
+template<class T, size_t N>
 struct ArrayType<T,N> {
     using type = array<T,N>;
 };
 
-template<typename T, size_t... NS>
+template<class T, size_t... NS>
 using Array = typename ArrayType<T,NS...>::type;
 
-template<typename T, size_t N>
+template<class T, size_t N>
 T& array_at(Array<T,N>& ary, i64 i) {
     return ary[i];
 }
 
-template<typename T, size_t N, size_t... NS, typename... Args>
+template<class T, size_t N, size_t... NS, class... Args>
 T& array_at(Array<T,N,NS...>& ary, i64 i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
 }
 
-template<typename T, size_t N>
+template<class T, size_t N>
 const T& array_at(const Array<T,N>& ary, i64 i) {
     return ary[i];
 }
 
-template<typename T, size_t N, size_t... NS, typename... Args>
+template<class T, size_t N, size_t... NS, class... Args>
 const T& array_at(const Array<T,N,NS...>& ary, i64 i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
 }
 
-template<typename T, typename C>
+template<class T, class C>
 T POP(stack<T,C>& stk) {
     T x = stk.top(); stk.pop();
     return x;
 }
 
-template<typename T, typename C>
+template<class T, class C>
 T POP(queue<T,C>& que) {
     T x = que.front(); que.pop();
     return x;
 }
 
-template<typename T, typename C, typename Comp>
+template<class T, class C, class Comp>
 T POP(priority_queue<T,C,Comp>& que) {
     T x = que.top(); que.pop();
     return x;
@@ -317,12 +317,12 @@ T POP(priority_queue<T,C,Comp>& que) {
 // }}}
 
 // fixpoint {{{
-template<typename F>
+template<class F>
 class FixPoint {
 public:
     explicit constexpr FixPoint(F&& f) : f_(forward<F>(f)) {}
 
-    template<typename... Args>
+    template<class... Args>
     constexpr decltype(auto) operator()(Args&&... args) const {
         return f_(*this, forward<Args>(args)...);
     }
@@ -331,17 +331,17 @@ private:
     F f_;
 };
 
-template<typename F>
+template<class F>
 constexpr decltype(auto) FIX(F&& f) {
     return FixPoint<F>(forward<F>(f));
 }
 
-template<typename F, size_t... NS>
+template<class F, size_t... NS>
 class FixPointMemo {
 public:
     explicit FixPointMemo(F&& f) : f_(forward<F>(f)) {}
 
-    template<typename... Args>
+    template<class... Args>
     decltype(auto) operator()(Args... args) const {
         using R = decltype(f_(*this,args...));
         static Array<bool,NS...> done {};
@@ -358,7 +358,7 @@ private:
     F f_;
 };
 
-template<size_t... NS, typename F>
+template<size_t... NS, class F>
 decltype(auto) FIXMEMO(F&& f) {
     return FixPointMemo<F,NS...>(forward<F>(f));
 }
@@ -406,7 +406,7 @@ auto str_reserve(i64 cap) {
 // }}}
 
 // input {{{
-template<typename T, typename Enable=void>
+template<class T, class Enable=void>
 struct Scan {
     static T scan(istream& in) {
         T res;
@@ -415,17 +415,17 @@ struct Scan {
     }
 };
 
-template<typename T, typename Enable=void>
+template<class T, class Enable=void>
 struct Scan1;
 
-template<typename T>
+template<class T>
 struct Scan1<T,enable_if_t<is_integral<T>::value && !is_same<T,bool>::value>> {
     static T scan1(istream& in) {
         return Scan<T>::scan(in) - 1;
     }
 };
 
-template<typename T1, typename T2>
+template<class T1, class T2>
 struct Scan<pair<T1,T2>> {
     static pair<T1,T2> scan(istream& in) {
         T1 x = Scan<T1>::scan(in);
@@ -434,7 +434,7 @@ struct Scan<pair<T1,T2>> {
     }
 };
 
-template<typename T1, typename T2>
+template<class T1, class T2>
 struct Scan1<pair<T1,T2>> {
     static pair<T1,T2> scan1(istream& in) {
         T1 x = Scan1<T1>::scan1(in);
@@ -443,53 +443,53 @@ struct Scan1<pair<T1,T2>> {
     }
 };
 
-template<typename T>
+template<class T>
 tuple<T> tuple_scan_impl(istream& in) {
     return make_tuple(Scan<T>::scan(in));
 }
 
-template<typename T, typename... TS, SFINAE(sizeof...(TS) > 0)>
+template<class T, class... TS, SFINAE(sizeof...(TS) > 0)>
 tuple<T,TS...> tuple_scan_impl(istream& in) {
     auto head = make_tuple(Scan<T>::scan(in));
     return tuple_cat(head, tuple_scan_impl<TS...>(in));
 }
 
-template<typename... TS>
+template<class... TS>
 struct Scan<tuple<TS...>> {
     static tuple<TS...> scan(istream& in) {
         return tuple_scan_impl<TS...>(in);
     }
 };
 
-template<typename T>
+template<class T>
 tuple<T> tuple_scan1_impl(istream& in) {
     return make_tuple(Scan1<T>::scan1(in));
 }
 
-template<typename T, typename... TS, SFINAE(sizeof...(TS) > 0)>
+template<class T, class... TS, SFINAE(sizeof...(TS) > 0)>
 tuple<T,TS...> tuple_scan1_impl(istream& in) {
     auto head = make_tuple(Scan1<T>::scan1(in));
     return tuple_cat(head, tuple_scan1_impl<TS...>(in));
 }
 
-template<typename... TS>
+template<class... TS>
 struct Scan1<tuple<TS...>> {
     static tuple<TS...> scan1(istream& in) {
         return tuple_scan1_impl<TS...>(in);
     }
 };
 
-template<typename T=i64>
+template<class T=i64>
 T RD() {
     return Scan<T>::scan(cin);
 }
 
-template<typename T=i64>
+template<class T=i64>
 T RD1() {
     return Scan1<T>::scan1(cin);
 }
 
-template<typename T=i64>
+template<class T=i64>
 auto RD_VEC(i64 n) {
     auto res = vec_reserve<T>(n);
     REP(_, n) {
@@ -498,7 +498,7 @@ auto RD_VEC(i64 n) {
     return res;
 }
 
-template<typename T=i64>
+template<class T=i64>
 auto RD1_VEC(i64 n) {
     auto res = vec_reserve<T>(n);
     REP(_, n) {
@@ -507,7 +507,7 @@ auto RD1_VEC(i64 n) {
     return res;
 }
 
-template<typename T=i64>
+template<class T=i64>
 auto RD_VEC2(i64 h, i64 w) {
     auto res = vec_reserve<vector<T>>(h);
     REP(_, h) {
@@ -516,7 +516,7 @@ auto RD_VEC2(i64 h, i64 w) {
     return res;
 }
 
-template<typename T=i64>
+template<class T=i64>
 auto RD1_VEC2(i64 h, i64 w) {
     auto res = vec_reserve<vector<T>>(h);
     REP(_, h) {
@@ -527,17 +527,17 @@ auto RD1_VEC2(i64 h, i64 w) {
 // }}}
 
 // output {{{
-template<typename T, typename Enable=void>
+template<class T, class Enable=void>
 struct Fmt {
     static void fmt(ostream& out, const T& x) { out << x; }
 };
 
-template<typename T>
+template<class T>
 void fmt_write(ostream& out, const T& x) {
     Fmt<T>::fmt(out, x);
 }
 
-template<typename... TS>
+template<class... TS>
 struct Fmt<tuple<TS...>> {
     static void fmt(ostream& out, const tuple<TS...>& t) {
         tuple_enumerate(t, [&out](i64 i, const auto& e) {
@@ -547,14 +547,14 @@ struct Fmt<tuple<TS...>> {
     }
 };
 
-template<typename T1, typename T2>
+template<class T1, class T2>
 struct Fmt<pair<T1,T2>> {
     static void fmt(ostream& out, const pair<T1,T2>& p) {
         return fmt_write(out, make_tuple(p.first,p.second));
     }
 };
 
-template<typename C>
+template<class C>
 struct Fmt<C,enable_if_t<is_container<C>::value>> {
     static void fmt(ostream& out, const C& c) {
         for(auto it = begin(c); it != end(c); ++it) {
@@ -566,7 +566,7 @@ struct Fmt<C,enable_if_t<is_container<C>::value>> {
 
 void PRINT() {}
 
-template<typename T, typename... TS>
+template<class T, class... TS>
 void PRINT(const T& x, const TS&... args) {
     fmt_write(cout, x);
     if(sizeof...(args) > 0) {
@@ -575,7 +575,7 @@ void PRINT(const T& x, const TS&... args) {
     }
 }
 
-template<typename... TS>
+template<class... TS>
 void PRINTLN(const TS&... args) {
     PRINT(args...);
     cout << '\n';
@@ -583,12 +583,12 @@ void PRINTLN(const TS&... args) {
 // }}}
 
 // debug {{{
-template<typename T, typename Enable=void>
+template<class T, class Enable=void>
 struct Dbg {
     static void dbg(ostream& out, const T& x) { out << x; }
 };
 
-template<typename T>
+template<class T>
 void dbg_write(ostream& out, const T& x) {
     Dbg<T>::dbg(out, x);
 }
@@ -617,7 +617,7 @@ struct Dbg<Real> {
     }
 };
 
-template<typename T, size_t N>
+template<class T, size_t N>
 struct Dbg<T[N]> {
     static void dbg(ostream& out, const T (&ary)[N]) {
         out << "[";
@@ -636,7 +636,7 @@ struct Dbg<char[N]> {
     }
 };
 
-template<typename... TS>
+template<class... TS>
 struct Dbg<tuple<TS...>> {
     static void dbg(ostream& out, const tuple<TS...>& t) {
         out << "(";
@@ -648,14 +648,14 @@ struct Dbg<tuple<TS...>> {
     }
 };
 
-template<typename T1, typename T2>
+template<class T1, class T2>
 struct Dbg<pair<T1,T2>> {
     static void dbg(ostream& out, const pair<T1,T2>& p) {
         return dbg_write(out, make_tuple(p.first,p.second));
     }
 };
 
-template<typename C>
+template<class C>
 struct Dbg<C,enable_if_t<is_container<C>::value>> {
     static void dbg(ostream& out, const C& c) {
         out << "[";
@@ -667,7 +667,7 @@ struct Dbg<C,enable_if_t<is_container<C>::value>> {
     }
 };
 
-template<typename T, typename C>
+template<class T, class C>
 struct Dbg<stack<T,C>> {
     static void dbg(ostream& out, stack<T,C> stk) {
         out << "[";
@@ -679,7 +679,7 @@ struct Dbg<stack<T,C>> {
     }
 };
 
-template<typename T, typename C>
+template<class T, class C>
 struct Dbg<queue<T,C>> {
     static void dbg(ostream& out, queue<T,C> que) {
         out << "[";
@@ -691,7 +691,7 @@ struct Dbg<queue<T,C>> {
     }
 };
 
-template<typename T, typename C, typename Comp>
+template<class T, class C, class Comp>
 struct Dbg<priority_queue<T,C,Comp>> {
     static void dbg(ostream& out, priority_queue<T,C,Comp> que) {
         out << "[";
@@ -703,7 +703,7 @@ struct Dbg<priority_queue<T,C,Comp>> {
     }
 };
 
-template<typename T>
+template<class T>
 void DBG_IMPL(i64 line, const char* expr, const T& value) {
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
@@ -713,7 +713,7 @@ void DBG_IMPL(i64 line, const char* expr, const T& value) {
 
 void DBG_IMPL_HELPER() {}
 
-template<typename T, typename... TS>
+template<class T, class... TS>
 void DBG_IMPL_HELPER(const T& x, const TS&... args) {
     dbg_write(cerr, x);
     if(sizeof...(args) > 0) {
@@ -722,7 +722,7 @@ void DBG_IMPL_HELPER(const T& x, const TS&... args) {
     }
 }
 
-template<typename... TS>
+template<class... TS>
 void DBG_IMPL(i64 line, const char* expr, const TS&... value) {
     cerr << "[L " << line << "]: ";
     cerr << "(" << expr << ") = (";
@@ -730,12 +730,12 @@ void DBG_IMPL(i64 line, const char* expr, const TS&... value) {
     cerr << ")\n";
 }
 
-template<size_t N, typename T, SFINAE(rank<T>::value == 0)>
+template<size_t N, class T, SFINAE(rank<T>::value == 0)>
 void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<i64,N>&, const array<i64,N>&) {
     dbg_write(out, x);
 }
 
-template<size_t N, typename T, SFINAE(rank<T>::value > 0)>
+template<size_t N, class T, SFINAE(rank<T>::value > 0)>
 void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<i64,N>& sizes, const array<i64,N>& offs) {
     i64 k   = N - rank<T>::value;
     i64 off = offs[k];
@@ -750,7 +750,7 @@ void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<i64,N>& sizes, con
     out << "]";
 }
 
-template<typename T, SFINAE(rank<T>::value > 0)>
+template<class T, SFINAE(rank<T>::value > 0)>
 void DBG_DP_IMPL(i64 line, const char* expr, const T& dp,
                  const array<i64,rank<T>::value>& sizes={},
                  const array<i64,rank<T>::value>& offs={})
@@ -761,7 +761,7 @@ void DBG_DP_IMPL(i64 line, const char* expr, const T& dp,
     cerr << "\n";
 }
 
-template<typename T>
+template<class T>
 void DBG_GRID_IMPL(i64 line, const char* expr, const vector<T>& grid) {
     cerr << "[L " << line << "]: ";
     cerr << expr << ":\n";
@@ -784,7 +784,7 @@ void DBG_GRID_IMPL(i64 line, const char* expr, const vector<T>& grid) {
 // }}}
 
 // modint {{{
-template<typename Mod>
+template<class Mod>
 class ModIntT {
 private:
     i64 v_;  // [0,Mod::value)
@@ -830,46 +830,46 @@ public:
     }
 };
 
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator+(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) += rhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator+(ModIntT<Mod> lhs, i64 rhs) { return ModIntT<Mod>(lhs) += rhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator+(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(rhs) += lhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator-(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) -= rhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator-(ModIntT<Mod> lhs, i64 rhs) { return ModIntT<Mod>(lhs) -= rhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator-(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(rhs) -= lhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator*(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) *= rhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator*(ModIntT<Mod> lhs, i64 rhs) { return ModIntT<Mod>(lhs) *= rhs; }
-template<typename Mod>
+template<class Mod>
 ModIntT<Mod> operator*(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(rhs) *= lhs; }
 
-template<typename Mod>
+template<class Mod>
 bool operator==(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return i64(lhs) == i64(rhs); }
-template<typename Mod>
+template<class Mod>
 bool operator==(ModIntT<Mod> lhs, i64 rhs) { return lhs == ModIntT<Mod>(rhs); }
-template<typename Mod>
+template<class Mod>
 bool operator==(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) == rhs; }
-template<typename Mod>
+template<class Mod>
 bool operator!=(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return !(lhs == rhs); }
-template<typename Mod>
+template<class Mod>
 bool operator!=(ModIntT<Mod> lhs, i64 rhs) { return !(lhs == rhs); }
-template<typename Mod>
+template<class Mod>
 bool operator!=(i64 lhs, ModIntT<Mod> rhs) { return !(lhs == rhs); }
 
-template<typename Mod>
+template<class Mod>
 struct ProconHash<ModIntT<Mod>> {
     size_t operator()(ModIntT<Mod> x) const noexcept {
         return procon_hash_value(i64(x));
     }
 };
 
-template<typename Mod>
+template<class Mod>
 struct Scan<ModIntT<Mod>> {
     static ModIntT<Mod> scan(istream& in) {
         i64 v = Scan<i64>::scan(in);
@@ -877,14 +877,14 @@ struct Scan<ModIntT<Mod>> {
     }
 };
 
-template<typename Mod>
+template<class Mod>
 struct Fmt<ModIntT<Mod>> {
     static void fmt(ostream& out, ModIntT<Mod> x) {
         fmt_write(out, i64(x));
     }
 };
 
-template<typename Mod>
+template<class Mod>
 struct Dbg<ModIntT<Mod>> {
     static void dbg(ostream& out, ModIntT<Mod> x) {
         dbg_write(out, i64(x));
