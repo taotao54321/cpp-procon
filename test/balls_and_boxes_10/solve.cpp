@@ -6,7 +6,7 @@ signed main() {
     i64 K = RD();
 
     decltype(auto) dp = partition_count_table<2001,1001>();
-    ModP ans = dp[N+K][K];
+    ModInt ans = dp[N+K][K];
 
     PRINTLN(ans);
 
