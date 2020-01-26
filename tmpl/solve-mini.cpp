@@ -326,6 +326,41 @@ Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
     return lo;
 }
 
+i64 sqrt_floor(i64 x) {
+    ASSERT(x >= 0);
+
+    i64 lo = 0;
+    i64 hi = MIN(x/2+2, 3037000500LL);
+    return bisect_integer(lo, hi, [x](i64 r) { return r*r <= x; });
+}
+
+i64 sqrt_ceil(i64 x) {
+    i64 r = sqrt_floor(x);
+    return r*r == x ? r : r+1;
+}
+
+// 0 <= log2_ceil(x) <= 63
+i64 log2_ceil(i64 x) {
+    ASSERT(x > 0);
+    return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
+}
+
+// 0 <= log2_floor(x) <= 62
+i64 log2_floor(i64 x) {
+    ASSERT(x > 0);
+    return 63 - BIT_COUNT_LEADING_ZEROS(x);
+}
+
+// x > 0
+i64 pow2_ceil(i64 x) {
+    return BIT_I(log2_ceil(x));
+}
+
+// x > 0
+i64 pow2_floor(i64 x) {
+    return BIT_I(log2_floor(x));
+}
+
 // Haskell の divMod と同じ
 pair<i64,i64> divmod(i64 a, i64 b) {
     i64 q = a / b;
