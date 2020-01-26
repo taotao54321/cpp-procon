@@ -2,9 +2,9 @@
 
 signed main() {
     i64 N = RD();
-    auto A = RD_ARRAY(N);
+    auto A = RD_VEC(N);
 
-    i64 ans = ALL(accumulate, A, 1, LCM);
+    i64 ans = ALL(FOLD1, A, LCM);
 
     PRINTLN(ans);
 
