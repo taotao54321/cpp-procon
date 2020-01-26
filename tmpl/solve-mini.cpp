@@ -326,6 +326,21 @@ Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
     return lo;
 }
 
+template<class Monoid>
+Monoid fastpow(const Monoid& x, i64 e, const Monoid& unity) {
+    ASSERT(e >= 0);
+
+    Monoid res = unity;
+    Monoid cur = x;
+    while(e > 0) {
+        if(e & 1)
+            res *= cur;
+        cur *= cur;
+        e >>= 1;
+    }
+    return res;
+}
+
 i64 sqrt_floor(i64 x) {
     ASSERT(x >= 0);
 
