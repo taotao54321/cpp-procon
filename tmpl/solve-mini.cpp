@@ -168,6 +168,135 @@ auto NOT_FN(F&& f) {
     return [f=forward<F>(f)](auto&&... args) -> bool { return !f(forward<decltype(args)>(args)...); };
 }
 
+// ビット演算 {{{
+// 引数は [-INF,INF] のみ想定
+i64 BIT_I(i64 i) {
+    return 1LL << i;
+}
+
+i64 BIT_I_1(i64 i) {
+    return BIT_I(i) - 1;
+}
+
+i64 BIT_GET(i64 x, i64 i) {
+    return x & BIT_I(i);
+}
+
+bool BIT_TEST(i64 x, i64 i) {
+    return BIT_GET(x,i) != 0;
+}
+
+i64 BIT_SET(i64 x, i64 i) {
+    return x | BIT_I(i);
+}
+
+i64 BIT_CLEAR(i64 x, i64 i) {
+    return x & ~BIT_I(i);
+}
+
+i64 BIT_FLIP(i64 x, i64 i) {
+    return x ^ BIT_I(i);
+}
+
+i64 BIT_ASSIGN(i64 x, i64 i, bool b) {
+    return b ? BIT_SET(x,i) : BIT_CLEAR(x,i);
+}
+
+i64 BIT_COUNT_LEADING_ZEROS(i64 x) {
+    if(x == 0) return 64;
+    return __builtin_clzll(x);
+}
+
+i64 BIT_COUNT_LEADING_ONES(i64 x) {
+    return BIT_COUNT_LEADING_ZEROS(~x);
+}
+
+i64 BIT_COUNT_TRAILING_ZEROS(i64 x) {
+    if(x == 0) return 64;
+    return __builtin_ctzll(x);
+}
+
+i64 BIT_COUNT_TRAILING_ONES(i64 x) {
+    return BIT_COUNT_TRAILING_ZEROS(~x);
+}
+
+i64 BIT_COUNT_ONES(i64 x) {
+    return __builtin_popcountll(x);
+}
+
+i64 BIT_COUNT_ZEROS(i64 x) {
+    return 64 - BIT_COUNT_ONES(x);
+}
+
+// 1の個数が奇数なら1, 偶数なら0を返す
+i64 BIT_PARITY(i64 x) {
+    return __builtin_parityll(x);
+}
+
+// X ⊆ {0,1,...,n-1}, |X| = k なる部分集合 X を昇順に列挙する
+// comb(n,k) 個
+//
+// ```
+// i64 x = BIT_I_1(3);
+// do {
+//     // ...
+// } while(BIT_NEXT_SET_SIZED(x, 10));
+// ```
+bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
+    if(x == 0) return false;
+    i64 t = (x|(x-1)) + 1;
+    x = t | ((~x&(x-1)) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
+    return x < BIT_I(n);
+}
+
+// 集合 Y の部分集合 X を昇順に列挙する
+// 2^|Y| 個
+//
+// ```
+// i64 y = 0b10101;
+// i64 x = 0;
+// do {
+//     // ...
+// } while(BIT_NEXT_SUBSET(x, y));
+// ```
+bool BIT_NEXT_SUBSET(i64& x, i64 y) {
+    if(x == y) return false;
+    x = (x-y) & y;
+    return true;
+}
+
+// 集合 Y の部分集合 X を降順に列挙する
+// 2^|Y| 個
+//
+// ```
+// i64 y = 0b10101;
+// i64 x = y;
+// do {
+//     // ...
+// } while(BIT_PREV_SUBSET(x, y));
+// ```
+bool BIT_PREV_SUBSET(i64& x, i64 y) {
+    if(x == 0) return false;
+    x = (x-1) & y;
+    return true;
+}
+
+// 集合 Y を包含する集合 X ⊆ {0,1,...,n-1} を昇順に列挙する
+// 2^(n-|Y|) 個
+//
+// ```
+// i64 y = 0b00010101;
+// i64 x = y;
+// do {
+//     // ...
+// } while(BIT_NEXT_SUPERSET(x, 8, y));
+// ```
+bool BIT_NEXT_SUPERSET(i64& x, i64 n, i64 y) {
+    x = (x+1) | y;
+    return x < BIT_I(n);
+}
+// }}}
+
 // lo:OK, hi:NG
 template<class Pred>
 i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
