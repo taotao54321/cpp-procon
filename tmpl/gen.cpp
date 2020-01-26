@@ -10,9 +10,11 @@ void gen() {
 }
 
 signed main() {
-    
-
-    gen();
+    i64 T = 1;
+    // PRINTLN(T);
+    REP(_, T) {
+        gen();
+    }
 
     EXIT();
 }
