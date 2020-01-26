@@ -39,15 +39,15 @@ template<class T> constexpr T PROCON_INF();
 template<> constexpr i64  PROCON_INF<i64>()  { return INT64_C(1'010'000'000'000'000'017); }
 template<> constexpr Real PROCON_INF<Real>() { return Real(1e100L); }
 
-constexpr i64  INF  = PROCON_INF<i64>();
-constexpr Real FINF = PROCON_INF<Real>();
-
 constexpr i64 MOD = INT64_C(1'000'000'007);
 //constexpr i64 MOD = INT64_C(998'244'353);
 
 constexpr Real EPS = Real(1e-10L);
 
 // util {{{
+constexpr i64  INF  = PROCON_INF<i64>();
+constexpr Real FINF = PROCON_INF<Real>();
+
 constexpr Real PI = Real(3.141592653589793238462643383279502884197L);
 
 bool LT_EPS(Real lhs, Real rhs, Real eps=EPS) { return lhs < rhs-eps; }
