@@ -875,39 +875,24 @@ public:
         ASSERT(g == 1);
         return ModIntT(x);
     }
+
+    friend ModIntT operator+(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) += rhs; }
+    friend ModIntT operator+(ModIntT lhs, i64 rhs)     { return ModIntT(lhs) += rhs; }
+    friend ModIntT operator+(i64 lhs, ModIntT rhs)     { return ModIntT(rhs) += lhs; }
+    friend ModIntT operator-(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) -= rhs; }
+    friend ModIntT operator-(ModIntT lhs, i64 rhs)     { return ModIntT(lhs) -= rhs; }
+    friend ModIntT operator-(i64 lhs, ModIntT rhs)     { return ModIntT(rhs) -= lhs; }
+    friend ModIntT operator*(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) *= rhs; }
+    friend ModIntT operator*(ModIntT lhs, i64 rhs)     { return ModIntT(lhs) *= rhs; }
+    friend ModIntT operator*(i64 lhs, ModIntT rhs)     { return ModIntT(rhs) *= lhs; }
+
+    friend bool operator==(ModIntT lhs, ModIntT rhs) { return i64(lhs) == i64(rhs); }
+    friend bool operator==(ModIntT lhs, i64 rhs)     { return lhs == ModIntT(rhs); }
+    friend bool operator==(i64 lhs, ModIntT rhs)     { return ModIntT(lhs) == rhs; }
+    friend bool operator!=(ModIntT lhs, ModIntT rhs) { return !(lhs == rhs); }
+    friend bool operator!=(ModIntT lhs, i64 rhs)     { return !(lhs == rhs); }
+    friend bool operator!=(i64 lhs, ModIntT rhs)     { return !(lhs == rhs); }
 };
-
-template<class Mod>
-ModIntT<Mod> operator+(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) += rhs; }
-template<class Mod>
-ModIntT<Mod> operator+(ModIntT<Mod> lhs, i64 rhs) { return ModIntT<Mod>(lhs) += rhs; }
-template<class Mod>
-ModIntT<Mod> operator+(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(rhs) += lhs; }
-template<class Mod>
-ModIntT<Mod> operator-(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) -= rhs; }
-template<class Mod>
-ModIntT<Mod> operator-(ModIntT<Mod> lhs, i64 rhs) { return ModIntT<Mod>(lhs) -= rhs; }
-template<class Mod>
-ModIntT<Mod> operator-(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(rhs) -= lhs; }
-template<class Mod>
-ModIntT<Mod> operator*(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) *= rhs; }
-template<class Mod>
-ModIntT<Mod> operator*(ModIntT<Mod> lhs, i64 rhs) { return ModIntT<Mod>(lhs) *= rhs; }
-template<class Mod>
-ModIntT<Mod> operator*(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(rhs) *= lhs; }
-
-template<class Mod>
-bool operator==(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return i64(lhs) == i64(rhs); }
-template<class Mod>
-bool operator==(ModIntT<Mod> lhs, i64 rhs) { return lhs == ModIntT<Mod>(rhs); }
-template<class Mod>
-bool operator==(i64 lhs, ModIntT<Mod> rhs) { return ModIntT<Mod>(lhs) == rhs; }
-template<class Mod>
-bool operator!=(ModIntT<Mod> lhs, ModIntT<Mod> rhs) { return !(lhs == rhs); }
-template<class Mod>
-bool operator!=(ModIntT<Mod> lhs, i64 rhs) { return !(lhs == rhs); }
-template<class Mod>
-bool operator!=(i64 lhs, ModIntT<Mod> rhs) { return !(lhs == rhs); }
 
 template<class Mod>
 struct ProconHash<ModIntT<Mod>> {
