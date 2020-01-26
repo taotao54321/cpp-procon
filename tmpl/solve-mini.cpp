@@ -163,16 +163,6 @@ auto GT_ON(F&& f) {
     return ON(greater<>{}, forward<F>(f));
 }
 
-template<class F>
-auto EQ_ON(F&& f) {
-    return ON(equal_to<>{}, forward<F>(f));
-}
-
-template<class F>
-auto NE_ON(F&& f) {
-    return ON(not_equal_to<>{}, forward<F>(f));
-}
-
 // tuple {{{
 template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(tuple<TS...>&, F&&) {}
