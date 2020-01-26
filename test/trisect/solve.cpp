@@ -14,7 +14,7 @@ signed main() {
     }
     {
         f64 x = trisect_max_real(-100.0, 100.0, f<f64>);
-        ASSERT(feq(x, 2.0, 1e-5));
+        ASSERT(EQ_EPS(x, 2.0, 1e-5));
     }
 
     EXIT();

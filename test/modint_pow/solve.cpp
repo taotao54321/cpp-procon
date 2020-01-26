@@ -1,12 +1,11 @@
 #include "procon.hpp"
-#include "num.hpp"
 
 signed main() {
     i64 M = RD();
     i64 N = RD();
 
-    ModP m(M);
-    ModP ans = pow_binary(m, N);
+    ModInt m(M);
+    ModInt ans = m.pow(N);
 
     PRINTLN(ans);
 

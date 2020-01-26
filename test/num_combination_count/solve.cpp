@@ -12,7 +12,7 @@ signed main() {
     auto           comb_f = combination_count_func<H,W>();
 
     REP(n, H) REP(r, W) {
-        ModP ans = combination_count_fac(n, r, fac, ifac);
+        ModInt ans = combination_count_fac(n, r, fac, ifac);
         ASSERT(ans == comb[n][r]);
         ASSERT(ans == comb_f(n,r));
     }
