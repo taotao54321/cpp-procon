@@ -9,10 +9,10 @@ signed main() {
     using Action = i64;            // 区間に一様に加える値
     auto seg = make_segtree_rq<Monoid,Action>(
         /* fm= */ [](const Monoid& m1, const Monoid& m2) {
-            return Monoid(FST(m1)+FST(m2), SND(m1)+SND(m2));
+            return Monoid(m1.first+m2.first, m1.second+m2.second);
         },
         /* fa= */ [](const Monoid& m, Action a) {
-            return Monoid(FST(m)+a*SND(m), SND(m));
+            return Monoid(m.first+a*m.second, m.second);
         },
         /* unity_monoid= */ Monoid(0,1),
         /* n= */ N
@@ -28,7 +28,7 @@ signed main() {
         else if(cmd == 1) {
             i64 s = RD1();
             i64 t = RD1();
-            i64 ans = FST(seg.query(s, t-s+1));
+            i64 ans = seg.query(s, t-s+1).first;
             PRINTLN(ans);
         }
         else {

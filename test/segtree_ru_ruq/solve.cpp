@@ -27,7 +27,7 @@ signed main() {
         }
         else if(cmd == 1) {
             i64 i = RD();
-            i64 ans = SND(seg.query(i));
+            i64 ans = seg.query(i).second;
             PRINTLN(ans);
         }
         else {
