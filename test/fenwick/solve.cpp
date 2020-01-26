@@ -4,13 +4,14 @@
 
 signed main() {
     i64 N = RD();
-    auto A = RD_ARRAY(N);
+    auto A = RD_VEC(N);
 
     // A を座標圧縮して [0,N) にする
     vector<i64> xs(A);
     unordered_map<i64,i64> m;
     coord_compress(xs, m);
-    ALL(transform_self, A, [&m](i64 e) { return m[e]; });
+    for(i64& e : A)
+        e = m[e];
 
     Fenwick<i64> fen(N);
     i64 ans = 0;
