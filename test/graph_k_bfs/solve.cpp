@@ -6,12 +6,12 @@ i64 vertex(i64 station, i64 company) {
     static Serial serial(0);
     static HashMap<pair<i64,i64>,i64> m;
 
-    auto key = PAIR(station, company);
+    auto key = make_pair(station, company);
     auto it = m.find(key);
     if(it == end(m))
-        it = m.insert(it, PAIR(key,serial.next()));
+        it = m.insert(it, make_pair(key,serial.next()));
 
-    return SND(*it);
+    return it->second;
 }
 
 signed main() {

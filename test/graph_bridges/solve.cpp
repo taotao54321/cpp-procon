@@ -18,7 +18,7 @@ signed main() {
 
     ALL(sort, bridges);
 
-    ALL(for_each, bridges, GENERIC(PRINTLN));
+    ALL(for_each, bridges, LIFT(PRINTLN));
 
     EXIT();
 }

@@ -18,7 +18,7 @@ signed main() {
 
     ALL(sort, articulations);
 
-    ALL(for_each, articulations, GENERIC(PRINTLN));
+    ALL(for_each, articulations, LIFT(PRINTLN));
 
     EXIT();
 }

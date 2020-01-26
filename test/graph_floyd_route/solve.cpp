@@ -14,7 +14,7 @@ void solve(i64 N) {
         ps[b] = { x, y };
     }
 
-    auto G = graph_make_matrix<f64>(N);
+    auto G = graph_make_matrix<Real>(N);
     REP(i, N) REP(j, N) {
         const Pos& p1 = ps[i];
         const Pos& p2 = ps[j];
@@ -44,7 +44,7 @@ void solve(i64 N) {
         }
         route.emplace_back(g);
 
-        ALL(transform_self, route, [](i64 e) { return e+1; });  // 1-based
+        for(i64& v : route) ++v;  // 1-based
         PRINTLN(route);
     }
 }

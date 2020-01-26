@@ -10,7 +10,7 @@ signed main() {
     i64 N = RD();
     i64 M = RD();
 
-    auto G = arrayn_make<i64>(N,N, 0);
+    auto G = vec_make<i64>(N,N, 0);
     i64 v_any = -1;
     REP(_, M) {
         i64 s = RD();
@@ -24,7 +24,7 @@ signed main() {
     i64 cnt = 0;
     vector<i64> odds;
     REP(i, N) {
-        i64 d = FST(degs[i]);
+        i64 d = degs[i].first;
         if(d > 0)
             ++cnt;
         if(is_odd(d))

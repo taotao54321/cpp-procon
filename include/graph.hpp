@@ -40,7 +40,7 @@ bool graph_is_tree(const vector<vector<i64>>& g) {
     ASSERT(n > 0);
 
     i64 edge_cnt = 0;
-    BoolArray visited(n, false);
+    vector<bool> visited(n, false);
     auto dfs = FIX([&g,&edge_cnt,&visited](auto&& self, i64 v) -> void {
         visited[v] = true;
         for(i64 to : g[v]) {
@@ -51,7 +51,7 @@ bool graph_is_tree(const vector<vector<i64>>& g) {
     });
     dfs(0);
 
-    bool connected = ALL(all_of, visited, IDENTITY());
+    bool connected = ALL(all_of, visited, [](bool b) { return b; });
 
     return edge_cnt == n-1 && connected;
 }
@@ -95,7 +95,7 @@ tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g
     vector<T> d(n, PROCON_INF<T>());
     vector<i64> parent(n, -1);
 
-    MinHeap<pair<T,i64>> que;
+    auto que = priority_queue_make<pair<T,i64>>(greater<>{});
 
     d[start] = T(0);
     que.emplace(T(0), start);
@@ -222,7 +222,7 @@ tuple<vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i6
     vector<i64> parent(n, -1);
 
     queue<i64> que;
-    BoolArray in_que(n, false);
+    vector<bool> in_que(n, false);
     const auto enqueue = [&que,&in_que](i64 v) { que.emplace(v); in_que[v] = true; };
     const auto dequeue = [&que,&in_que]() { i64 v = POP(que); in_que[v] = false; return v; };
 
@@ -382,8 +382,8 @@ vector<pair<i64,i64>> graph_degrees_list(const vector<vector<i64>>& g) {
 
     REP(from, n) {
         for(i64 to : g[from]) {
-            ++SND(res[from]);
-            ++FST(res[to]);
+            ++res[from].second;
+            ++res[to].first;
         }
     }
 
@@ -397,8 +397,8 @@ vector<pair<i64,i64>> graph_degrees_matrix(const vector<vector<i64>>& g) {
 
     REP(from, n) REP(to, n) {
         i64 k = g[from][to];
-        SND(res[from]) += k;
-        FST(res[to])   += k;
+        res[from].second += k;
+        res[to].first    += k;
     }
 
     return res;

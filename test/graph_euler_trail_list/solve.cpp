@@ -24,7 +24,7 @@ signed main() {
     i64 cnt = 0;
     vector<i64> odds;
     REP(i, N) {
-        i64 d = FST(degs[i]);
+        i64 d = degs[i].first;
         if(d > 0)
             ++cnt;
         if(is_odd(d))
