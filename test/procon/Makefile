@@ -18,7 +18,6 @@ CXXFLAGS := \
     -Wswitch-default \
     -Wswitch-enum \
     -Wundef \
-    -Wuseless-cast \
     -Wvla \
     -Wzero-as-null-pointer-constant \
     -g -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG \

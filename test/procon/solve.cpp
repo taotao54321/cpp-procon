@@ -81,30 +81,6 @@ void test_bit() {  // {{{
     ASSERT(BIT_COUNT_TRAILING_ONES(-2) == 0);
     ASSERT(BIT_COUNT_TRAILING_ONES((1LL<<62)-1) == 62);
 
-    ASSERT(BIT_MASK_TRAILING_ZEROS(0) == -1);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(1) == 0);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(2) == 1);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(3) == 0);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(4) == 3);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(0b1011) == 0);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(0b1100) == 3);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(-1) == 0);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(-2) == 1);
-    ASSERT(BIT_MASK_TRAILING_ZEROS(1LL<<62) == (1LL<<62)-1);
-    ASSERT(BIT_MASK_TRAILING_ZEROS((1LL<<62)-1) == 0);
-
-    ASSERT(BIT_MASK_TRAILING_ONES(0) == 0);
-    ASSERT(BIT_MASK_TRAILING_ONES(1) == 1);
-    ASSERT(BIT_MASK_TRAILING_ONES(2) == 0);
-    ASSERT(BIT_MASK_TRAILING_ONES(3) == 3);
-    ASSERT(BIT_MASK_TRAILING_ONES(4) == 0);
-    ASSERT(BIT_MASK_TRAILING_ONES(0b1011) == 3);
-    ASSERT(BIT_MASK_TRAILING_ONES(0b1100) == 0);
-    ASSERT(BIT_MASK_TRAILING_ONES(-1) == -1);
-    ASSERT(BIT_MASK_TRAILING_ONES(-2) == 0);
-    ASSERT(BIT_MASK_TRAILING_ONES(1LL<<62) == 0);
-    ASSERT(BIT_MASK_TRAILING_ONES((1LL<<62)-1) == (1LL<<62)-1);
-
     ASSERT(BIT_COUNT_ZEROS(0) == 64);
     ASSERT(BIT_COUNT_ZEROS(1) == 63);
     ASSERT(BIT_COUNT_ZEROS(0b1100) == 62);
@@ -117,109 +93,12 @@ void test_bit() {  // {{{
     ASSERT(BIT_COUNT_ONES(-1) == 64);
     ASSERT(BIT_COUNT_ONES((1LL<<62)-1) == 62);
 
-    ASSERT(BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(0) == 63);
-    ASSERT(BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(1) == 62);
-    ASSERT(BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(0b1100) == 59);
-    ASSERT(BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(-1) == 63);
-    ASSERT(BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS((1LL<<62)-1) == 1);
-    ASSERT(BIT_COUNT_LEADING_REDUNDANT_SIGN_BITS(-2) == 62);
-
     ASSERT(BIT_PARITY(0) == 0);
     ASSERT(BIT_PARITY(1) == 1);
     ASSERT(BIT_PARITY(0b1100) == 0);
     ASSERT(BIT_PARITY(-1) == 0);
     ASSERT(BIT_PARITY((1LL<<62)-1) == 0);
     ASSERT(BIT_PARITY((1LL<<61)-1) == 1);
-
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(0) == 1);
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(1) == 2);
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(2) == 1);
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(3) == 4);
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(4) == 1);
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(6) == 1);
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(-1) == 0);
-    ASSERT(BIT_EXTRACT_FIRST_ZERO(-2) == 1);
-
-    ASSERT(BIT_EXTRACT_FIRST_ONE(0) == 0);
-    ASSERT(BIT_EXTRACT_FIRST_ONE(1) == 1);
-    ASSERT(BIT_EXTRACT_FIRST_ONE(2) == 2);
-    ASSERT(BIT_EXTRACT_FIRST_ONE(3) == 1);
-    ASSERT(BIT_EXTRACT_FIRST_ONE(4) == 4);
-    ASSERT(BIT_EXTRACT_FIRST_ONE(6) == 2);
-    ASSERT(BIT_EXTRACT_FIRST_ONE(-1) == 1);
-    ASSERT(BIT_EXTRACT_FIRST_ONE(-2) == 2);
-
-    ASSERT(BIT_FLIP_FIRST_ZERO(0) == 1);
-    ASSERT(BIT_FLIP_FIRST_ZERO(1) == 3);
-    ASSERT(BIT_FLIP_FIRST_ZERO(2) == 3);
-    ASSERT(BIT_FLIP_FIRST_ZERO(3) == 7);
-    ASSERT(BIT_FLIP_FIRST_ZERO(4) == 5);
-    ASSERT(BIT_FLIP_FIRST_ZERO(6) == 7);
-    ASSERT(BIT_FLIP_FIRST_ZERO(-1) == -1);
-    ASSERT(BIT_FLIP_FIRST_ZERO(-2) == -1);
-
-    ASSERT(BIT_FLIP_FIRST_ONE(0) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONE(1) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONE(2) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONE(3) == 2);
-    ASSERT(BIT_FLIP_FIRST_ONE(4) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONE(6) == 4);
-    ASSERT(BIT_FLIP_FIRST_ONE(-1) == -2);
-    ASSERT(BIT_FLIP_FIRST_ONE(-2) == -4);
-
-    ASSERT(BIT_FIND_FIRST_ZERO(0) == 1);
-    ASSERT(BIT_FIND_FIRST_ZERO(1) == 2);
-    ASSERT(BIT_FIND_FIRST_ZERO(0b1100) == 1);
-    ASSERT(BIT_FIND_FIRST_ZERO(0b1111) == 5);
-    ASSERT(BIT_FIND_FIRST_ZERO(-1) == 0);
-    ASSERT(BIT_FIND_FIRST_ZERO((1LL<<62)-1) == 63);
-
-    ASSERT(BIT_FIND_FIRST_ONE(0) == 0);
-    ASSERT(BIT_FIND_FIRST_ONE(1) == 1);
-    ASSERT(BIT_FIND_FIRST_ONE(0b1100) == 3);
-    ASSERT(BIT_FIND_FIRST_ONE(-1) == 1);
-    ASSERT(BIT_FIND_FIRST_ONE((1LL<<62)-1) == 1);
-
-    ASSERT(BIT_PROPAGATE_FIRST_ZERO(0) == 0);
-    ASSERT(BIT_PROPAGATE_FIRST_ZERO(1) == 0);
-    ASSERT(BIT_PROPAGATE_FIRST_ZERO(0b101011) == 0b101000);
-    ASSERT(BIT_PROPAGATE_FIRST_ZERO(-1) == -1);
-    ASSERT(BIT_PROPAGATE_FIRST_ZERO((1LL<<62)-1) == 0);
-
-    ASSERT(BIT_PROPAGATE_FIRST_ONE(0) == 0);
-    ASSERT(BIT_PROPAGATE_FIRST_ONE(1) == 1);
-    ASSERT(BIT_PROPAGATE_FIRST_ONE(0b110100) == 0b110111);
-    ASSERT(BIT_PROPAGATE_FIRST_ONE(-1) == -1);
-    ASSERT(BIT_PROPAGATE_FIRST_ONE(1LL<<62) == numeric_limits<i64>::max());
-
-    ASSERT(BIT_MASKTO_FIRST_ZERO(0) == 1);
-    ASSERT(BIT_MASKTO_FIRST_ZERO(1) == 3);
-    ASSERT(BIT_MASKTO_FIRST_ZERO(0b101011) == 0b000111);
-    ASSERT(BIT_MASKTO_FIRST_ZERO(-1) == 0);
-    ASSERT(BIT_MASKTO_FIRST_ZERO((1LL<<62)-1) == numeric_limits<i64>::max());
-
-    ASSERT(BIT_MASKTO_FIRST_ONE(0) == 0);
-    ASSERT(BIT_MASKTO_FIRST_ONE(1) == 1);
-    ASSERT(BIT_MASKTO_FIRST_ONE(4) == 7);
-    ASSERT(BIT_MASKTO_FIRST_ONE(0b110100) == 0b000111);
-    ASSERT(BIT_MASKTO_FIRST_ONE(-1) == 1);
-    ASSERT(BIT_MASKTO_FIRST_ONE(1LL<<62) == numeric_limits<i64>::max());
-
-    ASSERT(BIT_FLIP_FIRST_ZEROS(0) == -1);
-    ASSERT(BIT_FLIP_FIRST_ZEROS(1) == -1);
-    ASSERT(BIT_FLIP_FIRST_ZEROS(4) == 7);
-    ASSERT(BIT_FLIP_FIRST_ZEROS(0b101001) == 0b101111);
-    ASSERT(BIT_FLIP_FIRST_ZEROS(-1) == -1);
-    ASSERT(BIT_FLIP_FIRST_ZEROS(1LL<<62) == numeric_limits<i64>::max());
-    ASSERT(BIT_FLIP_FIRST_ZEROS((1LL<<62)-1) == -1);
-
-    ASSERT(BIT_FLIP_FIRST_ONES(0) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONES(1) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONES(4) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONES(0b110110) == 0b110000);
-    ASSERT(BIT_FLIP_FIRST_ONES(-1) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONES(1LL<<50) == 0);
-    ASSERT(BIT_FLIP_FIRST_ONES((1LL<<50)-1) == 0);
 
     {
         i64 x = 0;
@@ -308,54 +187,7 @@ void test_log2() {
     ASSERT(log2_floor((1LL<<62)+1) == 62);
 }
 
-void test_log10() {
-    ASSERT(log10_ceil(1) == 0);
-    ASSERT(log10_ceil(2) == 1);
-    ASSERT(log10_ceil(9) == 1);
-    ASSERT(log10_ceil(10) == 1);
-    ASSERT(log10_ceil(11) == 2);
-    ASSERT(log10_ceil(50) == 2);
-    ASSERT(log10_ceil(100) == 2);
-    ASSERT(log10_ceil(  999'999'999LL) == 9);
-    ASSERT(log10_ceil(1'000'000'000LL) == 9);
-    ASSERT(log10_ceil(5'000'000'000LL) == 10);
-    ASSERT(log10_ceil(  999'999'999'999'999'999LL) == 18);
-    ASSERT(log10_ceil(1'000'000'000'000'000'000LL) == 18);
-    ASSERT(log10_ceil(5'000'000'000'000'000'000LL) == 19);
-
-    ASSERT(log10_floor(1) == 0);
-    ASSERT(log10_floor(2) == 0);
-    ASSERT(log10_floor(9) == 0);
-    ASSERT(log10_floor(10) == 1);
-    ASSERT(log10_floor(11) == 1);
-    ASSERT(log10_floor(50) == 1);
-    ASSERT(log10_floor(100) == 2);
-    ASSERT(log10_floor(  999'999'999LL) == 8);
-    ASSERT(log10_floor(1'000'000'000LL) == 9);
-    ASSERT(log10_floor(5'000'000'000LL) == 9);
-    ASSERT(log10_floor(  999'999'999'999'999'999LL) == 17);
-    ASSERT(log10_floor(1'000'000'000'000'000'000LL) == 18);
-    ASSERT(log10_floor(5'000'000'000'000'000'000LL) == 18);
-}
-
 void test_pow2() {
-    ASSERT( is_mersenne(0));
-    ASSERT( is_mersenne(1));
-    ASSERT(!is_mersenne(2));
-    ASSERT( is_mersenne(3));
-    ASSERT(!is_mersenne(4));
-    ASSERT(!is_mersenne(5));
-    ASSERT(!is_mersenne(13));
-    ASSERT(!is_mersenne(1LL<<62));
-    ASSERT( is_mersenne((1LL<<62)-1));
-
-    ASSERT( is_pow2(1));
-    ASSERT( is_pow2(2));
-    ASSERT(!is_pow2(3));
-    ASSERT( is_pow2(4));
-    ASSERT( is_pow2(1LL<<62));
-    ASSERT(!is_pow2((1LL<<62)-1));
-
     ASSERT(pow2_ceil(1) == 1);
     ASSERT(pow2_ceil(2) == 2);
     ASSERT(pow2_ceil(3) == 4);
@@ -397,7 +229,7 @@ void test_align() {
     ASSERT(align_floor(-11,10) == -20);
 }
 
-void test_max_min_clamp() {
+void test_max_min() {
     {
         i64 x = 5;
         i64 y = 6;
@@ -448,42 +280,6 @@ void test_max_min_clamp() {
         //MIN("", 0);
         //MIN(0, string{});
     }
-    {
-        i64 x = 3;
-        ASSERT(CLAMP(x, 0, 5) == 3);
-        ASSERT(CLAMP(x, 5, 9) == 5);
-        ASSERT(CLAMP(x, 0, 1) == 1);
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-        f64 y = 3.0;
-        ASSERT(CLAMP(y, 0.0, 5.0) == 3.0);
-        ASSERT(CLAMP(y, 5.0, 9.0) == 5.0);
-        ASSERT(CLAMP(y, 0.0, 1.0) == 1.0);
-#pragma GCC diagnostic pop
-
-        string s("foo");
-        ASSERT(CLAMP(s, string("a"), string("z")) == "foo");
-        ASSERT(CLAMP(s, string("h"), string("z")) == "h");
-        ASSERT(CLAMP(s, string("a"), string("d")) == "d");
-    }
-}
-
-void test_fst_snd() {
-    {
-        pair<i64,string> p(5, "foo");
-        FST(p) = 3;
-        SND(p) = "bar";
-        ASSERT(FST(p) == 3);
-        ASSERT(SND(p) == "bar");
-    }
-    {
-        tuple<i64,string,char> t(5, "foo", 'z');
-        FST(t) = 3;
-        SND(t) = "bar";
-        ASSERT(FST(t) == 3);
-        ASSERT(SND(t) == "bar");
-    }
 }
 
 void test_digit_conv() {
@@ -493,12 +289,12 @@ void test_digit_conv() {
 
     {
         string res(10, '\0');
-        ALL(transform, ds, begin(res), digit_chr);
+        ALL(transform, ds, begin(res), chr_digit);
         ASSERT(res == cs);
     }
     {
         vector<i64> res(10);
-        ALL(transform, cs, begin(res), digit_ord);
+        ALL(transform, cs, begin(res), ord_digit);
         ASSERT(res == ds);
     }
 }
@@ -511,12 +307,12 @@ void test_lower_conv() {
 
     {
         string res;
-        ALL(transform, ds, back_inserter(res), lower_chr);
+        ALL(transform, ds, back_inserter(res), chr_lower);
         ASSERT(res == cs);
     }
     {
         vector<i64> res;
-        ALL(transform, cs, back_inserter(res), lower_ord);
+        ALL(transform, cs, back_inserter(res), ord_lower);
     }
 }
 
@@ -528,31 +324,31 @@ void test_upper_conv() {
 
     {
         string res;
-        ALL(transform, ds, back_inserter(res), upper_chr);
+        ALL(transform, ds, back_inserter(res), chr_upper);
         ASSERT(res == cs);
     }
     {
         vector<i64> res;
-        ALL(transform, cs, back_inserter(res), upper_ord);
+        ALL(transform, cs, back_inserter(res), ord_upper);
     }
 }
 
 void test_fmt() {
     {
         vector<i64> v { 3, 1, 5, 4, 2 };
-        ASSERT(TO_STR(v) == "3 1 5 4 2");
-        ASSERT(TO_REPR(v) == "vector[3, 1, 5, 4, 2]");
+        ASSERT(FMT_STR(v) == "3 1 5 4 2");
+        ASSERT(DBG_STR(v) == "[3,1,5,4,2]");
     }
 
     {
-        ASSERT(TO_STR(make_tuple()) == "");
-        ASSERT(TO_REPR(make_tuple()) == "()");
+        ASSERT(FMT_STR(make_tuple()) == "");
+        ASSERT(DBG_STR(make_tuple()) == "()");
     }
 
     {
         auto t = make_tuple(1, "foo", make_pair(3,4));
-        ASSERT(TO_STR(t) == "1 foo 3 4");
-        ASSERT(TO_REPR(t) == "(1,foo,(3,4))");
+        ASSERT(FMT_STR(t) == "1 foo 3 4");
+        ASSERT(DBG_STR(t) == "(1,foo,(3,4))");
     }
 }
 
@@ -561,13 +357,10 @@ signed main() {
 
     test_sqrt();
     test_log2();
-    test_log10();
     test_pow2();
     test_align();
 
-    test_max_min_clamp();
-
-    test_fst_snd();
+    test_max_min();
 
     test_digit_conv();
     test_lower_conv();

@@ -95,9 +95,18 @@ constexpr i64 SGN(T x) noexcept { return CMP(x,T(0)); }
 
 template<class T1, class T2, class Comp=less<>,
          SFINAE(
-             is_arithmetic<T1>::value &&
-             is_arithmetic<T2>::value &&
+             is_integral<T1>::value &&
+             is_integral<T2>::value &&
              is_signed<T1>::value != is_unsigned<T2>::value
+         )>
+constexpr auto MAX(T1 x, T2 y, Comp comp={}) {
+    return max<common_type_t<T1,T2>>({x,y}, comp);
+}
+
+template<class T1, class T2, class Comp=less<>,
+         SFINAE(
+             is_floating_point<T1>::value &&
+             is_floating_point<T2>::value
          )>
 constexpr auto MAX(T1 x, T2 y, Comp comp={}) {
     return max<common_type_t<T1,T2>>({x,y}, comp);
@@ -115,9 +124,18 @@ constexpr T MAX(initializer_list<T> ilist, Comp comp={}) {
 
 template<class T1, class T2, class Comp=less<>,
          SFINAE(
-             is_arithmetic<T1>::value &&
-             is_arithmetic<T2>::value &&
+             is_integral<T1>::value &&
+             is_integral<T2>::value &&
              is_signed<T1>::value != is_unsigned<T2>::value
+         )>
+constexpr auto MIN(T1 x, T2 y, Comp comp={}) {
+    return min<common_type_t<T1,T2>>({x,y}, comp);
+}
+
+template<class T1, class T2, class Comp=less<>,
+         SFINAE(
+             is_floating_point<T1>::value &&
+             is_floating_point<T2>::value
          )>
 constexpr auto MIN(T1 x, T2 y, Comp comp={}) {
     return min<common_type_t<T1,T2>>({x,y}, comp);
@@ -250,7 +268,7 @@ i64 BIT_PARITY(i64 x) {
 bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
     if(x == 0) return false;
     i64 t = (x|(x-1)) + 1;
-    x = t | ((~x&(x-1)) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
+    x = t | ((~t&(t-1)) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
     return x < BIT_I(n);
 }
 
@@ -882,6 +900,13 @@ void fmt_write(ostream& out, const T& x) {
     Fmt<T>::fmt(out, x);
 }
 
+template<class T>
+string FMT_STR(const T& x) {
+    ostringstream out;
+    fmt_write(out, x);
+    return out.str();
+}
+
 template<class... TS>
 struct Fmt<tuple<TS...>> {
     static void fmt(ostream& out, const tuple<TS...>& t) {
@@ -936,6 +961,13 @@ struct Dbg {
 template<class T>
 void dbg_write(ostream& out, const T& x) {
     Dbg<T>::dbg(out, x);
+}
+
+template<class T>
+string DBG_STR(const T& x) {
+    ostringstream out;
+    dbg_write(out, x);
+    return out.str();
 }
 
 template<>
