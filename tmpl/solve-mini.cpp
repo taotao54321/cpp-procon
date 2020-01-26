@@ -255,6 +255,17 @@ auto SUM(InputIt first, InputIt last) {
     return FOLD1(first, last, plus<>{});
 }
 
+template<class C>
+void UNIQ(C& c) {
+    c.erase(ALL(unique,c), end(c));
+}
+
+template<class C>
+void SORT_UNIQ(C& c) {
+    ALL(sort, c);
+    UNIQ(c);
+}
+
 // tuple {{{
 template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(tuple<TS...>&, F&&) {}
