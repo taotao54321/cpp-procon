@@ -5,9 +5,9 @@
 void solve() {
     i64 N = RD();
     i64 K = RD();
-    auto A = RD_ARRAY(N);
+    auto A = RD_VEC(N);
 
-    auto f = MEMOIZE<100001>([&A](auto&& self, i64 n) -> bool {
+    auto f = FIXMEMO<100001>([&A](auto&& self, i64 n) -> bool {
         for(i64 a : A) {
             if(n >= a && !self(n-a))
                 return true;
