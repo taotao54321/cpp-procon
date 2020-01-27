@@ -231,25 +231,13 @@ constexpr i64 BIT_COUNT_LEADING_ZEROS(i64 x) {
     return __builtin_clzll(x);
 }
 
-constexpr i64 BIT_COUNT_LEADING_ONES(i64 x) {
-    return BIT_COUNT_LEADING_ZEROS(~x);
-}
-
 constexpr i64 BIT_COUNT_TRAILING_ZEROS(i64 x) {
     if(x == 0) return 64;
     return __builtin_ctzll(x);
 }
 
-constexpr i64 BIT_COUNT_TRAILING_ONES(i64 x) {
-    return BIT_COUNT_TRAILING_ZEROS(~x);
-}
-
 constexpr i64 BIT_COUNT_ONES(i64 x) {
     return __builtin_popcountll(x);
-}
-
-constexpr i64 BIT_COUNT_ZEROS(i64 x) {
-    return 64 - BIT_COUNT_ONES(x);
 }
 
 // 1の個数が奇数なら1, 偶数なら0を返す
