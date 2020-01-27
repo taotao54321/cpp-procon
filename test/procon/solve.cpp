@@ -260,6 +260,31 @@ void test_max_min() {
     }
 }
 
+void test_vec() {
+    {
+        auto v = vec_make<i64>(4,3, 1);
+        ASSERT(v == vector<vector<i64>>{ {1,1,1},{1,1,1},{1,1,1},{1,1,1} });
+    }
+
+    {
+        auto v1 = vec_iota(6);
+        ASSERT(v1 == vector<i64>{ 0, 1, 2, 3, 4, 5 });
+
+        auto v2 = vec_iota(5, 2);
+        ASSERT(v2 == vector<i64>{ 2, 3, 4, 5, 6 });
+    }
+
+    {
+        vector<i64> v{ 3, 1, 4, 1, 5, 9, 2 };
+
+        auto cum = ALL(vec_cum, v);
+        ASSERT(cum == vector<i64>{ 0, 3, 4, 8, 9, 14, 23, 25 });
+
+        auto cum_xor = ALL(vec_scan, v, 0, bit_xor<>{});
+        ASSERT(cum_xor == vector<i64>{ 0, 3, 2, 6, 7, 2, 11, 9 });
+    }
+}
+
 void test_digit_conv() {
     string cs("0123456789");
     vector<i64> ds(10);
@@ -339,6 +364,8 @@ signed main() {
     test_align();
 
     test_max_min();
+
+    test_vec();
 
     test_digit_conv();
     test_lower_conv();
