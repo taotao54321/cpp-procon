@@ -611,6 +611,26 @@ auto vec_iota(i64 n, T init={}) {
     return res;
 }
 
+template<class InputIt, class BinaryOp>
+auto vec_scan(InputIt first, InputIt last,
+              typename iterator_traits<InputIt>::value_type init,
+              BinaryOp op)
+{
+    using T = typename iterator_traits<InputIt>::value_type;
+    vector<T> res { init };
+    for(; first != last; ++first) {
+        init = op(move(init), *first);
+        res.emplace_back(init);
+    }
+    return res;
+}
+
+template<class InputIt>
+auto vec_cum(InputIt first, InputIt last) {
+    using T = typename iterator_traits<InputIt>::value_type;
+    return vec_scan(first, last, T{}, plus<>{});
+}
+
 template<class T, class Comp, class Cont=vector<T>>
 auto priority_queue_make(const Comp& comp, Cont&& cont={}) {
     return priority_queue<T,remove_reference_t<Cont>,Comp>(comp, forward<Cont>(cont));
