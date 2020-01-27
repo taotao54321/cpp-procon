@@ -44,7 +44,7 @@ struct Cum2 {
         built_ = true;
     }
 
-    Abel query(i64 y1, i64 x1, i64 y2, i64 x2) {
+    Abel query(i64 y1, i64 x1, i64 y2, i64 x2) const {
 #ifdef PROCON_LOCAL
         ASSERT(built_);
         ASSERT(y1 <= y2 && x1 <= x2);
