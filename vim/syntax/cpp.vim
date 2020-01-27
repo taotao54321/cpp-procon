@@ -30,7 +30,7 @@ syntax keyword cppStatement assert ASSERT
 
 syntax keyword cppStatement SFINAE
 
-syntax keyword cRepeat REP FOR
+syntax keyword cRepeat REP FOR LOOP
 
 syntax keyword cppStatement DBG DBG_DP DBG_GRID
 " }}}

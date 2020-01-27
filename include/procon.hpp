@@ -63,6 +63,7 @@ bool EQ_EXACT(Real lhs, Real rhs) {
 
 #define FOR(i, start, end) for(i64 i = (start), CPP_CAT(i,xxxx_end)=(end); i < CPP_CAT(i,xxxx_end); ++i)
 #define REP(i, n) FOR(i, 0, n)
+#define LOOP(n) REP(CPP_CAT(macro_loop_counter,__COUNTER__), n)
 
 #define ALL(f,c,...) (([&](decltype((c)) cccc) { return (f)(std::begin(cccc), std::end(cccc), ## __VA_ARGS__); })(c))
 #define SLICE(f,c,l,r,...) (([&](decltype((c)) cccc, decltype((l)) llll, decltype((r)) rrrr) {\
@@ -193,66 +194,66 @@ auto NOT_FN(F&& f) {
 
 // ビット演算 {{{
 // 引数は [-INF,INF] のみ想定
-i64 BIT_I(i64 i) {
+constexpr i64 BIT_I(i64 i) {
     return 1LL << i;
 }
 
-i64 BIT_I_1(i64 i) {
+constexpr i64 BIT_I_1(i64 i) {
     return BIT_I(i) - 1;
 }
 
-i64 BIT_GET(i64 x, i64 i) {
+constexpr i64 BIT_GET(i64 x, i64 i) {
     return x & BIT_I(i);
 }
 
-bool BIT_TEST(i64 x, i64 i) {
+constexpr bool BIT_TEST(i64 x, i64 i) {
     return BIT_GET(x,i) != 0;
 }
 
-i64 BIT_SET(i64 x, i64 i) {
+constexpr i64 BIT_SET(i64 x, i64 i) {
     return x | BIT_I(i);
 }
 
-i64 BIT_CLEAR(i64 x, i64 i) {
+constexpr i64 BIT_CLEAR(i64 x, i64 i) {
     return x & ~BIT_I(i);
 }
 
-i64 BIT_FLIP(i64 x, i64 i) {
+constexpr i64 BIT_FLIP(i64 x, i64 i) {
     return x ^ BIT_I(i);
 }
 
-i64 BIT_ASSIGN(i64 x, i64 i, bool b) {
+constexpr i64 BIT_ASSIGN(i64 x, i64 i, bool b) {
     return b ? BIT_SET(x,i) : BIT_CLEAR(x,i);
 }
 
-i64 BIT_COUNT_LEADING_ZEROS(i64 x) {
+constexpr i64 BIT_COUNT_LEADING_ZEROS(i64 x) {
     if(x == 0) return 64;
     return __builtin_clzll(x);
 }
 
-i64 BIT_COUNT_LEADING_ONES(i64 x) {
+constexpr i64 BIT_COUNT_LEADING_ONES(i64 x) {
     return BIT_COUNT_LEADING_ZEROS(~x);
 }
 
-i64 BIT_COUNT_TRAILING_ZEROS(i64 x) {
+constexpr i64 BIT_COUNT_TRAILING_ZEROS(i64 x) {
     if(x == 0) return 64;
     return __builtin_ctzll(x);
 }
 
-i64 BIT_COUNT_TRAILING_ONES(i64 x) {
+constexpr i64 BIT_COUNT_TRAILING_ONES(i64 x) {
     return BIT_COUNT_TRAILING_ZEROS(~x);
 }
 
-i64 BIT_COUNT_ONES(i64 x) {
+constexpr i64 BIT_COUNT_ONES(i64 x) {
     return __builtin_popcountll(x);
 }
 
-i64 BIT_COUNT_ZEROS(i64 x) {
+constexpr i64 BIT_COUNT_ZEROS(i64 x) {
     return 64 - BIT_COUNT_ONES(x);
 }
 
 // 1の個数が奇数なら1, 偶数なら0を返す
-i64 BIT_PARITY(i64 x) {
+constexpr i64 BIT_PARITY(i64 x) {
     return __builtin_parityll(x);
 }
 
@@ -265,7 +266,7 @@ i64 BIT_PARITY(i64 x) {
 //     // ...
 // } while(BIT_NEXT_SET_SIZED(x, 10));
 // ```
-bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
+constexpr bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
     if(x == 0) return false;
     i64 t = (x|(x-1)) + 1;
     x = t | ((~t&(t-1)) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
@@ -282,7 +283,7 @@ bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
 //     // ...
 // } while(BIT_NEXT_SUBSET(x, y));
 // ```
-bool BIT_NEXT_SUBSET(i64& x, i64 y) {
+constexpr bool BIT_NEXT_SUBSET(i64& x, i64 y) {
     if(x == y) return false;
     x = (x-y) & y;
     return true;
@@ -298,7 +299,7 @@ bool BIT_NEXT_SUBSET(i64& x, i64 y) {
 //     // ...
 // } while(BIT_PREV_SUBSET(x, y));
 // ```
-bool BIT_PREV_SUBSET(i64& x, i64 y) {
+constexpr bool BIT_PREV_SUBSET(i64& x, i64 y) {
     if(x == 0) return false;
     x = (x-1) & y;
     return true;
@@ -314,7 +315,7 @@ bool BIT_PREV_SUBSET(i64& x, i64 y) {
 //     // ...
 // } while(BIT_NEXT_SUPERSET(x, 8, y));
 // ```
-bool BIT_NEXT_SUPERSET(i64& x, i64 n, i64 y) {
+constexpr bool BIT_NEXT_SUPERSET(i64& x, i64 n, i64 y) {
     x = (x+1) | y;
     return x < BIT_I(n);
 }
@@ -322,7 +323,7 @@ bool BIT_NEXT_SUPERSET(i64& x, i64 n, i64 y) {
 
 // lo:OK, hi:NG
 template<class Pred>
-i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
+constexpr i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
     ASSERT(lo < hi);
 
     while(lo+1 < hi) {
@@ -336,10 +337,10 @@ i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
 }
 
 template<class Pred>
-Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
+constexpr Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
     ASSERT(lo < hi);
 
-    REP(_, iter) {
+    LOOP(iter) {
         Real mid = (lo+hi) / 2;
         if(pred(mid))
             lo = mid;
@@ -350,7 +351,7 @@ Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
 }
 
 template<class Monoid>
-Monoid fastpow(const Monoid& x, i64 e, const Monoid& unity) {
+constexpr Monoid fastpow(const Monoid& x, i64 e, const Monoid& unity) {
     ASSERT(e >= 0);
 
     Monoid res = unity;
@@ -364,11 +365,11 @@ Monoid fastpow(const Monoid& x, i64 e, const Monoid& unity) {
     return res;
 }
 
-i64 ipow(i64 x, i64 e) {
+constexpr i64 ipow(i64 x, i64 e) {
     return fastpow<i64>(x,e,1);
 }
 
-i64 sqrt_floor(i64 x) {
+/*constexpr*/ i64 sqrt_floor(i64 x) {
     ASSERT(x >= 0);
 
     i64 lo = 0;
@@ -376,35 +377,35 @@ i64 sqrt_floor(i64 x) {
     return bisect_integer(lo, hi, [x](i64 r) { return r*r <= x; });
 }
 
-i64 sqrt_ceil(i64 x) {
+/*constexpr*/ i64 sqrt_ceil(i64 x) {
     i64 r = sqrt_floor(x);
     return r*r == x ? r : r+1;
 }
 
 // 0 <= log2_ceil(x) <= 63
-i64 log2_ceil(i64 x) {
+constexpr i64 log2_ceil(i64 x) {
     ASSERT(x > 0);
     return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
 }
 
 // 0 <= log2_floor(x) <= 62
-i64 log2_floor(i64 x) {
+constexpr i64 log2_floor(i64 x) {
     ASSERT(x > 0);
     return 63 - BIT_COUNT_LEADING_ZEROS(x);
 }
 
 // x > 0
-i64 pow2_ceil(i64 x) {
+constexpr i64 pow2_ceil(i64 x) {
     return BIT_I(log2_ceil(x));
 }
 
 // x > 0
-i64 pow2_floor(i64 x) {
+constexpr i64 pow2_floor(i64 x) {
     return BIT_I(log2_floor(x));
 }
 
 // Haskell の divMod と同じ
-pair<i64,i64> divmod(i64 a, i64 b) {
+constexpr pair<i64,i64> divmod(i64 a, i64 b) {
     i64 q = a / b;
     i64 r = a % b;
     if((b>0 && r<0) || (b<0 && r>0)) {
@@ -414,7 +415,7 @@ pair<i64,i64> divmod(i64 a, i64 b) {
     return {q,r};
 }
 
-i64 div_ceil(i64 a, i64 b) {
+constexpr i64 div_ceil(i64 a, i64 b) {
     i64 q = a / b;
     i64 r = a % b;
     if((b>0 && r>0) || (b<0 && r<0))
@@ -422,20 +423,20 @@ i64 div_ceil(i64 a, i64 b) {
     return q;
 }
 
-i64 div_floor(i64 a, i64 b) {
+constexpr i64 div_floor(i64 a, i64 b) {
     return divmod(a,b).first;
 }
 
-i64 modulo(i64 a, i64 b) {
+constexpr i64 modulo(i64 a, i64 b) {
     return divmod(a,b).second;
 }
 
-i64 align_ceil(i64 x, i64 align) {
+constexpr i64 align_ceil(i64 x, i64 align) {
     ASSERT(align > 0);
     return div_ceil(x,align) * align;
 }
 
-i64 align_floor(i64 x, i64 align) {
+constexpr i64 align_floor(i64 x, i64 align) {
     ASSERT(align > 0);
     return div_floor(x,align) * align;
 }
@@ -855,7 +856,7 @@ T RD1() {
 template<class T=i64>
 auto RD_VEC(i64 n) {
     auto res = vec_reserve<T>(n);
-    REP(_, n) {
+    LOOP(n) {
         res.emplace_back(RD<T>());
     }
     return res;
@@ -864,7 +865,7 @@ auto RD_VEC(i64 n) {
 template<class T=i64>
 auto RD1_VEC(i64 n) {
     auto res = vec_reserve<T>(n);
-    REP(_, n) {
+    LOOP(n) {
         res.emplace_back(RD1<T>());
     }
     return res;
@@ -873,7 +874,7 @@ auto RD1_VEC(i64 n) {
 template<class T=i64>
 auto RD_VEC2(i64 h, i64 w) {
     auto res = vec_reserve<vector<T>>(h);
-    REP(_, h) {
+    LOOP(h) {
         res.emplace_back(RD_VEC<T>(w));
     }
     return res;
@@ -882,7 +883,7 @@ auto RD_VEC2(i64 h, i64 w) {
 template<class T=i64>
 auto RD1_VEC2(i64 h, i64 w) {
     auto res = vec_reserve<vector<T>>(h);
-    REP(_, h) {
+    LOOP(h) {
         res.emplace_back(RD1_VEC<T>(w));
     }
     return res;

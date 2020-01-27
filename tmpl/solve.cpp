@@ -16,7 +16,7 @@ void solve() {
 
 signed main() {
     i64 T = 1; //RD();
-    REP(_, T) {
+    LOOP(T) {
         solve();
     }
 
