@@ -7,6 +7,7 @@ bool operator==(const Vec& lhs, const Vec& rhs);
 struct Vec {
     Real x{}, y{};
 
+    Vec() = default;
     Vec(Real xx, Real yy) : x(xx), y(yy) {}
 
     static Vec polar(Real r, Real theta) {
