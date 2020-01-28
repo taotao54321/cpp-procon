@@ -2,29 +2,84 @@
 
 template<class T>
 struct Fenwick {
-    vector<T> v_;
+    i64 n_;
+    vector<T> data_;
 
-    explicit Fenwick(i64 n) : v_(n+1, T(0)) {}
+    explicit Fenwick(i64 n) : n_(n), data_(n_+1,T{}) {}
 
-    void add(i64 i, T x) {
-        for(++i; i < SIZE(v_); i += i&(-i)) {
-            v_[i] += x;
+    void add(i64 i, T val) {
+        for(i64 v = i+1; v <= n_; v += v&-v) {
+            data_[v] += val;
         }
     }
 
-    T query(i64 i, i64 n) const {
-        if(i == 0) return query0(i+n);
-        return query0(i+n) - query0(i);
-    }
-
-private:
-    // [0,n) の和
-    T query0(i64 n) const {
-        T res(0);
-        for(i64 i = n; i > 0; i -= i&(-i)) {
-            res += v_[i];
+    // [0,r) の和
+    T query0(i64 r) const {
+        T res{};
+        for(i64 v = r; v >= 1; v -= v&-v) {
+            res += data_[v];
         }
         return res;
+    }
+
+    // [l,r) の和
+    T query(i64 l, i64 r) const {
+#ifdef PROCON_LOCAL
+        ASSERT(l <= r);
+#endif
+        return query0(r) - query0(l);
+    }
+
+    // [0,r) の和が s 以上となる最小の r
+    i64 lower_bound(T s) const {
+        if(s <= T{}) return 0;
+        i64 i = 0;
+        for(i64 v = pow2_floor(n_); v >= 1; v /= 2) {
+            // 0 の要素もあるので、等号は付けない
+            if(i+v <= n_ && data_[i+v] < s) {
+                s -= data_[i+v];
+                i += v;
+            }
+        }
+        return i+1;
+    }
+};
+
+template<class T>
+struct Fenwick2 {
+    i64 h_;
+    i64 w_;
+    vector<vector<T>> data_;
+
+    Fenwick2(i64 h, i64 w) : h_(h), w_(w), data_(h_+1,vector<T>(w_+1,T{})) {}
+
+    void add(i64 y, i64 x, i64 val) {
+        for(i64 i = y+1; i <= h_; i += i&-i) {
+            for(i64 j = x+1; j <= w_; j += j&-j) {
+                data_[i][j] += val;
+            }
+        }
+    }
+
+    // [(0,0),(y,x)) の和
+    T query0(i64 y, i64 x) const {
+        T res{};
+
+        for(i64 i = y; i >= 1; i -= i&-i) {
+            for(i64 j = x; j >= 1; j -= j&-j) {
+                res += data_[i][j];
+            }
+        }
+
+        return res;
+    }
+
+    // [(y1,x1),(y2,x2)) の和
+    T query(i64 y1, i64 x1, i64 y2, i64 x2) const {
+#ifdef PROCON_LOCAL
+        ASSERT(y1 <= y2 && x1 <= x2);
+#endif
+        return query0(y2,x2) - query0(y1,x2) - query0(y2,x1) + query0(y1,x1);
     }
 };
 
