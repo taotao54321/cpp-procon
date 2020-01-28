@@ -86,41 +86,39 @@ tuple<vector<i64>,vector<i64>> graph_bfs(const vector<vector<i64>>& g, i64 start
 
 // ダイクストラ法
 //
-// (d,parent) を返す
-// d[i]: start から点 i への最短距離(到達不能な点は INF)
-// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+// (ds,ps) を返す
+// ds[i]: start から点 i への最短距離(到達不能な点は PROCON_INF<T>())
+// ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
 tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
-    vector<T> d(n, PROCON_INF<T>());
-    vector<i64> parent(n, -1);
+    vector<T> ds(n, PROCON_INF<T>());
+    vector<i64> ps(n, -1);
 
     auto que = priority_queue_make<pair<T,i64>>(greater<>{});
 
-    d[start] = T(0);
-    que.emplace(T(0), start);
+    ds[start] = T{};
+    que.emplace(T{}, start);
 
     i64 n_remain = n;
     while(!que.empty()) {
-        i64 dmin,vmin; tie(dmin,vmin) = POP(que);
-
-        if(d[vmin] < dmin) continue;
+        T d; i64 v; tie(d,v) = POP(que);
+        if(ds[v] < d) continue;
 
         if(--n_remain == 0) break;
 
-        for(const auto& p : g[vmin]) {
-            i64 to,cost; tie(to,cost) = p;
+        for(const auto& p : g[v]) {
+            i64 to; T cost; tie(to,cost) = p;
 
-            i64 d_new = dmin + cost;
-            if(d_new < d[to]) {
-                d[to] = d_new;
-                parent[to] = vmin;
+            T d_new = d + cost;
+            if(chmin(ds[to], d_new)) {
+                ps[to] = v;
                 que.emplace(d_new, to);
             }
         }
     }
 
-    return make_tuple(d, parent);
+    return make_tuple(ds, ps);
 }
 
 // 辺のコストが非負かつ小さい場合の最良優先探索(01-BFS の一般化)
