@@ -192,6 +192,13 @@ auto NOT_FN(F&& f) {
     return [f=forward<F>(f)](auto&&... args) -> bool { return !f(forward<decltype(args)>(args)...); };
 }
 
+struct IDENTITY {
+    using is_transparent = void;
+
+    template<class T>
+    constexpr decltype(auto) operator()(T&& x) const { return forward<T>(x); }
+};
+
 // ビット演算 {{{
 // 引数は [-INF,INF] のみ想定
 constexpr i64 BIT_I(i64 i) {
