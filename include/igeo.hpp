@@ -1,9 +1,5 @@
 // igeo {{{
 
-struct IVec;
-IVec operator/(const IVec& lhs, i64 rhs);
-bool operator==(const IVec& lhs, const IVec& rhs);
-
 struct IVec {
     i64 x{}, y{};
 
@@ -65,18 +61,18 @@ struct IVec {
         // y成分が同符号の場合、外積で判定できる
         return lhs.cross(rhs) > 0;
     }
+
+    friend IVec operator+(const IVec& lhs, const IVec& rhs) { return IVec(lhs) += rhs; }
+    friend IVec operator-(const IVec& lhs, const IVec& rhs) { return IVec(lhs) -= rhs; }
+    friend IVec operator*(const IVec& lhs, i64 rhs) { return IVec(lhs) *= rhs; }
+    friend IVec operator*(i64 lhs, const IVec& rhs) { return IVec(rhs) *= lhs; }
+    friend IVec operator/(const IVec& lhs, i64 rhs) { return IVec(lhs) /= rhs; }
+
+    friend bool operator==(const IVec& lhs, const IVec& rhs) {
+        return lhs.x==rhs.x && lhs.y==rhs.y;
+    }
+    friend bool operator!=(const IVec& lhs, const IVec& rhs) { return !(lhs == rhs); }
 };
-
-IVec operator+(const IVec& lhs, const IVec& rhs) { return IVec(lhs) += rhs; }
-IVec operator-(const IVec& lhs, const IVec& rhs) { return IVec(lhs) -= rhs; }
-IVec operator*(const IVec& lhs, i64 rhs) { return IVec(lhs) *= rhs; }
-IVec operator*(i64 lhs, const IVec& rhs) { return IVec(rhs) *= lhs; }
-IVec operator/(const IVec& lhs, i64 rhs) { return IVec(lhs) /= rhs; }
-
-bool operator==(const IVec& lhs, const IVec& rhs) {
-    return lhs.x==rhs.x && lhs.y==rhs.y;
-}
-bool operator!=(const IVec& lhs, const IVec& rhs) { return !(lhs == rhs); }
 
 template<>
 struct Scan<IVec> {
