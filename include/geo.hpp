@@ -1,9 +1,5 @@
 // geo {{{
 
-struct Vec;
-Vec operator/(const Vec& lhs, Real rhs);
-bool operator==(const Vec& lhs, const Vec& rhs);
-
 struct Vec {
     Real x{}, y{};
 
@@ -73,18 +69,18 @@ struct Vec {
         // y成分が同符号の場合、外積で判定できる
         return lhs.cross(rhs) > 0;
     }
+
+    friend Vec operator+(const Vec& lhs, const Vec& rhs) { return Vec(lhs) += rhs; }
+    friend Vec operator-(const Vec& lhs, const Vec& rhs) { return Vec(lhs) -= rhs; }
+    friend Vec operator*(const Vec& lhs, Real rhs) { return Vec(lhs) *= rhs; }
+    friend Vec operator*(Real lhs, const Vec& rhs) { return Vec(rhs) *= lhs; }
+    friend Vec operator/(const Vec& lhs, Real rhs) { return Vec(lhs) /= rhs; }
+
+    friend bool operator==(const Vec& lhs, const Vec& rhs) {
+        return EQ_EXACT(lhs.x,rhs.x) && EQ_EXACT(lhs.y,rhs.y);
+    }
+    friend bool operator!=(const Vec& lhs, const Vec& rhs) { return !(lhs == rhs); }
 };
-
-Vec operator+(const Vec& lhs, const Vec& rhs) { return Vec(lhs) += rhs; }
-Vec operator-(const Vec& lhs, const Vec& rhs) { return Vec(lhs) -= rhs; }
-Vec operator*(const Vec& lhs, Real rhs) { return Vec(lhs) *= rhs; }
-Vec operator*(Real lhs, const Vec& rhs) { return Vec(rhs) *= lhs; }
-Vec operator/(const Vec& lhs, Real rhs) { return Vec(lhs) /= rhs; }
-
-bool operator==(const Vec& lhs, const Vec& rhs) {
-    return EQ_EXACT(lhs.x,rhs.x) && EQ_EXACT(lhs.y,rhs.y);
-}
-bool operator!=(const Vec& lhs, const Vec& rhs) { return !(lhs == rhs); }
 
 template<>
 struct Scan<Vec> {
