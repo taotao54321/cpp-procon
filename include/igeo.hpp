@@ -48,7 +48,7 @@ struct IVec {
         return {-y,x};
     }
 
-    constexpr static bool lt_arg(const IVec& lhs, const IVec& rhs) {
+    static constexpr bool lt_arg(const IVec& lhs, const IVec& rhs) {
         // 零ベクトルは偏角最小とみなす
         if(lhs == rhs) return false;
         if(lhs == IVec{0,0}) return true;
