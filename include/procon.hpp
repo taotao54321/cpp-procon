@@ -50,11 +50,16 @@ constexpr Real FINF = PROCON_INF<Real>();
 
 constexpr Real PI = Real(3.141592653589793238462643383279502884197L);
 
-bool LT_EPS(Real lhs, Real rhs, Real eps=EPS) { return lhs < rhs-eps; }
-bool GT_EPS(Real lhs, Real rhs, Real eps=EPS) { return lhs > rhs+eps; }
-bool EQ_EPS(Real lhs, Real rhs, Real eps=EPS) { return std::abs(lhs-rhs) <= eps; }
+template<class T, SFINAE(is_signed<T>::value)>
+constexpr T ABS(T x) noexcept {
+    return x < 0 ? -x : x;
+}
 
-bool EQ_EXACT(Real lhs, Real rhs) {
+constexpr bool LT_EPS(Real lhs, Real rhs, Real eps=EPS) { return lhs < rhs-eps; }
+constexpr bool GT_EPS(Real lhs, Real rhs, Real eps=EPS) { return lhs > rhs+eps; }
+constexpr bool EQ_EPS(Real lhs, Real rhs, Real eps=EPS) { return ABS(lhs-rhs) <= eps; }
+
+constexpr bool EQ_EXACT(Real lhs, Real rhs) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
     return lhs == rhs;
@@ -82,11 +87,6 @@ constexpr i64 SIZE(const T (&)[N]) noexcept { return static_cast<i64>(N); }
 
 constexpr bool is_odd (i64 x) { return x%2 != 0; }
 constexpr bool is_even(i64 x) { return x%2 == 0; }
-
-template<class T, SFINAE(is_signed<T>::value)>
-constexpr T ABS(T x) noexcept {
-    return x < 0 ? -x : x;
-}
 
 template<class T>
 constexpr i64 CMP(T x, T y) noexcept { return (y<x) - (x<y); }

@@ -3,55 +3,55 @@
 struct Vec {
     Real x{}, y{};
 
-    Vec() = default;
-    Vec(Real xx, Real yy) : x(xx), y(yy) {}
+    constexpr Vec() = default;
+    constexpr Vec(Real xx, Real yy) : x(xx), y(yy) {}
 
-    static Vec polar(Real r, Real theta) {
+    static /*constexpr*/ Vec polar(Real r, Real theta) {
         return { r*cos(theta), r*sin(theta) };
     }
 
-    Vec operator-() const { return {-x,-y}; }
+    constexpr Vec operator-() const { return {-x,-y}; }
 
-    Vec& operator+=(const Vec& rhs) {
+    constexpr Vec& operator+=(const Vec& rhs) {
         x += rhs.x;
         y += rhs.y;
         return *this;
     }
-    Vec& operator-=(const Vec& rhs) {
+    constexpr Vec& operator-=(const Vec& rhs) {
         x -= rhs.x;
         y -= rhs.y;
         return *this;
     }
-    Vec& operator*=(Real rhs) {
+    constexpr Vec& operator*=(Real rhs) {
         x *= rhs;
         y *= rhs;
         return *this;
     }
-    Vec& operator/=(Real rhs) {
+    constexpr Vec& operator/=(Real rhs) {
         x /= rhs;
         y /= rhs;
         return *this;
     }
 
-    Real norm() const { return x*x + y*y; }
-    Real abs() const { return sqrt(norm()); }
-    Vec unit() const { return *this / abs(); }
+    constexpr Real norm() const { return x*x + y*y; }
+    /*constexpr*/ Real abs() const { return sqrt(norm()); }
+    /*constexpr*/ Vec unit() const { return *this / abs(); }
 
-    Real arg() const { return atan2(y,x); }
+    /*constexpr*/ Real arg() const { return atan2(y,x); }
 
-    Real dot(const Vec& rhs) const {
+    constexpr Real dot(const Vec& rhs) const {
         return x*rhs.x + y*rhs.y;
     }
 
-    Real cross(const Vec& rhs) const {
+    constexpr Real cross(const Vec& rhs) const {
         return x*rhs.y - y*rhs.x;
     }
 
-    Vec rotate90() const {
+    constexpr Vec rotate90() const {
         return {-y,x};
     }
 
-    static bool lt_arg(const Vec& lhs, const Vec& rhs) {
+    static constexpr bool lt_arg(const Vec& lhs, const Vec& rhs) {
         // 零ベクトルは偏角最小とみなす
         if(lhs == rhs) return false;
         if(lhs == Vec{0,0}) return true;
@@ -70,16 +70,16 @@ struct Vec {
         return lhs.cross(rhs) > 0;
     }
 
-    friend Vec operator+(const Vec& lhs, const Vec& rhs) { return Vec(lhs) += rhs; }
-    friend Vec operator-(const Vec& lhs, const Vec& rhs) { return Vec(lhs) -= rhs; }
-    friend Vec operator*(const Vec& lhs, Real rhs) { return Vec(lhs) *= rhs; }
-    friend Vec operator*(Real lhs, const Vec& rhs) { return Vec(rhs) *= lhs; }
-    friend Vec operator/(const Vec& lhs, Real rhs) { return Vec(lhs) /= rhs; }
+    friend constexpr Vec operator+(const Vec& lhs, const Vec& rhs) { return Vec(lhs) += rhs; }
+    friend constexpr Vec operator-(const Vec& lhs, const Vec& rhs) { return Vec(lhs) -= rhs; }
+    friend constexpr Vec operator*(const Vec& lhs, Real rhs) { return Vec(lhs) *= rhs; }
+    friend constexpr Vec operator*(Real lhs, const Vec& rhs) { return Vec(rhs) *= lhs; }
+    friend constexpr Vec operator/(const Vec& lhs, Real rhs) { return Vec(lhs) /= rhs; }
 
-    friend bool operator==(const Vec& lhs, const Vec& rhs) {
+    friend constexpr bool operator==(const Vec& lhs, const Vec& rhs) {
         return EQ_EXACT(lhs.x,rhs.x) && EQ_EXACT(lhs.y,rhs.y);
     }
-    friend bool operator!=(const Vec& lhs, const Vec& rhs) { return !(lhs == rhs); }
+    friend constexpr bool operator!=(const Vec& lhs, const Vec& rhs) { return !(lhs == rhs); }
 };
 
 template<>
