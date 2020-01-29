@@ -7,6 +7,7 @@ bool operator==(const IVec& lhs, const IVec& rhs);
 struct IVec {
     i64 x{}, y{};
 
+    IVec() = default;
     IVec(i64 xx, i64 yy) : x(xx), y(yy) {}
 
     IVec operator-() const { return {-x,-y}; }
