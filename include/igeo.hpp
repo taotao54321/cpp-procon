@@ -3,47 +3,52 @@
 struct IVec {
     i64 x{}, y{};
 
-    IVec() = default;
-    IVec(i64 xx, i64 yy) : x(xx), y(yy) {}
+    constexpr IVec() = default;
+    constexpr IVec(i64 xx, i64 yy) : x(xx), y(yy) {}
 
-    IVec operator-() const { return {-x,-y}; }
+    constexpr IVec operator-() const { return {-x,-y}; }
 
-    IVec& operator+=(const IVec& rhs) {
+    constexpr IVec& operator+=(const IVec& rhs) {
         x += rhs.x;
         y += rhs.y;
         return *this;
     }
-    IVec& operator-=(const IVec& rhs) {
+    constexpr IVec& operator-=(const IVec& rhs) {
         x -= rhs.x;
         y -= rhs.y;
         return *this;
     }
-    IVec& operator*=(i64 rhs) {
+    constexpr IVec& operator*=(i64 rhs) {
         x *= rhs;
         y *= rhs;
         return *this;
     }
-    IVec& operator/=(i64 rhs) {
+    constexpr IVec& operator/=(i64 rhs) {
         x /= rhs;
         y /= rhs;
         return *this;
     }
 
-    i64 norm() const { return x*x + y*y; }
+    template<class C>
+    constexpr const auto& operator[](const C& cont) const { return cont[y][x]; }
+    template<class C>
+    constexpr       auto& operator[](C& cont) const { return cont[y][x]; }
 
-    i64 dot(const IVec& rhs) const {
+    constexpr i64 norm() const { return x*x + y*y; }
+
+    constexpr i64 dot(const IVec& rhs) const {
         return x*rhs.x + y*rhs.y;
     }
 
-    i64 cross(const IVec& rhs) const {
+    constexpr i64 cross(const IVec& rhs) const {
         return x*rhs.y - y*rhs.x;
     }
 
-    IVec rotate90() const {
+    constexpr IVec rotate90() const {
         return {-y,x};
     }
 
-    static bool lt_arg(const IVec& lhs, const IVec& rhs) {
+    constexpr static bool lt_arg(const IVec& lhs, const IVec& rhs) {
         // 零ベクトルは偏角最小とみなす
         if(lhs == rhs) return false;
         if(lhs == IVec{0,0}) return true;
@@ -62,16 +67,16 @@ struct IVec {
         return lhs.cross(rhs) > 0;
     }
 
-    friend IVec operator+(const IVec& lhs, const IVec& rhs) { return IVec(lhs) += rhs; }
-    friend IVec operator-(const IVec& lhs, const IVec& rhs) { return IVec(lhs) -= rhs; }
-    friend IVec operator*(const IVec& lhs, i64 rhs) { return IVec(lhs) *= rhs; }
-    friend IVec operator*(i64 lhs, const IVec& rhs) { return IVec(rhs) *= lhs; }
-    friend IVec operator/(const IVec& lhs, i64 rhs) { return IVec(lhs) /= rhs; }
+    friend constexpr IVec operator+(const IVec& lhs, const IVec& rhs) { return IVec(lhs) += rhs; }
+    friend constexpr IVec operator-(const IVec& lhs, const IVec& rhs) { return IVec(lhs) -= rhs; }
+    friend constexpr IVec operator*(const IVec& lhs, i64 rhs) { return IVec(lhs) *= rhs; }
+    friend constexpr IVec operator*(i64 lhs, const IVec& rhs) { return IVec(rhs) *= lhs; }
+    friend constexpr IVec operator/(const IVec& lhs, i64 rhs) { return IVec(lhs) /= rhs; }
 
-    friend bool operator==(const IVec& lhs, const IVec& rhs) {
+    friend constexpr bool operator==(const IVec& lhs, const IVec& rhs) {
         return lhs.x==rhs.x && lhs.y==rhs.y;
     }
-    friend bool operator!=(const IVec& lhs, const IVec& rhs) { return !(lhs == rhs); }
+    friend constexpr bool operator!=(const IVec& lhs, const IVec& rhs) { return !(lhs == rhs); }
 };
 
 template<>
