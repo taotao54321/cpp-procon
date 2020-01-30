@@ -3,14 +3,14 @@
 template<typename Monoid, typename F>
 class FoldQueue {
 private:
+    F f_;
+    Monoid unity_;
     // (value, folded)
     stack<pair<Monoid,Monoid>> stk_front_{};
     stack<pair<Monoid,Monoid>> stk_back_{};
-    Monoid unity_;
-    F f_;
 
 public:
-    FoldQueue(const Monoid& unity, F&& f) : unity_(unity), f_(forward<F>(f)) {}
+    FoldQueue(F&& f, const Monoid& unity) : f_(forward<F>(f)), unity_(unity) {}
 
     bool empty() const { return stk_front_.empty() && stk_back_.empty(); }
     i64 size() const { return stk_front_.size() + stk_back_.size(); }
@@ -62,8 +62,8 @@ private:
 };
 
 template<typename Monoid, typename F>
-FoldQueue<Monoid,F> make_fold_queue(const Monoid& unity, F&& f) {
-    return FoldQueue<Monoid,F>(unity, forward<F>(f));
+FoldQueue<Monoid,F> fold_queue_make(F&& f, const Monoid& unity) {
+    return FoldQueue<Monoid,F>(forward<F>(f), unity);
 }
 
 template<typename Monoid, typename F>
