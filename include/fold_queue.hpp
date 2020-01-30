@@ -1,6 +1,6 @@
 // fold_queue {{{
 
-template<typename Monoid, typename F>
+template<class Monoid, class F>
 class FoldQueue {
 private:
     F f_;
@@ -31,7 +31,7 @@ public:
         stk_back_.emplace(x, f_(lhs,x));
     }
 
-    template<typename... Args>
+    template<class... Args>
     void emplace(Args&&... args) {
         push(Monoid(forward<Args>(args)...));
     }
@@ -61,12 +61,12 @@ private:
     }
 };
 
-template<typename Monoid, typename F>
+template<class Monoid, class F>
 FoldQueue<Monoid,F> fold_queue_make(F&& f, const Monoid& unity) {
     return FoldQueue<Monoid,F>(forward<F>(f), unity);
 }
 
-template<typename Monoid, typename F>
+template<class Monoid, class F>
 Monoid POP(FoldQueue<Monoid,F>& que) {
     Monoid x = que.front(); que.pop();
     return x;
