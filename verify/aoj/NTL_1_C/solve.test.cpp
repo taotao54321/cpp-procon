@@ -1,4 +1,4 @@
-#define PROBLEM ""
+#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/6/NTL/1/NTL_1_C"
 //#define ERROR "1e-6"
 
 // header {{{
@@ -43,9 +43,12 @@ constexpr bool COUT_AUTOFLUSH = false;
 //--------------------------------------------------------------------
 
 void solve() {
-    
+    i64 N = RD();
+    auto A = RD_VEC(N);
 
-    //PRINTLN(ans);
+    i64 ans = ALL(FOLD1, A, LCM);
+
+    PRINTLN(ans);
 }
 
 signed main() {

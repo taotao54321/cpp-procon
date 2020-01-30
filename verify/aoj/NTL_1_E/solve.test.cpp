@@ -1,4 +1,4 @@
-#define PROBLEM ""
+#define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/6/NTL/1/NTL_1_E"
 //#define ERROR "1e-6"
 
 // header {{{
@@ -43,9 +43,12 @@ constexpr bool COUT_AUTOFLUSH = false;
 //--------------------------------------------------------------------
 
 void solve() {
-    
+    i64 A = RD();
+    i64 B = RD();
 
-    //PRINTLN(ans);
+    i64 x,y; tie(ignore,x,y) = EXTGCD(A, B);
+
+    PRINTLN(x, y);
 }
 
 signed main() {
