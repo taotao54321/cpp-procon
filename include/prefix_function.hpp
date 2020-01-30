@@ -1,6 +1,6 @@
 // prefix_function {{{
 
-template<typename RandomIt>
+template<class RandomIt>
 vector<i64> prefix_function(RandomIt first, RandomIt last) {
     i64 n = last - first;
     vector<i64> pi(n, 0);

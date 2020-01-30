@@ -1,6 +1,6 @@
 // z_function {{{
 
-template<typename RandomIt>
+template<class RandomIt>
 vector<i64> z_function(RandomIt first, RandomIt last) {
     i64 n = last - first;
     vector<i64> z(n, 0);
