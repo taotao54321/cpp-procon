@@ -2,13 +2,13 @@
 
 // nPr
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2639.pdf
-template<typename BidiIt>
+template<class BidiIt>
 bool next_partial_permutation(BidiIt first, BidiIt middle, BidiIt last) {
     reverse(middle, last);
     return next_permutation(first, last);
 }
 
-template<typename BidiIt>
+template<class BidiIt>
 bool prev_partial_permutation(BidiIt first, BidiIt middle, BidiIt last) {
     bool res = prev_permutation(first, last);
     reverse(middle, last);
@@ -17,7 +17,7 @@ bool prev_partial_permutation(BidiIt first, BidiIt middle, BidiIt last) {
 
 // nCr
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2639.pdf
-template<typename BidiIt>
+template<class BidiIt>
 bool next_combination_impl(BidiIt first1, BidiIt last1, BidiIt first2, BidiIt last2) {
     if(first1 == last1 || first2 == last2) return false;
 
@@ -56,17 +56,17 @@ bool next_combination_impl(BidiIt first1, BidiIt last1, BidiIt first2, BidiIt la
     return !res;
 }
 
-template<typename BidiIt>
+template<class BidiIt>
 bool next_combination(BidiIt first, BidiIt middle, BidiIt last) {
     return next_combination_impl(first, middle, middle, last);
 }
 
-template<typename BidiIt>
+template<class BidiIt>
 bool prev_combination(BidiIt first, BidiIt middle, BidiIt last) {
     return next_combination_impl(middle, last, first, middle);
 }
 
-template<typename InputIt>
+template<class InputIt>
 auto nth_value(InputIt first, InputIt last, i64 n) {
     using T = typename iterator_traits<InputIt>::value_type;
     vector<T> v(first, last);
@@ -74,12 +74,12 @@ auto nth_value(InputIt first, InputIt last, i64 n) {
     return v[n];
 }
 
-template<typename ForwardIt>
+template<class ForwardIt>
 void rotate_left(ForwardIt first, ForwardIt last, i64 n) {
     rotate(first, first+n, last);
 }
 
-template<typename ForwardIt>
+template<class ForwardIt>
 void rotate_right(ForwardIt first, ForwardIt last, i64 n) {
     auto rfirst = make_reverse_iterator(last);
     auto rlast  = make_reverse_iterator(first);
@@ -95,7 +95,7 @@ void rotate_right(ForwardIt first, ForwardIt last, i64 n) {
 // (lambda,mu) を返す
 // lambda: 循環の長さ (循環しない場合 -1)
 // mu: 循環の開始位置 (0-based, 循環しない場合 -1)
-template<typename T, typename F>
+template<class T, class F>
 pair<i64,i64> cycle_detect(const T& x0, F f, i64 lam_max=INF) {
     i64 lam;
     {
@@ -135,7 +135,7 @@ pair<i64,i64> cycle_detect(const T& x0, F f, i64 lam_max=INF) {
 // [first,last) を隣接2項間で pred が成り立つグループに分ける
 // デフォルトでは同じ値のグループに分ける
 // 返り値はイテレータ対のリスト
-template<typename ForwardIt, typename BinaryPred=equal_to<>>
+template<class ForwardIt, class BinaryPred=equal_to<>>
 vector<pair<ForwardIt,ForwardIt>> group_by(ForwardIt first, ForwardIt last, BinaryPred pred={}) {
     vector<pair<ForwardIt,ForwardIt>> res;
 
@@ -160,7 +160,7 @@ vector<pair<ForwardIt,ForwardIt>> group_by(ForwardIt first, ForwardIt last, Bina
 // f は bool f(const vector<T>& v)
 // f が true を返した時点でイテレーション終了
 // 返り値は f が true を返していれば true, さもなくば false
-template<typename ForwardIt, typename F>
+template<class ForwardIt, class F>
 bool cartesian_product_repeat(ForwardIt first, ForwardIt last, i64 n, F f) {
     using T = typename iterator_traits<ForwardIt>::value_type;
 
