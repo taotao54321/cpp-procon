@@ -47,7 +47,7 @@ void solve() {
     i64 N = RD();
     i64 Q = RD();
 
-    WeightedUnionFind wuf(N);
+    WeightedUnionFind<i64> wuf(N);
     LOOP(Q) {
         i64 cmd = RD();
         if(cmd == 0) {
