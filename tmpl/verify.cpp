@@ -1,6 +1,5 @@
-/**
- * 
- */
+#define PROBLEM ""
+//#define ERROR "1e-6"
 
 // header {{{
 #include <bits/stdc++.h>
@@ -39,16 +38,9 @@ constexpr Real EPS = Real(1e-10L);
 constexpr int  COUT_PREC      = 15;
 constexpr bool COUT_AUTOFLUSH = false;
 
-#include "../include/procon.hpp"
+#include "../../../include/procon.hpp"
 
 //--------------------------------------------------------------------
-
-[[noreturn]] void impossible() {
-    PRINTLN("-1");
-    EXIT();
-}
-
-
 
 void solve() {
     
@@ -57,10 +49,7 @@ void solve() {
 }
 
 signed main() {
-    i64 T = 1; //RD();
-    LOOP(T) {
-        solve();
-    }
+    solve();
 
     EXIT();
 }

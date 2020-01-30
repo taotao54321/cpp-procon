@@ -1,10 +1,4 @@
-/**
- * 
- */
-
-// header {{{
-#include <bits/stdc++.h>
-using namespace std;
+// procon {{{
 
 #define CPP_STR(x) CPP_STR_I(x)
 #define CPP_CAT(x,y) CPP_CAT_I(x,y)
@@ -15,36 +9,6 @@ using namespace std;
 
 #define ASSERT(expr...) assert((expr))
 
-using i8  = int8_t;
-using u8  = uint8_t;
-using i16 = int16_t;
-using u16 = uint16_t;
-using i32 = int32_t;
-using u32 = uint32_t;
-using i64 = int64_t;
-using u64 = uint64_t;
-#ifdef __SIZEOF_INT128__
-using i128 = __int128;
-using u128 = unsigned __int128;
-#endif
-
-using f32 = float;
-using f64 = double;
-using f80 = long double;
-// }}}
-
-using Real = f80;
-
-template<class T> constexpr T PROCON_INF();
-template<> constexpr i64  PROCON_INF<i64>()  { return INT64_C(1'010'000'000'000'000'017); }
-template<> constexpr Real PROCON_INF<Real>() { return Real(1e100L); }
-
-constexpr i64 MOD = INT64_C(1'000'000'007);
-//constexpr i64 MOD = INT64_C(998'244'353);
-
-constexpr Real EPS = Real(1e-10L);
-
-// util {{{
 constexpr i64  INF  = PROCON_INF<i64>();
 constexpr Real FINF = PROCON_INF<Real>();
 
@@ -1279,23 +1243,21 @@ using ModIntC = ModIntT<integral_constant<i64,M>>;
 
 using ModInt = ModIntC<MOD>;
 // }}}
-// }}}
 
 // init {{{
 struct ProconInit {
-    static constexpr int IOS_PREC = 15;
-    static constexpr bool AUTOFLUSH = false;
-
     ProconInit() {
         cin.tie(nullptr);
         ios::sync_with_stdio(false);
         cin.exceptions(ios::failbit | ios::badbit);
-        cout << fixed << setprecision(IOS_PREC);
+        cout << fixed << setprecision(COUT_PREC);
 #ifdef PROCON_LOCAL
         cerr << fixed << setprecision(2);
 #endif
-        if(AUTOFLUSH)
+        if(COUT_AUTOFLUSH)
             cout << unitbuf;
     }
 } PROCON_INIT;
+// }}}
+
 // }}}

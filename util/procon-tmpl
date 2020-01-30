@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import argparse
+from pathlib import Path
+import re
+from typing import *
+
+def create_cpp(tmpl_dir: Path, tmpl: Path, dest: Path, expand: bool) -> None:
+    RE_INC = re.compile(r'^#include\s+"([^"]+)"')
+
+    try:
+        with open(tmpl,"r") as in_, open(dest,"x") as out:
+            for line in in_:
+                m = RE_INC.search(line)
+                if not m or not expand:
+                    out.write(line)
+                    continue
+                hdr_path = tmpl_dir.joinpath(m.group(1))
+                hdr_body = open(hdr_path,"r").read()
+                out.write(hdr_body)
+                if not hdr_body.endswith("\n"):
+                    out.write("\n")
+        print(dest)
+    except FileExistsError:
+        return
+
+def create_makefile(mf_tmpl: Path, mf_dest: Path, dest: Path) -> None:
+    try:
+        body = open(mf_tmpl,"r").read()
+        with open(mf_dest,"x") as out:
+            out.write(body)
+        print(dest.with_name(mf_tmpl.name))
+    except FileExistsError:
+        return
+
+def arg_parser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("tmpl", type=Path)
+    ap.add_argument("dest", type=Path)
+    ap.add_argument("--makefile-tmpl", type=Path)
+    ap.add_argument("--makefile-dest", type=Path)
+    ap.add_argument("--no-expand", action="store_false", dest="flag_expand", help="do not expand #include")
+    ap.add_argument("--no-makefile", action="store_false", dest="flag_makefile", help="do not generate Makefile")
+    return ap
+
+def main() -> None:
+    ap = arg_parser()
+    args = ap.parse_args()
+
+    tmpl_dir = args.tmpl.resolve().parent
+    create_cpp(tmpl_dir, args.tmpl, args.dest, args.flag_expand)
+
+    if args.flag_makefile:
+        dest_dir = args.dest.resolve().parent
+        if not args.makefile_tmpl:
+            args.makefile_tmpl = tmpl_dir.joinpath("Makefile")
+        if not args.makefile_dest:
+            args.makefile_dest = dest_dir.joinpath("Makefile")
+        create_makefile(args.makefile_tmpl, args.makefile_dest, args.dest)
+
+if __name__ == "__main__": main()

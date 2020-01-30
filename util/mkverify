@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import argparse
+from pathlib import Path
+import subprocess
+
+COMMAND_NAME = "procon-tmpl"
+
+TMPL_NAME = "verify.cpp"
+DEST_DEF  = "solve.test.cpp"
+
+def script_dir() -> Path:
+    return Path(__file__).resolve().parent
+
+def tmpl_dir() -> Path:
+    return script_dir().parent.joinpath("tmpl/")
+
+def arg_parser() -> argparse.ArgumentParser:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("dest", type=Path, nargs="?", default=Path(DEST_DEF))
+    return ap
+
+def create(dest: Path) -> None:
+    command = script_dir().joinpath(COMMAND_NAME)
+    tmpl = tmpl_dir().joinpath(TMPL_NAME)
+
+    cmdline = ( command, "--no-expand", "--no-makefile", tmpl, dest )
+    subprocess.run(cmdline, check=True)
+
+def main() -> None:
+    args = arg_parser().parse_args()
+
+    create(args.dest)
+
+if __name__ == "__main__": main()
