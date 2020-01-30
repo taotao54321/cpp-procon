@@ -14,6 +14,10 @@ struct UnionFind {
         return ps_[x] = root(p);
     }
 
+    bool is_same(i64 x, i64 y) {
+        return root(x) == root(y);
+    }
+
     i64 group_size(i64 x) {
         return -ps_[root(x)];
     }
@@ -47,6 +51,10 @@ struct WeightedUnionFind {
         return get<0>(compress(x));
     }
 
+    bool is_same(i64 x, i64 y) {
+        return root(x) == root(y);
+    }
+
     i64 group_size(i64 x) {
         return -ps_[root(x)];
     }
@@ -60,7 +68,7 @@ struct WeightedUnionFind {
     // x に対する y の重みを d とする
     // 併合できたかどうかを返す
     // x, y が元々同一集合に属する場合、d の値によっては矛盾が生じて併合不能
-    [[nodiscard]] bool unite(i64 x, i64 y, i64 d) {
+    /*[[nodiscard]]*/ bool unite(i64 x, i64 y, i64 d) {
         i64 rx, ry, wx, wy;
         tie(rx,wx) = compress(x);
         tie(ry,wy) = compress(y);
@@ -83,6 +91,7 @@ struct WeightedUnionFind {
         return true;
     }
 
+private:
     // 経路圧縮
     // (xの根、根に対するxの重み) を返す
     tuple<i64,i64> compress(i64 x) {
