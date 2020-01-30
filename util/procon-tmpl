@@ -4,7 +4,6 @@
 import argparse
 from pathlib import Path
 import re
-from typing import *
 
 def create_cpp(tmpl_dir: Path, tmpl: Path, dest: Path, expand: bool) -> None:
     RE_INC = re.compile(r'^#include\s+"([^"]+)"')
