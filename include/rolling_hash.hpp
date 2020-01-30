@@ -9,10 +9,10 @@ struct RollingHash {
     vector<i64> bpow_;
     vector<i64> h_;
 
-    template<typename ForwardIt>
+    template<class ForwardIt>
     RollingHash(ForwardIt first, ForwardIt last) : RollingHash(first,last,B_DEF) {}
 
-    template<typename ForwardIt>
+    template<class ForwardIt>
     RollingHash(ForwardIt first, ForwardIt last, i64 b) :
         n_(distance(first,last)), b_(b), bpow_(n_+1,1), h_(n_+1,0)
     {
@@ -24,8 +24,11 @@ struct RollingHash {
         }
     }
 
-    i64 get(i64 i, i64 k) const {
-        return mod(h_[i+k] - mul(h_[i],bpow_[k]));
+    i64 get(i64 l, i64 r) const {
+#ifdef PROCON_LOCAL
+        ASSERT(l <= r);
+#endif
+        return mod(h_[r] - mul(h_[l],bpow_[r-l]));
     }
 
 private:
@@ -47,13 +50,13 @@ private:
     }
 };
 
-template<typename ForwardIt>
-RollingHash make_rolling_hash(ForwardIt first, ForwardIt last) {
+template<class ForwardIt>
+RollingHash rolling_hash_make(ForwardIt first, ForwardIt last) {
     return RollingHash(first, last);
 }
 
-template<typename ForwardIt>
-RollingHash make_rolling_hash(ForwardIt first, ForwardIt last, i64 b) {
+template<class ForwardIt>
+RollingHash rolling_hash_make(ForwardIt first, ForwardIt last, i64 b) {
     return RollingHash(first, last, b);
 }
 
