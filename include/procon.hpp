@@ -722,12 +722,17 @@ decltype(auto) FIXMEMO(F&& f) {
 }
 
 /*constexpr*/ tuple<i64,i64,i64> EXTGCD(i64 a, i64 b) noexcept {
-    /*constexpr*/ auto impl = FIX([](auto&& self, i64 aa, i64 bb) -> tuple<i64,i64,i64> {
-        if(bb == 0) return make_tuple(aa, 1, 0);
-        i64 g,x,y; tie(g,x,y) = self(bb, aa%bb);
-        return make_tuple(g, y, x-(aa/bb)*y);
+    /*constexpr*/ auto impl = FIX([](auto&& self, i64 aa, i64 bb, i64& x, i64& y) {
+        if(bb == 0) {
+            x = 1; y = 0;
+            return aa;
+        }
+        i64 g = self(bb, aa%bb, y, x);
+        y -= (aa/bb)*x;
+        return g;
     });
-    i64 g,x,y; tie(g,x,y) = impl(ABS(a), ABS(b));
+    i64 x{},y{};
+    i64 g = impl(ABS(a), ABS(b), x, y);
     x *= SGN(a);
     y *= SGN(b);
     return make_tuple(g, x, y);
