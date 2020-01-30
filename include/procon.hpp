@@ -703,7 +703,7 @@ decltype(auto) FIXMEMO(F&& f) {
 
 // math {{{
 /*constexpr*/ i64 GCD(i64 a, i64 b) noexcept {
-    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) {
+    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) -> i64 {
         if(bb == 0) return aa;
         return self(bb, aa%bb);
     });
@@ -712,7 +712,7 @@ decltype(auto) FIXMEMO(F&& f) {
 
 /*constexpr*/ i64 LCM(i64 a, i64 b) noexcept {
     ASSERT(a != 0 && b != 0);
-    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) {
+    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) -> i64 {
         if(bb == 0) return aa;
         return self(bb, aa%bb);
     });
@@ -722,7 +722,7 @@ decltype(auto) FIXMEMO(F&& f) {
 }
 
 /*constexpr*/ tuple<i64,i64,i64> EXTGCD(i64 a, i64 b) noexcept {
-    /*constexpr*/ auto impl = FIX([](auto&& self, i64 aa, i64 bb, i64& x, i64& y) {
+    /*constexpr*/ auto impl = FIX([](auto&& self, i64 aa, i64 bb, i64& x, i64& y) -> i64 {
         if(bb == 0) {
             x = 1; y = 0;
             return aa;
