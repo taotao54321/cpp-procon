@@ -32,17 +32,15 @@ vector<pair<i64,i64>> factorize(i64 n) {
 
     vector<pair<i64,i64>> res;
 
-    i64 m = n;
-    for(i64 i = 2; i*i <= n; ++i) {
-        if(m == 1) break;
+    for(i64 p = 2; p*p <= n; ++p) {
         i64 e = 0;
-        while(m % i == 0) {
+        while(n % p == 0) {
             ++e;
-            m /= i;
+            n /= p;
         }
-        if(e) res.emplace_back(i, e);
+        if(e) res.emplace_back(p, e);
     }
-    if(m > 1) res.emplace_back(m, 1);
+    if(n > 1) res.emplace_back(n, 1);
 
     return res;
 }
