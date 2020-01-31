@@ -21,6 +21,7 @@
 "verify/aoj/GRL_1_A/solve.test.cpp": "2020-01-31 11:43:40 +0900",
 "verify/aoj/GRL_1_B/bellman.test.cpp": "2020-01-31 11:49:15 +0900",
 "verify/aoj/GRL_1_B/spfa.test.cpp": "2020-01-31 11:49:15 +0900",
+"verify/aoj/GRL_1_C/solve.test.cpp": "2020-01-31 11:53:28 +0900",
 "verify/aoj/ITP2_11_B/solve.test.cpp": "2020-01-30 23:58:00 +0900",
 "verify/aoj/ITP2_11_C/solve.test.cpp": "2020-01-30 23:58:00 +0900",
 "verify/aoj/ITP2_11_D/bit.test.cpp": "2020-01-30 23:48:05 +0900",
