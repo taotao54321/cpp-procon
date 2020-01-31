@@ -58,30 +58,30 @@ bool graph_is_tree(const vector<vector<i64>>& g) {
 
 // BFSで重みなしグラフ上の単一始点最短経路を求める
 //
-// (d,parent) を返す
-// d[i]: start から点 i への最短距離(到達不能な点は INF)
-// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+// (ds,ps) を返す
+// ds[i]: start から点 i への最短距離(到達不能な点は INF)
+// ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 tuple<vector<i64>,vector<i64>> graph_bfs(const vector<vector<i64>>& g, i64 start) {
     i64 n = SIZE(g);
-    vector<i64> d(n, INF);
-    vector<i64> parent(n, -1);
+    vector<i64> ds(n, INF);
+    vector<i64> ps(n, -1);
 
     queue<i64> que;
     que.emplace(start);
-    d[start] = 0;
+    ds[start] = 0;
 
     while(!que.empty()) {
         i64 v = POP(que);
 
         for(i64 to : g[v]) {
-            if(d[to] != INF) continue;
+            if(ds[to] != INF) continue;
             que.emplace(to);
-            d[to] = d[v] + 1;
-            parent[to] = v;
+            ds[to] = ds[v] + 1;
+            ps[to] = v;
         }
     }
 
-    return make_tuple(d, parent);
+    return make_tuple(ds, ps);
 }
 
 // ダイクストラ法
@@ -121,17 +121,16 @@ tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g
     return make_tuple(ds, ps);
 }
 
-// 辺のコストが非負かつ小さい場合の最良優先探索(01-BFS の一般化)
+// 辺のコストが小さい非負整数の場合の最良優先探索(01-BFS の一般化)
 // 全ての辺のコストは [0,k] であること
 //
-// (d,parent) を返す
-// d[i]: start から点 i への最短距離(到達不能な点は INF)
-// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
-template<typename T>
-tuple<vector<T>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,T>>>& g, i64 k, i64 start) {
+// (ds,ps) を返す
+// ds[i]: start から点 i への最短距離(到達不能な点は INF)
+// ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+tuple<vector<i64>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,i64>>>& g, i64 k, i64 start) {
     i64 n = SIZE(g);
-    vector<T> d(n, PROCON_INF<T>());
-    vector<i64> parent(n, -1);
+    vector<i64> ds(n, INF);
+    vector<i64> ps(n, -1);
 
     vector<queue<i64>> ques(k+1);
     auto enqueue = [&ques](i64 to, i64 cost) {
@@ -145,23 +144,22 @@ tuple<vector<T>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,T>>>& g, i
     };
 
     enqueue(start, 0);
-    d[start] = 0;
+    ds[start] = 0;
 
     i64 v;
     while((v = dequeue()) != -1) {
         for(const auto& p : g[v]) {
             i64 to,cost; tie(to,cost) = p;
 
-            i64 d_new = d[v] + cost;
-            if(d_new < d[to]) {
-                d[to] = d_new;
-                parent[to] = v;
+            i64 d_new = ds[v] + cost;
+            if(chmin(ds[to], d_new)) {
+                ps[to] = v;
                 enqueue(to, cost);
             }
         }
     }
 
-    return make_tuple(d, parent);
+    return make_tuple(ds, ps);
 }
 
 // ベルマンフォード法
@@ -170,30 +168,30 @@ tuple<vector<T>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,T>>>& g, i
 // そのような点を全て検出するため、2*n 回ループしている
 // (一般的な実装の倍の回数。ただし更新がなくなったら打ち切る)
 //
-// (d,parent) を返す
-// d[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
-// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+// (ds,ps) を返す
+// ds[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
+// ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
 tuple<vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
-    vector<T> d(n, PROCON_INF<T>());
-    vector<i64> parent(n, -1);
+    vector<T> ds(n, PROCON_INF<T>());
+    vector<i64> ps(n, -1);
 
-    d[start] = T(0);
+    ds[start] = T{};
 
     REP(i, 2*n) {
         bool update = false;
         REP(from, n) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
-            if(d[from] == PROCON_INF<T>()) continue;
+            if(ds[from] == PROCON_INF<T>()) continue;
             for(const auto& p : g[from]) {
-                i64 to,cost; tie(to,cost) = p;
-                i64 d_new = d[from] == -PROCON_INF<T>() ? -PROCON_INF<T>() : d[from] + cost;
-                if(d_new < d[to]) {
-                    update     = true;
-                    d[to]      = i >= n-1 ? -PROCON_INF<T>() : d_new;
-                    parent[to] = from;
+                i64 to; T cost; tie(to,cost) = p;
+                T d_new = ds[from]==-PROCON_INF<T>() ? -PROCON_INF<T>() : ds[from]+cost;
+                if(d_new < ds[to]) {
+                    update = true;
+                    ds[to] = i >= n-1 ? -PROCON_INF<T>() : d_new;
+                    ps[to] = from;
                 }
             }
 #pragma GCC diagnostic pop
@@ -201,7 +199,7 @@ tuple<vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g,
         if(!update) break;
     }
 
-    return make_tuple(d, parent);
+    return make_tuple(ds, ps);
 }
 
 // SPFA (Shortest Path Faster Algorithm)
@@ -210,34 +208,34 @@ tuple<vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g,
 // 最短距離が負の無限大になる点を全て検出するため 2*n 回ループしている
 // (一般的な実装の倍の回数。ただし更新がなくなったら打ち切る)
 //
-// (d,parent) を返す
-// d[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
-// parent[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
+// (ds,ps) を返す
+// ds[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
+// ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
 tuple<vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i64 start) {
     i64 n = SIZE(g);
-    vector<T> d(n, PROCON_INF<T>());
-    vector<i64> parent(n, -1);
+    vector<T> ds(n, PROCON_INF<T>());
+    vector<i64> ps(n, -1);
 
     queue<i64> que;
     vector<bool> in_que(n, false);
     const auto enqueue = [&que,&in_que](i64 v) { que.emplace(v); in_que[v] = true; };
     const auto dequeue = [&que,&in_que]() { i64 v = POP(que); in_que[v] = false; return v; };
 
-    d[start] = T(0);
+    ds[start] = T{};
     enqueue(start);
 
     REP(i, 2*n) {
         REP(_, que.size()) {
             i64 from = dequeue();
             for(const auto& p : g[from]) {
-                i64 to,cost; tie(to,cost) = p;
+                i64 to; T cost; tie(to,cost) = p;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
-                i64 d_new = d[from] == -PROCON_INF<T>() ? -PROCON_INF<T>() : d[from] + cost;
-                if(d_new < d[to]) {
-                    d[to]      = i >= n-1 ? -PROCON_INF<T>() : d_new;
-                    parent[to] = from;
+                T d_new = ds[from]==-PROCON_INF<T>() ? -PROCON_INF<T>() : ds[from]+cost;
+                if(d_new < ds[to]) {
+                    ds[to] = i >= n-1 ? -PROCON_INF<T>() : d_new;
+                    ps[to] = from;
                     if(!in_que[to]) enqueue(to);
                 }
 #pragma GCC diagnostic pop
@@ -246,7 +244,7 @@ tuple<vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i6
         if(que.empty()) break;
     }
 
-    return make_tuple(d, parent);
+    return make_tuple(ds, ps);
 }
 
 // ワーシャルフロイド法
