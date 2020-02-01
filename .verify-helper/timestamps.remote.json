@@ -32,6 +32,7 @@
 "verify/aoj/NTL_1_C/solve.test.cpp": "2020-01-30 17:34:24 +0900",
 "verify/aoj/NTL_1_E/solve.test.cpp": "2020-01-30 17:34:24 +0900",
 "verify/yosupo/point_add_range_sum/segtree_rq.test.cpp": "2020-01-30 23:19:09 +0900",
+"verify/yosupo/point_set_range_composite/segtree_rq.test.cpp": "2020-02-01 15:49:59 +0900",
 "verify/yosupo/staticrmq/segtree_rq.test.cpp": "2020-01-30 23:03:50 +0900",
 "verify/yosupo/unionfind/solve.test.cpp": "2020-01-30 21:20:51 +0900",
 "verify/yosupo/zalgorithm/solve.test.cpp": "2020-01-30 20:44:20 +0900"
