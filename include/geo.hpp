@@ -225,4 +225,43 @@ bool geo_intersects(const Segment& s0, const Segment& s1, Real eps=EPS) {
     return true;
 }
 
+Real geo_distance(const Vec& p0, const Vec& p1) {
+    return (p1-p0).abs();
+}
+
+Real geo_distance(const Vec& p, const Line& l) {
+    auto v = l.vec();
+    return ABS(v.cross(p-l[0]) / v.abs());
+}
+Real geo_distance(const Line& l, const Vec& p) { return geo_distance(p,l); }
+
+Real geo_distance(const Vec& p, const Segment& s) {
+    auto v = s.vec();
+    if( v.dot(p-s[0]) < 0) return geo_distance(s[0], p);
+    if(-v.dot(p-s[1]) < 0) return geo_distance(s[1], p);
+    return geo_distance(p, Line(s));
+}
+Real geo_distance(const Segment& s, const Vec& p) { return geo_distance(p,s); }
+
+Real geo_distance(const Line& l0, const Line& l1, Real eps=EPS) {
+    if(geo_intersects(l0,l1,eps)) return 0;
+    return geo_distance(l0[0], l1);
+}
+
+Real geo_distance(const Line& l, const Segment& s, Real eps=EPS) {
+    if(geo_intersects(l,s,eps)) return 0;
+    return MIN(geo_distance(s[0],l), geo_distance(s[1],l));
+}
+Real geo_distance(const Segment& s, const Line& l, Real eps=EPS) { return geo_distance(l,s,eps); }
+
+Real geo_distance(const Segment& s0, const Segment& s1, Real eps=EPS) {
+    if(geo_intersects(s0,s1,eps)) return 0;
+    return MIN({
+        geo_distance(s0[0], s1),
+        geo_distance(s0[1], s1),
+        geo_distance(s1[0], s0),
+        geo_distance(s1[1], s0),
+    });
+}
+
 // }}}
