@@ -1,8 +1,8 @@
 // trisect {{{
 
 // [lo,hi) におけるunimodalな関数 f のargmaxを返す
-template<typename F>
-i64 trisect_max_integer(i64 lo, i64 hi, F f) {
+template<class F>
+i64 trisect_max_integer(i64 lo, i64 hi, F&& f) {
     ASSERT(lo < hi);
 
     while(lo+2 < hi) {
@@ -20,8 +20,8 @@ i64 trisect_max_integer(i64 lo, i64 hi, F f) {
         return f(lo) > f(lo+1) ? lo : lo+1;
 }
 
-template<typename F>
-i64 trisect_min_integer(i64 lo, i64 hi, F f) {
+template<class F>
+i64 trisect_min_integer(i64 lo, i64 hi, F&& f) {
     ASSERT(lo < hi);
 
     while(lo+2 < hi) {
@@ -39,13 +39,13 @@ i64 trisect_min_integer(i64 lo, i64 hi, F f) {
         return f(lo) < f(lo+1) ? lo : lo+1;
 }
 
-template<typename F>
-f64 trisect_max_real(f64 lo, f64 hi, F f, i64 iter=100) {
+template<class F>
+Real trisect_max_real(Real lo, Real hi, F&& f, i64 iter=100) {
     ASSERT(lo < hi);
 
-    REP(_, iter) {
-        f64 x1 = lo + 1*(hi-lo)/3;
-        f64 x2 = lo + 2*(hi-lo)/3;
+    LOOP(iter) {
+        Real x1 = lo + 1*(hi-lo)/3;
+        Real x2 = lo + 2*(hi-lo)/3;
         if(f(x1) > f(x2))
             hi = x2;
         else
@@ -55,13 +55,13 @@ f64 trisect_max_real(f64 lo, f64 hi, F f, i64 iter=100) {
     return (lo+hi) / 2;
 }
 
-template<typename F>
-f64 trisect_min_real(f64 lo, f64 hi, F f, i64 iter=100) {
+template<class F>
+Real trisect_min_real(Real lo, Real hi, F&& f, i64 iter=100) {
     ASSERT(lo < hi);
 
-    REP(_, iter) {
-        f64 x1 = lo + 1*(hi-lo)/3;
-        f64 x2 = lo + 2*(hi-lo)/3;
+    LOOP(iter) {
+        Real x1 = lo + 1*(hi-lo)/3;
+        Real x2 = lo + 2*(hi-lo)/3;
         if(f(x1) < f(x2))
             hi = x2;
         else
