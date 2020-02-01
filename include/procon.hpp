@@ -296,10 +296,13 @@ constexpr i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
 }
 
 template<class Pred>
-constexpr Real bisect_real(Real lo, Real hi, Pred pred, i64 iter=70) {
-    ASSERT(lo < hi);
+constexpr Real bisect_real(Real lo, Real hi, Pred pred, Real eps=EPS) {
+#ifdef PROCON_LOCAL
+    ASSERT(!GT_EPS(lo,hi,eps));
+#endif
+    if(lo > hi) swap(lo, hi);
 
-    LOOP(iter) {
+    while(!EQ_EPS(lo,hi,eps)) {
         Real mid = (lo+hi) / 2;
         if(pred(mid))
             lo = mid;
