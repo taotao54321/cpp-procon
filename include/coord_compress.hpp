@@ -65,6 +65,20 @@ struct CoordCompress {
 #endif
         return xs_[i];
     }
+
+    i64 lower_bound(i64 x) const {
+#ifdef PROCON_LOCAL
+        ASSERT(built_);
+#endif
+        return distance(begin(xs_), ALL(std::lower_bound, xs_, x));
+    }
+
+    i64 upper_bound(i64 x) const {
+#ifdef PROCON_LOCAL
+        ASSERT(built_);
+#endif
+        return distance(begin(xs_), ALL(std::upper_bound, xs_, x));
+    }
 };
 
 // }}}
