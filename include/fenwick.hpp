@@ -24,9 +24,7 @@ struct Fenwick {
 
     // [l,r) の和
     T query(i64 l, i64 r) const {
-#ifdef PROCON_LOCAL
-        ASSERT(l <= r);
-#endif
+        ASSERT_LOCAL(l <= r);
         return query0(r) - query0(l);
     }
 
@@ -76,9 +74,7 @@ struct Fenwick2 {
 
     // [(y1,x1),(y2,x2)) の和
     T query(i64 y1, i64 x1, i64 y2, i64 x2) const {
-#ifdef PROCON_LOCAL
-        ASSERT(y1 <= y2 && x1 <= x2);
-#endif
+        ASSERT_LOCAL(y1 <= y2 && x1 <= x2);
         return query0(y2,x2) - query0(y1,x2) - query0(y2,x1) + query0(y1,x1);
     }
 };

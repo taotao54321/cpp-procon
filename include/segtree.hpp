@@ -43,9 +43,7 @@ struct SegTreeRQ {
     }
 
     Monoid query(i64 l, i64 r) const {
-#ifdef PROCON_LOCAL
-        ASSERT(l <= r);
-#endif
+        ASSERT_LOCAL(l <= r);
         return query_impl(l, r, 1, 0, n_);
     }
 
@@ -120,9 +118,7 @@ struct SegTreeRU {
     }
 
     void act(i64 l, i64 r, const Action& a) {
-#ifdef PROCON_LOCAL
-        ASSERT(l <= r);
-#endif
+        ASSERT_LOCAL(l <= r);
         act_impl(l, r, a, 1, 0, n_);
     }
 
@@ -160,9 +156,8 @@ private:
     }
 
     T query_impl(i64 qi, i64 v, i64 l, i64 r) {
-#ifdef PROCON_LOCAL
-        ASSERT(l <= qi && qi < r);
-#endif
+        ASSERT_LOCAL(l <= qi && qi < r);
+
         eval(v);
 
         if(v >= n_) return data_[v-n_];  // leaf
@@ -240,16 +235,12 @@ struct SegTreeLazy {
     }
 
     void act(i64 l, i64 r, const Action& a) {
-#ifdef PROCON_LOCAL
-        ASSERT(l <= r);
-#endif
+        ASSERT_LOCAL(l <= r);
         act_impl(l, r, a, 1, 0, n_);
     }
 
     Monoid query(i64 l, i64 r) {
-#ifdef PROCON_LOCAL
-        ASSERT(l <= r);
-#endif
+        ASSERT_LOCAL(l <= r);
         return query_impl(l, r, 1, 0, n_);
     }
 

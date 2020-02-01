@@ -17,17 +17,13 @@ struct CoordCompress {
     i64 size() const { return SIZE(xs_); }
 
     void insert(i64 x) {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
         xs_.emplace_back(x);
     }
 
     template<class InputIt>
     void insert(InputIt first, InputIt last) {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
         xs_.insert(end(xs_), first, last);
     }
 
@@ -36,9 +32,8 @@ struct CoordCompress {
     }
 
     void build() {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
+
         ALL(sort, xs_);
         xs_.erase(ALL(unique,xs_), end(xs_));
 
@@ -50,9 +45,7 @@ struct CoordCompress {
     }
 
     i64 comp(i64 x) const {
-#ifdef PROCON_LOCAL
-        ASSERT(built_);
-#endif
+        ASSERT_LOCAL(built_);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnull-dereference"
         return comp_.find(x)->second;
@@ -60,23 +53,17 @@ struct CoordCompress {
     }
 
     i64 uncomp(i64 i) const {
-#ifdef PROCON_LOCAL
-        ASSERT(built_);
-#endif
+        ASSERT_LOCAL(built_);
         return xs_[i];
     }
 
     i64 lower_bound(i64 x) const {
-#ifdef PROCON_LOCAL
-        ASSERT(built_);
-#endif
+        ASSERT_LOCAL(built_);
         return distance(begin(xs_), ALL(std::lower_bound, xs_, x));
     }
 
     i64 upper_bound(i64 x) const {
-#ifdef PROCON_LOCAL
-        ASSERT(built_);
-#endif
+        ASSERT_LOCAL(built_);
         return distance(begin(xs_), ALL(std::upper_bound, xs_, x));
     }
 };

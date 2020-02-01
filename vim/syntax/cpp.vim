@@ -26,7 +26,7 @@ syntax keyword cppConstant PI
 " }}}
 
 " statement {{{
-syntax keyword cppStatement assert ASSERT
+syntax keyword cppStatement assert ASSERT ASSERT_LOCAL
 
 syntax keyword cppStatement SFINAE
 

@@ -1,6 +1,7 @@
 #define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/library/6/NTL/1/NTL_1_B"
 //#define ERROR "1e-6"
 
+#define ASSERT_LV 2
 // header {{{
 #include "../../../include/stdc++.hpp"
 using namespace std;

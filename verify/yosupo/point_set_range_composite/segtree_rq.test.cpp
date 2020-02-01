@@ -1,6 +1,7 @@
 #define PROBLEM "https://judge.yosupo.jp/problem/point_set_range_composite"
 //#define ERROR "1e-6"
 
+#define ASSERT_LV 2
 // header {{{
 #include "../../../include/stdc++.hpp"
 using namespace std;

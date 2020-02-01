@@ -1,3 +1,10 @@
+#ifndef ASSERT_LV
+# define ASSERT_LV 1
+#endif
+#if ASSERT_LV == 0
+# define NDEBUG
+#endif
+
 #if defined(__GNUC__) && !defined(__clang__)
 #include <bits/stdc++.h>
 #else

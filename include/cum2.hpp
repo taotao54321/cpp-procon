@@ -18,23 +18,18 @@ struct Cum2 {
     i64 w() const { return SIZE(v_[0])-1; }
 
     const Abel& at(i64 y, i64 x) const {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
         return v_[y+1][x+1];
     }
 
     Abel& at(i64 y, i64 x) {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
         return v_[y+1][x+1];
     }
 
     void build() {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
+
         FOR(y, 1, h()+1) {
             partial_sum(begin(v_[y])+1, end(v_[y]), begin(v_[y])+1, op_);
             FOR(x, 1, w()+1) {
@@ -45,10 +40,9 @@ struct Cum2 {
     }
 
     Abel query(i64 y1, i64 x1, i64 y2, i64 x2) const {
-#ifdef PROCON_LOCAL
-        ASSERT(built_);
-        ASSERT(y1 <= y2 && x1 <= x2);
-#endif
+        ASSERT_LOCAL(built_);
+        ASSERT_LOCAL(y1 <= y2 && x1 <= x2);
+
         Abel res = v_[y2][x2];
         res = op_(res, inv_(v_[y1][x2]));
         res = op_(res, inv_(v_[y2][x1]));

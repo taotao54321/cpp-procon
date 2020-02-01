@@ -1,6 +1,7 @@
 #define PROBLEM "https://onlinejudge.u-aizu.ac.jp/courses/lesson/8/ITP2/11/ITP2_11_C"
 //#define ERROR "1e-6"
 
+#define ASSERT_LV 2
 // header {{{
 #include "../../../include/stdc++.hpp"
 using namespace std;

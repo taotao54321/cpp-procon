@@ -25,9 +25,7 @@ struct RollingHash {
     }
 
     i64 get(i64 l, i64 r) const {
-#ifdef PROCON_LOCAL
-        ASSERT(l <= r);
-#endif
+        ASSERT_LOCAL(l <= r);
         return mod(h_[r] - mul(h_[l],bpow_[r-l]));
     }
 

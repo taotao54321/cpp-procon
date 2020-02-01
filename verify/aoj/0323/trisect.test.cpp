@@ -1,6 +1,7 @@
 #define PROBLEM "http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0323"
 #define ERROR "1e-3"
 
+#define ASSERT_LV 2
 // header {{{
 #include "../../../include/stdc++.hpp"
 using namespace std;

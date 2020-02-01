@@ -41,9 +41,7 @@ i64 trisect_min_integer(i64 lo, i64 hi, F&& f) {
 
 template<class F>
 Real trisect_max_real(Real lo, Real hi, F&& f, Real eps=EPS) {
-#ifdef PROCON_LOCAL
-    ASSERT(!GT_EPS(lo,hi,eps));
-#endif
+    ASSERT_LOCAL(!GT_EPS(lo,hi,eps));
     if(lo > hi) swap(lo, hi);
 
     while(!EQ_EPS(lo,hi,eps)) {
@@ -60,9 +58,7 @@ Real trisect_max_real(Real lo, Real hi, F&& f, Real eps=EPS) {
 
 template<class F>
 Real trisect_min_real(Real lo, Real hi, F&& f, Real eps=EPS) {
-#ifdef PROCON_LOCAL
-    ASSERT(!GT_EPS(lo,hi,eps));
-#endif
+    ASSERT_LOCAL(!GT_EPS(lo,hi,eps));
     if(lo > hi) swap(lo, hi);
 
     while(!EQ_EPS(lo,hi,eps)) {

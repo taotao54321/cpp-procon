@@ -19,9 +19,8 @@ struct Imos2 {
 
     // [(y1,x1),(y2,x2))
     void add(i64 y1, i64 x1, i64 y2, i64 x2, const Abel& val) {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
+
         v_[y1][x1] = op_(v_[y1][x1], val);
         v_[y2][x1] = op_(v_[y2][x1], inv_(val));
         v_[y1][x2] = op_(v_[y1][x2], inv_(val));
@@ -29,9 +28,8 @@ struct Imos2 {
     }
 
     void build() {
-#ifdef PROCON_LOCAL
-        ASSERT(!built_);
-#endif
+        ASSERT_LOCAL(!built_);
+
         REP(y, h()) {
             REP(x, w()-1) {
                 v_[y][x+1] = op_(v_[y][x+1], v_[y][x]);
@@ -46,9 +44,7 @@ struct Imos2 {
     }
 
     const Abel& at(i64 y, i64 x) const {
-#ifdef PROCON_LOCAL
-        ASSERT(built_);
-#endif
+        ASSERT_LOCAL(built_);
         return v_[y][x];
     }
 };

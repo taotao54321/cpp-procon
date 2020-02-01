@@ -2,6 +2,7 @@
  * 
  */
 
+#define ASSERT_LV 1
 // header {{{
 #include "../include/stdc++.hpp"
 using namespace std;

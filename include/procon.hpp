@@ -8,6 +8,11 @@
 #define SFINAE(pred...) std::enable_if_t<(pred), std::nullptr_t> = nullptr
 
 #define ASSERT(expr...) assert((expr))
+#if defined(PROCON_LOCAL) || ASSERT_LV >= 2
+# define ASSERT_LOCAL(expr...) assert((expr))
+#else
+# define ASSERT_LOCAL(expr...)
+#endif
 
 constexpr i64  INF  = PROCON_INF<i64>();
 constexpr Real FINF = PROCON_INF<Real>();
@@ -297,9 +302,7 @@ constexpr i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
 
 template<class Pred>
 constexpr Real bisect_real(Real lo, Real hi, Pred pred, Real eps=EPS) {
-#ifdef PROCON_LOCAL
-    ASSERT(!GT_EPS(lo,hi,eps));
-#endif
+    ASSERT_LOCAL(!GT_EPS(lo,hi,eps));
     if(lo > hi) swap(lo, hi);
 
     while(!EQ_EPS(lo,hi,eps)) {
