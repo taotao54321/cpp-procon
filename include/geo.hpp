@@ -130,23 +130,24 @@ bool geo_is_parallel(const Vec& v0, const Vec& v1, Real eps=EPS) {
     return EQ_EPS(v0.cross(v1), 0, eps);
 }
 
-/**
- * +1: ccw
- * -1: cw
- * +2: p2--p0--p1 on line
- * -2: p0--p1--p2 on line
- *  0: p0--p2--p1 on line
- */
-i64 geo_ccw(const Vec& p0, const Vec& p1, const Vec& p2, Real eps=EPS) {
+enum GeoCcw {
+    GEO_CCW_CCW   =  1,
+    GEO_CCW_CW    = -1,
+    GEO_CCW_BACK  =  2,  // p2--p0--p1 on line
+    GEO_CCW_FRONT = -2,  // p0--p1--p2 on line
+    GEO_CCW_ON    =  0,  // p0--p2--p1 on line
+};
+
+GeoCcw geo_ccw(const Vec& p0, const Vec& p1, const Vec& p2, Real eps=EPS) {
     auto va = p1 - p0;
     auto vb = p2 - p0;
 
     auto cross = va.cross(vb);
-    if(GT_EPS(cross, 0, eps))             return  1;
-    if(LT_EPS(cross, 0, eps))             return -1;
-    if(LT_EPS(va.dot(vb), 0, eps))        return  2;
-    if(LT_EPS(va.norm(), vb.norm(), eps)) return -2;
-    return 0;
+    if(GT_EPS(cross, 0, eps))             return GEO_CCW_CCW;
+    if(LT_EPS(cross, 0, eps))             return GEO_CCW_CW;
+    if(LT_EPS(va.dot(vb), 0, eps))        return GEO_CCW_BACK;
+    if(LT_EPS(va.norm(), vb.norm(), eps)) return GEO_CCW_FRONT;
+    return GEO_CCW_ON;
 }
 
 struct Segment {
