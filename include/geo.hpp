@@ -51,6 +51,13 @@ struct Vec {
         return {-y,x};
     }
 
+    /*constexpr*/ Vec rotate(Real theta) const {
+        return {
+            x*cos(theta) - y*sin(theta),
+            x*sin(theta) + y*cos(theta)
+        };
+    }
+
     static constexpr bool lt_arg(const Vec& lhs, const Vec& rhs) {
         // 零ベクトルは偏角最小とみなす
         if(lhs == rhs) return false;
@@ -81,6 +88,10 @@ struct Vec {
     }
     friend constexpr bool operator!=(const Vec& lhs, const Vec& rhs) { return !(lhs == rhs); }
 };
+
+constexpr bool EQ_EPS(const Vec& lhs, const Vec& rhs, Real eps=EPS) {
+    return EQ_EPS(lhs.x,rhs.x,eps) && EQ_EPS(lhs.y,rhs.y,eps);
+}
 
 template<>
 struct Scan<Vec> {
@@ -166,8 +177,18 @@ struct Line {
     Vec vec() const { return p[1]-p[0]; }
 };
 
+Vec geo_project(const Line& l, const Vec& p) {
+    auto base = l.vec();
+    Real r = base.dot(p-l[0]) / base.norm();
+    return l[0] + r*base;
+}
+
+Vec geo_reflect(const Line& l, const Vec& p) {
+    return 2*geo_project(l,p) - p;
+}
+
 bool geo_intersects(const Vec& p0, const Vec& p1, Real eps=EPS) {
-    return EQ_EPS((p1-p0).norm(), 0, eps);
+    return EQ_EPS(p0, p1, eps);
 }
 
 bool geo_intersects(const Vec& p, const Line& l, Real eps=EPS) {
