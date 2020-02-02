@@ -301,7 +301,7 @@ Vec geo_crosspoint(const Segment& s0, const Segment& s1, Real eps=EPS) {
 }
 
 struct Polygon {
-    vector<Vec> ps;
+    vector<Vec> ps;  // 反時計回り
 
     explicit Polygon(const vector<Vec>& ps_arg) : ps(ps_arg) {}
     explicit Polygon(vector<Vec>&& ps_arg) : ps(ps_arg) {}
@@ -313,12 +313,24 @@ struct Polygon {
 
     Real area() const {
         i64 n = SIZE(ps);
+        ASSERT_LOCAL(n >= 3);
+
         Real res = 0;
         REP(i, n) {
             res += ps[i].cross(ps[(i+1)%n]);
         }
         res /= 2;
         return res;
+    }
+
+    bool is_convex() const {
+        i64 n = SIZE(ps);
+        ASSERT_LOCAL(n >= 3);
+
+        REP(i, n) {
+            if(geo_ccw(ps[modulo(i-1,n)], ps[i], ps[(i+1)%n]) == GEO_CCW_CW) return false;
+        }
+        return true;
     }
 };
 
