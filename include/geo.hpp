@@ -87,6 +87,10 @@ struct Vec {
         return EQ_EXACT(lhs.x,rhs.x) && EQ_EXACT(lhs.y,rhs.y);
     }
     friend constexpr bool operator!=(const Vec& lhs, const Vec& rhs) { return !(lhs == rhs); }
+
+    friend constexpr bool operator<(const Vec& lhs, const Vec& rhs) {
+        return make_pair(lhs.x,lhs.y) < make_pair(rhs.x,rhs.y);
+    }
 };
 
 constexpr bool EQ_EPS(const Vec& lhs, const Vec& rhs, Real eps=EPS) {
@@ -295,5 +299,35 @@ Vec geo_crosspoint(const Segment& s0, const Segment& s1, Real eps=EPS) {
     auto t = d0 / (d0+d1);
     return s0[0] + t*v0;
 }
+
+struct Circle {
+    Vec c;
+    Real r;
+
+    Circle(const Vec& cc, Real rr) : c(cc), r(rr) {}
+
+    Real circum() const { return 2*PI*r; }
+    Real area() const { return PI*r*r; }
+};
+
+bool geo_intersects(const Vec& p, const Circle& cir, Real eps=EPS) {
+    return EQ_EPS((p-cir.c).abs(), cir.r, eps);
+}
+bool geo_intersects(const Circle& cir, const Vec& p, Real eps=EPS) { return geo_intersects(p,cir,eps); }
+
+bool geo_intersects(const Line& l, const Circle& cir, Real eps=EPS) {
+    return !GT_EPS(geo_distance(l,cir.c), cir.r);
+}
+bool geo_intersects(const Circle& cir, const Line& l, Real eps=EPS) { return geo_intersects(l,cir,eps); }
+
+auto geo_crosspoints(const Line& l, const Circle& cir, Real eps=EPS) {
+    ASSERT_LOCAL(geo_intersects(l,cir,eps));
+
+    auto pr = geo_project(l, cir.c);
+    auto e  = l.vec().unit();
+    auto t  = sqrt(cir.r*cir.r - (pr-cir.c).norm());
+    return array<Vec,2> { pr+t*e, pr-t*e };
+}
+auto geo_crosspoints(const Circle& cir, const Line& l, Real eps=EPS) { return geo_crosspoints(l,cir,eps); }
 
 // }}}
