@@ -300,6 +300,28 @@ Vec geo_crosspoint(const Segment& s0, const Segment& s1, Real eps=EPS) {
     return s0[0] + t*v0;
 }
 
+struct Polygon {
+    vector<Vec> ps;
+
+    explicit Polygon(const vector<Vec>& ps_arg) : ps(ps_arg) {}
+    explicit Polygon(vector<Vec>&& ps_arg) : ps(ps_arg) {}
+
+    template<class InputIt>
+    Polygon(InputIt first, InputIt last) : ps(first,last) {}
+
+    i64 size() const { return SIZE(ps); }
+
+    Real area() const {
+        i64 n = SIZE(ps);
+        Real res = 0;
+        REP(i, n) {
+            res += ps[i].cross(ps[(i+1)%n]);
+        }
+        res /= 2;
+        return res;
+    }
+};
+
 struct Circle {
     Vec c;
     Real r;
