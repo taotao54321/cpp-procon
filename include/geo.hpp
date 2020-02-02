@@ -310,6 +310,17 @@ struct Circle {
     Real area() const { return PI*r*r; }
 };
 
+i64 geo_common_tangent_count(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
+    Real d = (cir1.c-cir0.c).abs();
+    Real rsum = cir0.r + cir1.r;
+    Real rdif = ABS(cir0.r - cir1.r);
+    if(EQ_EPS(d,rsum,eps)) return 3;    // 外接
+    if(rsum < d) return 4;              // 離れている
+    if(EQ_EPS(d,rdif,eps)) return 1;    // 内接
+    if(rdif < d && d < rsum) return 2;  // 交わる
+    return 0;                           // 一方が他方を含む
+}
+
 bool geo_intersects(const Vec& p, const Circle& cir, Real eps=EPS) {
     return EQ_EPS((p-cir.c).abs(), cir.r, eps);
 }
@@ -320,6 +331,11 @@ bool geo_intersects(const Line& l, const Circle& cir, Real eps=EPS) {
 }
 bool geo_intersects(const Circle& cir, const Line& l, Real eps=EPS) { return geo_intersects(l,cir,eps); }
 
+bool geo_intersects(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
+    i64 k = geo_common_tangent_count(cir0, cir1, eps);
+    return 1 <= k && k <= 3;
+}
+
 auto geo_crosspoints(const Line& l, const Circle& cir, Real eps=EPS) {
     ASSERT_LOCAL(geo_intersects(l,cir,eps));
 
@@ -329,5 +345,17 @@ auto geo_crosspoints(const Line& l, const Circle& cir, Real eps=EPS) {
     return array<Vec,2> { pr+t*e, pr-t*e };
 }
 auto geo_crosspoints(const Circle& cir, const Line& l, Real eps=EPS) { return geo_crosspoints(l,cir,eps); }
+
+auto geo_crosspoints(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
+    ASSERT_LOCAL(geo_intersects(cir0,cir1,eps));
+
+    auto v = cir1.c - cir0.c;
+    auto d = v.abs();
+    auto t = acos((cir0.r*cir0.r + d*d - cir1.r*cir1.r) / (2*cir0.r*d));
+    return array<Vec,2> {
+        cir0.c + v.rotate(t)  * cir0.r/d,
+        cir0.c + v.rotate(-t) * cir0.r/d,
+    };
+}
 
 // }}}
