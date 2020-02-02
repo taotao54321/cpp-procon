@@ -264,4 +264,36 @@ Real geo_distance(const Segment& s0, const Segment& s1, Real eps=EPS) {
     });
 }
 
+Vec geo_crosspoint(const Line& l0, const Line& l1, Real eps=EPS) {
+    ASSERT_LOCAL(geo_intersects(l0,l1,eps));
+    auto v0 = l0.vec();
+    auto v1 = l1.vec();
+    auto a = v0.cross(v1);
+    auto b = v0.cross(l0[1]-l1[0]);
+    if(EQ_EPS(a,0,eps)) return l0[0];  // 一致
+    return l1[0] + b/a*v1;
+}
+
+Vec geo_crosspoint(const Line& l, const Segment& s, Real eps=EPS) {
+    ASSERT_LOCAL(geo_intersects(l,s,eps));
+    return geo_crosspoint(l,Line(s));
+}
+Vec geo_crosspoint(const Segment& s, const Line& l, Real eps=EPS) { return geo_crosspoint(l,s,eps); }
+
+Vec geo_crosspoint(const Segment& s0, const Segment& s1, Real eps=EPS) {
+    ASSERT_LOCAL(geo_intersects(s0,s1));
+
+    if(EQ_EPS(geo_distance(s0[0],s1),0,eps)) return s0[0];
+    if(EQ_EPS(geo_distance(s0[1],s1),0,eps)) return s0[1];
+    if(EQ_EPS(geo_distance(s1[0],s0),0,eps)) return s1[0];
+    if(EQ_EPS(geo_distance(s1[1],s0),0,eps)) return s1[1];
+
+    auto v0 = s0.vec();
+    auto v1 = s1.vec();
+    auto d0 = ABS(v1.cross(s0[0]-s1[0]));
+    auto d1 = ABS(v1.cross(s0[1]-s1[0]));
+    auto t = d0 / (d0+d1);
+    return s0[0] + t*v0;
+}
+
 // }}}
