@@ -435,7 +435,7 @@ auto geo_tangent(const Circle& cir, const Vec& p, Real eps=EPS) {
     ASSERT_LOCAL(cir.containment(p) == GEO_CONT_OUT);
 
     Circle cir1(p, sqrt((cir.c-p).norm() - cir.r*cir.r));
-    return geo_crosspoints(cir, cir1);
+    return geo_crosspoints(cir, cir1, eps);
 }
 
 // }}}
