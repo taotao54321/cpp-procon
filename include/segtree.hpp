@@ -11,14 +11,14 @@ struct SegTreeRQ {
 
     SegTreeRQ(FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid, i64 n) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), unity_monoid_(unity_monoid),
-        n_(pow2_ceil(n)), data_(2*n_,unity_monoid_)
+        n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_)
     {
         init_merge();
     }
 
     SegTreeRQ(FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid, i64 n, const Monoid& x) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), unity_monoid_(unity_monoid),
-        n_(pow2_ceil(n)), data_(2*n_,unity_monoid_)
+        n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_)
     {
         fill_n(begin(data_)+n_, n, x);
         init_merge();
@@ -27,7 +27,7 @@ struct SegTreeRQ {
     template<class ForwardIt>
     SegTreeRQ(FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid, ForwardIt first, ForwardIt last) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), unity_monoid_(unity_monoid),
-        n_(pow2_ceil(distance(first,last))), data_(2*n_,unity_monoid_)
+        n_(first==last?0:pow2_ceil(distance(first,last))), data_(2*n_,unity_monoid_)
     {
         copy(first, last, begin(data_)+n_);
         init_merge();
@@ -99,12 +99,12 @@ struct SegTreeRU {
 
     SegTreeRU(FuncAction&& fa, FuncLazy&& fl, const Action& unity_action, i64 n) :
         fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)), unity_action_(unity_action),
-        n_(pow2_ceil(n)), data_(n_,T{}), lazy_(2*n_,unity_action_)
+        n_(n==0?0:pow2_ceil(n)), data_(n_,T{}), lazy_(2*n_,unity_action_)
     {}
 
     SegTreeRU(FuncAction&& fa, FuncLazy&& fl, const Action& unity_action, i64 n, const T& x) :
         fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)), unity_action_(unity_action),
-        n_(pow2_ceil(n)), data_(n_,T{}), lazy_(2*n_,unity_action_)
+        n_(n==0?0:pow2_ceil(n)), data_(n_,T{}), lazy_(2*n_,unity_action_)
     {
         fill_n(begin(data_), n, x);
     }
@@ -112,13 +112,14 @@ struct SegTreeRU {
     template<class ForwardIt>
     SegTreeRU(FuncAction&& fa, FuncLazy&& fl, const Action& unity_action, ForwardIt first, ForwardIt last) :
         fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)), unity_action_(unity_action),
-        n_(pow2_ceil(distance(first,last))), data_(n_,T{}), lazy_(2*n_,unity_action_)
+        n_(first==last?0:pow2_ceil(distance(first,last))), data_(n_,T{}), lazy_(2*n_,unity_action_)
     {
         copy(first, last, begin(data_));
     }
 
     void act(i64 l, i64 r, const Action& a) {
         ASSERT_LOCAL(l <= r);
+        if(l == r) return;
         act_impl(l, r, a, 1, 0, n_);
     }
 
@@ -208,7 +209,7 @@ struct SegTreeLazy {
                 const Monoid& unity_monoid, const Action& unity_action, i64 n) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)),
         unity_monoid_(unity_monoid), unity_action_(unity_action),
-        n_(pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
+        n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
     {
         init_merge();
     }
@@ -217,7 +218,7 @@ struct SegTreeLazy {
                 const Monoid& unity_monoid, const Action& unity_action, i64 n, const Monoid& x) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)),
         unity_monoid_(unity_monoid), unity_action_(unity_action),
-        n_(pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
+        n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
     {
         fill_n(begin(data_)+n_, n, x);
         init_merge();
@@ -228,7 +229,7 @@ struct SegTreeLazy {
                 const Monoid& unity_monoid, const Action& unity_action, ForwardIt first, ForwardIt last) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)),
         unity_monoid_(unity_monoid), unity_action_(unity_action),
-        n_(pow2_ceil(distance(first,last))), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
+        n_(first==last?0:pow2_ceil(distance(first,last))), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
     {
         copy(first, last, begin(data_)+n_);
         init_merge();
@@ -236,6 +237,7 @@ struct SegTreeLazy {
 
     void act(i64 l, i64 r, const Action& a) {
         ASSERT_LOCAL(l <= r);
+        if(l == r) return;
         act_impl(l, r, a, 1, 0, n_);
     }
 
