@@ -391,10 +391,12 @@ auto geo_crosspoints(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
 
     auto v = cir1.c - cir0.c;
     auto d = v.abs();
-    auto t = acos((cir0.r*cir0.r + d*d - cir1.r*cir1.r) / (2*cir0.r*d));
+    auto ta = (d*d + cir0.r*cir0.r - cir1.r*cir1.r) / (2*d);
+    auto tb = sqrt(MAX(0.0, cir0.r*cir0.r - ta*ta));
+    auto vn = v.rotate90();
     return array<Vec,2> {
-        cir0.c + v.rotate(t)  * cir0.r/d,
-        cir0.c + v.rotate(-t) * cir0.r/d,
+        cir0.c + ta/d*v + tb/d*vn,
+        cir0.c + ta/d*v - tb/d*vn,
     };
 }
 
