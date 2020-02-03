@@ -341,7 +341,7 @@ struct Polygon {
 
     Real area() const {
         i64 n = SIZE(ps);
-        ASSERT_LOCAL(n >= 3);
+        ASSERT(n >= 3);
 
         Real res = 0;
         REP(i, n) {
@@ -353,7 +353,7 @@ struct Polygon {
 
     bool is_convex() const {
         i64 n = SIZE(ps);
-        ASSERT_LOCAL(n >= 3);
+        ASSERT(n >= 3);
 
         REP(i, n) {
             if(geo_ccw(ps[modulo(i-1,n)], ps[i], ps[(i+1)%n]) == GEO_CCW_CW) return false;
@@ -363,7 +363,7 @@ struct Polygon {
 
     GeoContainment containment(const Vec& p, Real eps=EPS) const {
         i64 n = SIZE(ps);
-        ASSERT_LOCAL(n >= 3);
+        ASSERT(n >= 3);
 
         i64 cnt = 0;
         REP(i, n) {
