@@ -300,6 +300,12 @@ Vec geo_crosspoint(const Segment& s0, const Segment& s1, Real eps=EPS) {
     return s0[0] + t*v0;
 }
 
+enum GeoContainment {
+    GEO_CONT_OUT,
+    GEO_CONT_ON,
+    GEO_CONT_IN,
+};
+
 struct Polygon {
     vector<Vec> ps;  // 反時計回り
 
@@ -332,6 +338,21 @@ struct Polygon {
         }
         return true;
     }
+
+    GeoContainment containment(const Vec& p, Real eps=EPS) const {
+        i64 n = SIZE(ps);
+        ASSERT_LOCAL(n >= 3);
+
+        i64 cnt = 0;
+        REP(i, n) {
+            Vec a = ps[i] - p;
+            Vec b = ps[(i+1)%n] - p;
+            if(EQ_EPS(a.cross(b),0,eps) && !GT_EPS(a.dot(b),0,eps)) return GEO_CONT_ON;
+            if(a.y > b.y) swap(a, b);
+            if(!GT_EPS(a.y,0,eps) && GT_EPS(b.y,0,eps) && GT_EPS(a.cross(b),0,eps)) ++cnt;
+        }
+        return cnt%2==0 ? GEO_CONT_OUT : GEO_CONT_IN;
+    }
 };
 
 struct Circle {
@@ -342,6 +363,16 @@ struct Circle {
 
     Real circum() const { return 2*PI*r; }
     Real area() const { return PI*r*r; }
+
+    GeoContainment containment(const Vec& p, Real eps=EPS) const {
+        auto d = (c-p).abs();
+        if(GT_EPS(d,r,eps))
+            return GEO_CONT_OUT;
+        else if(LT_EPS(d,r,eps))
+            return GEO_CONT_IN;
+        else
+            return GEO_CONT_ON;
+    }
 };
 
 i64 geo_common_tangent_count(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
