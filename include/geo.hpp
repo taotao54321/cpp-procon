@@ -328,6 +328,26 @@ enum GeoContainment {
     GEO_CONT_IN,
 };
 
+bool geo_is_triangle(const Vec& A, const Vec& B, const Vec& C) {
+    auto ccw = geo_ccw(A, B, C);
+    return ccw == GEO_CCW_CCW || ccw == GEO_CCW_CW;
+}
+
+Vec geo_triangle_excenter(const Vec& A, const Vec& B, const Vec& C) {
+    ASSERT_LOCAL(geo_is_triangle(A,B,C));
+
+    auto a2 = (B-C).norm();
+    auto b2 = (C-A).norm();
+    auto c2 = (A-B).norm();
+
+    auto s = a2*(b2+c2-a2);
+    auto t = b2*(c2+a2-b2);
+    auto u = c2*(a2+b2-c2);
+    auto S = ABS((B-A).cross(C-A));
+
+    return (s*A + t*B + u*C) / (4*S*S);
+}
+
 struct Polygon {
     vector<Vec> ps;  // 反時計回り
 
@@ -518,6 +538,46 @@ auto geo_tangent(const Circle& cir, const Vec& p) {
 
     Circle cir1(p, sqrt((cir.c-p).norm() - cir.r*cir.r));
     return geo_crosspoints(cir, cir1);
+}
+
+Circle geo_min_ball(vector<Vec> ps) {
+    i64 n = SIZE(ps);
+    ASSERT(n >= 1);
+    if(n == 1) return {ps[0],0};
+
+    ALL(shuffle, ps, PROCON_URBG());
+
+    auto f_cir2 = [](const Vec& A, const Vec& B) -> pair<Vec,Real> {
+        Vec c = (A+B) / 2;
+        Real r2 = (A-c).norm();
+        return {c,r2};
+    };
+    auto f_cir3 = [](const Vec& A, const Vec& B, const Vec& C) -> pair<Vec,Real> {
+        Vec c = geo_triangle_excenter(A, B, C);
+        Real r2 = (A-c).norm();
+        return {c,r2};
+    };
+    auto f_in = [](const pair<Vec,Real>& cir, const Vec& p) {
+        auto c  = cir.first;
+        auto r2 = cir.second;
+        return !GT_EPS((p-c).norm(), r2);
+    };
+
+    auto cir = f_cir2(ps[0], ps[1]);
+    FOR(i, 2, n) {
+        if(f_in(cir, ps[i])) continue;
+        cir = f_cir2(ps[0], ps[i]);
+        FOR(j, 1, i) {
+            if(f_in(cir, ps[j])) continue;
+            cir = f_cir2(ps[i], ps[j]);
+            REP(k, j) {
+                if(f_in(cir, ps[k])) continue;
+                cir = f_cir3(ps[i], ps[j], ps[k]);
+            }
+        }
+    }
+
+    return {cir.first, sqrt(cir.second)};
 }
 
 // }}}

@@ -1255,6 +1255,39 @@ using ModIntC = ModIntT<integral_constant<i64,M>>;
 using ModInt = ModIntC<MOD>;
 // }}}
 
+// rng {{{
+// http://prng.di.unimi.it/xoroshiro128plus.c
+struct ProconUrbg {
+    using result_type = u64;
+    static constexpr result_type min() { return numeric_limits<result_type>::min(); }
+    static constexpr result_type max() { return numeric_limits<result_type>::max(); }
+
+    ProconUrbg(u64 s0, u64 s1) : state_{s0,s1} {}
+
+    result_type operator()() {
+        u64 s0 = state_[0];
+        u64 s1 = state_[1];
+        u64 res = s0 + s1;
+
+        s1 ^= s0;
+        state_[0] = ((s0<<24)|(s0>>40)) ^ s1 ^ (s1<<16);
+        state_[1] = (s1<<37)|(s1>>27);
+
+        return res;
+    }
+
+private:
+    u64 state_[2];
+};
+
+ProconUrbg PROCON_URBG() {
+    static u64 s0 = u64(chrono::high_resolution_clock::now().time_since_epoch().count());
+    static u64 s1 = u64(&s0);
+    static ProconUrbg urbg(s0, s1);
+    return urbg;
+}
+// }}}
+
 // init {{{
 struct ProconInit {
     ProconInit() {
