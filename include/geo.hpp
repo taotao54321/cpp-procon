@@ -384,6 +384,48 @@ struct Dbg<Polygon> {
     }
 };
 
+// 凸包 (Andrew's Monotone Chain)
+//
+// * 始点はy座標最小のもののうちx座標最小のもの
+// * 反時計回り
+// * 辺上の点を含む
+Polygon geo_convex_hull(vector<Vec> ps) {
+    i64 n = SIZE(ps);
+    ASSERT(n >= 3);
+
+    ALL(sort, ps, LT_ON([](const Vec& p) { return make_pair(p.y,p.x); }));
+
+    auto res = vec_reserve<Vec>(n);
+    auto step = [&res](const Vec& p) {
+        while(SIZE(res) >= 2) {
+            i64 k = SIZE(res);
+            // 辺上の点を含めたくなければ "!= GEO_CCW_CW" を "== GEO_CCW_CCW" に変える
+            if(geo_ccw(res[k-2],res[k-1],p) != GEO_CCW_CW) break;
+            res.pop_back();
+        }
+        res.emplace_back(p);
+    };
+
+    // lower hull
+    for(i64 i = 0; i < n; ++i) {
+        step(ps[i]);
+    }
+    // upper hull
+    for(i64 i = n-2; i >= 0; --i) {
+        step(ps[i]);
+    }
+    // 始点が重複するので削除
+    res.pop_back();
+
+    return Polygon(move(res));
+}
+
+template<class InputIt>
+Polygon geo_convex_hull(InputIt first, InputIt last) {
+    vector<Vec> ps(first, last);
+    return geo_convex_hull(move(ps));
+}
+
 struct Circle {
     Vec c;
     Real r;
