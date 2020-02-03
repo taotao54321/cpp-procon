@@ -126,12 +126,12 @@ struct Dbg<Vec> {
     }
 };
 
-bool geo_is_orthogonal(const Vec& v0, const Vec& v1, Real eps=EPS) {
-    return EQ_EPS(v0.dot(v1), 0, eps);
+bool geo_is_orthogonal(const Vec& v0, const Vec& v1) {
+    return EQ_EPS(v0.dot(v1), 0);
 }
 
-bool geo_is_parallel(const Vec& v0, const Vec& v1, Real eps=EPS) {
-    return EQ_EPS(v0.cross(v1), 0, eps);
+bool geo_is_parallel(const Vec& v0, const Vec& v1) {
+    return EQ_EPS(v0.cross(v1), 0);
 }
 
 enum GeoCcw {
@@ -142,15 +142,15 @@ enum GeoCcw {
     GEO_CCW_ON    =  0,  // p0--p2--p1 on line
 };
 
-GeoCcw geo_ccw(const Vec& p0, const Vec& p1, const Vec& p2, Real eps=EPS) {
+GeoCcw geo_ccw(const Vec& p0, const Vec& p1, const Vec& p2) {
     auto va = p1 - p0;
     auto vb = p2 - p0;
 
     auto cross = va.cross(vb);
-    if(GT_EPS(cross, 0, eps))             return GEO_CCW_CCW;
-    if(LT_EPS(cross, 0, eps))             return GEO_CCW_CW;
-    if(LT_EPS(va.dot(vb), 0, eps))        return GEO_CCW_BACK;
-    if(LT_EPS(va.norm(), vb.norm(), eps)) return GEO_CCW_FRONT;
+    if(GT_EPS(cross, 0))             return GEO_CCW_CCW;
+    if(LT_EPS(cross, 0))             return GEO_CCW_CW;
+    if(LT_EPS(va.dot(vb), 0))        return GEO_CCW_BACK;
+    if(LT_EPS(va.norm(), vb.norm())) return GEO_CCW_FRONT;
     return GEO_CCW_ON;
 }
 
@@ -214,105 +214,105 @@ Vec geo_reflect(const Line& l, const Vec& p) {
     return 2*geo_project(l,p) - p;
 }
 
-bool geo_intersects(const Vec& p0, const Vec& p1, Real eps=EPS) {
-    return EQ_EPS(p0, p1, eps);
+bool geo_intersects(const Vec& p0, const Vec& p1) {
+    return EQ_EPS(p0, p1);
 }
 
-bool geo_intersects(const Vec& p, const Line& l, Real eps=EPS) {
-    return geo_is_parallel(l[0]-p, l[1]-p, eps);
+bool geo_intersects(const Vec& p, const Line& l) {
+    return geo_is_parallel(l[0]-p, l[1]-p);
 }
-bool geo_intersects(const Line& l, const Vec& p, Real eps=EPS) { return geo_intersects(p,l,eps); }
+bool geo_intersects(const Line& l, const Vec& p) { return geo_intersects(p,l); }
 
-bool geo_intersects(const Vec& p, const Segment& s, Real eps=EPS) {
+bool geo_intersects(const Vec& p, const Segment& s) {
     if(!geo_intersects(p, Line(s))) return false;
     auto v = s.vec();
     auto dot0 = (p-s[0]).dot(v);
     auto dot1 = (p-s[1]).dot(-v);
-    return !LT_EPS(dot0,0,eps) && !LT_EPS(dot1,0,eps);
+    return !LT_EPS(dot0,0) && !LT_EPS(dot1,0);
 }
-bool geo_intersects(const Segment& s, const Vec& p, Real eps=EPS) { return geo_intersects(p,s,eps); }
+bool geo_intersects(const Segment& s, const Vec& p) { return geo_intersects(p,s); }
 
-bool geo_intersects(const Line& l0, const Line& l1, Real eps=EPS) {
-    if(!geo_is_parallel(l0.vec(), l1.vec(), eps)) return true;
+bool geo_intersects(const Line& l0, const Line& l1) {
+    if(!geo_is_parallel(l0.vec(), l1.vec())) return true;
     return geo_intersects(l1[0], l0);
 }
 
-bool geo_intersects(const Line& l, const Segment& s, Real eps=EPS) {
+bool geo_intersects(const Line& l, const Segment& s) {
     auto v = l.vec();
     auto cross0 = v.cross(s[0]-l[0]);
     auto cross1 = v.cross(s[1]-l[0]);
-    return !GT_EPS(cross0*cross1, 0, eps);
+    return !GT_EPS(cross0*cross1, 0);
 }
-bool geo_intersects(const Segment& s, const Line& l, Real eps=EPS) { return geo_intersects(l,s,eps); }
+bool geo_intersects(const Segment& s, const Line& l) { return geo_intersects(l,s); }
 
-bool geo_intersects(const Segment& s0, const Segment& s1, Real eps=EPS) {
-    if(GT_EPS(geo_ccw(s0[0],s0[1],s1[0])*geo_ccw(s0[0],s0[1],s1[1]), 0, eps)) return false;
-    if(GT_EPS(geo_ccw(s1[0],s1[1],s0[0])*geo_ccw(s1[0],s1[1],s0[1]), 0, eps)) return false;
+bool geo_intersects(const Segment& s0, const Segment& s1) {
+    if(GT_EPS(geo_ccw(s0[0],s0[1],s1[0])*geo_ccw(s0[0],s0[1],s1[1]), 0)) return false;
+    if(GT_EPS(geo_ccw(s1[0],s1[1],s0[0])*geo_ccw(s1[0],s1[1],s0[1]), 0)) return false;
     return true;
 }
 
-Real geo_distance(const Vec& p0, const Vec& p1, Real=EPS) {
+Real geo_distance(const Vec& p0, const Vec& p1) {
     return (p1-p0).abs();
 }
 
-Real geo_distance(const Vec& p, const Line& l, Real=EPS) {
+Real geo_distance(const Vec& p, const Line& l) {
     auto v = l.vec();
     return ABS(v.cross(p-l[0]) / v.abs());
 }
-Real geo_distance(const Line& l, const Vec& p, Real eps=EPS) { return geo_distance(p,l,eps); }
+Real geo_distance(const Line& l, const Vec& p) { return geo_distance(p,l); }
 
-Real geo_distance(const Vec& p, const Segment& s, Real eps=EPS) {
+Real geo_distance(const Vec& p, const Segment& s) {
     auto v = s.vec();
-    if( v.dot(p-s[0]) < 0) return geo_distance(s[0], p, eps);
-    if(-v.dot(p-s[1]) < 0) return geo_distance(s[1], p, eps);
-    return geo_distance(p, Line(s), eps);
+    if( v.dot(p-s[0]) < 0) return geo_distance(s[0], p);
+    if(-v.dot(p-s[1]) < 0) return geo_distance(s[1], p);
+    return geo_distance(p, Line(s));
 }
-Real geo_distance(const Segment& s, const Vec& p, Real eps=EPS) { return geo_distance(p,s,eps); }
+Real geo_distance(const Segment& s, const Vec& p) { return geo_distance(p,s); }
 
-Real geo_distance(const Line& l0, const Line& l1, Real eps=EPS) {
-    if(geo_intersects(l0,l1,eps)) return 0;
-    return geo_distance(l0[0], l1, eps);
+Real geo_distance(const Line& l0, const Line& l1) {
+    if(geo_intersects(l0,l1)) return 0;
+    return geo_distance(l0[0], l1);
 }
 
-Real geo_distance(const Line& l, const Segment& s, Real eps=EPS) {
-    if(geo_intersects(l,s,eps)) return 0;
-    return MIN(geo_distance(s[0],l,eps), geo_distance(s[1],l,eps));
+Real geo_distance(const Line& l, const Segment& s) {
+    if(geo_intersects(l,s)) return 0;
+    return MIN(geo_distance(s[0],l), geo_distance(s[1],l));
 }
-Real geo_distance(const Segment& s, const Line& l, Real eps=EPS) { return geo_distance(l,s,eps); }
+Real geo_distance(const Segment& s, const Line& l) { return geo_distance(l,s); }
 
-Real geo_distance(const Segment& s0, const Segment& s1, Real eps=EPS) {
-    if(geo_intersects(s0,s1,eps)) return 0;
+Real geo_distance(const Segment& s0, const Segment& s1) {
+    if(geo_intersects(s0,s1)) return 0;
     return MIN({
-        geo_distance(s0[0], s1, eps),
-        geo_distance(s0[1], s1, eps),
-        geo_distance(s1[0], s0, eps),
-        geo_distance(s1[1], s0, eps),
+        geo_distance(s0[0], s1),
+        geo_distance(s0[1], s1),
+        geo_distance(s1[0], s0),
+        geo_distance(s1[1], s0),
     });
 }
 
-Vec geo_crosspoint(const Line& l0, const Line& l1, Real eps=EPS) {
-    ASSERT_LOCAL(geo_intersects(l0,l1,eps));
+Vec geo_crosspoint(const Line& l0, const Line& l1) {
+    ASSERT_LOCAL(geo_intersects(l0,l1));
     auto v0 = l0.vec();
     auto v1 = l1.vec();
     auto a = v0.cross(v1);
     auto b = v0.cross(l0[1]-l1[0]);
-    if(EQ_EPS(a,0,eps)) return l0[0];  // 一致
+    if(EQ_EPS(a,0)) return l0[0];  // 一致
     return l1[0] + b/a*v1;
 }
 
-Vec geo_crosspoint(const Line& l, const Segment& s, Real eps=EPS) {
-    ASSERT_LOCAL(geo_intersects(l,s,eps));
+Vec geo_crosspoint(const Line& l, const Segment& s) {
+    ASSERT_LOCAL(geo_intersects(l,s));
     return geo_crosspoint(l,Line(s));
 }
-Vec geo_crosspoint(const Segment& s, const Line& l, Real eps=EPS) { return geo_crosspoint(l,s,eps); }
+Vec geo_crosspoint(const Segment& s, const Line& l) { return geo_crosspoint(l,s); }
 
-Vec geo_crosspoint(const Segment& s0, const Segment& s1, Real eps=EPS) {
+Vec geo_crosspoint(const Segment& s0, const Segment& s1) {
     ASSERT_LOCAL(geo_intersects(s0,s1));
 
-    if(EQ_EPS(geo_distance(s0[0],s1),0,eps)) return s0[0];
-    if(EQ_EPS(geo_distance(s0[1],s1),0,eps)) return s0[1];
-    if(EQ_EPS(geo_distance(s1[0],s0),0,eps)) return s1[0];
-    if(EQ_EPS(geo_distance(s1[1],s0),0,eps)) return s1[1];
+    if(EQ_EPS(geo_distance(s0[0],s1),0)) return s0[0];
+    if(EQ_EPS(geo_distance(s0[1],s1),0)) return s0[1];
+    if(EQ_EPS(geo_distance(s1[0],s0),0)) return s1[0];
+    if(EQ_EPS(geo_distance(s1[1],s0),0)) return s1[1];
 
     auto v0 = s0.vec();
     auto v1 = s1.vec();
@@ -361,7 +361,7 @@ struct Polygon {
         return true;
     }
 
-    GeoContainment containment(const Vec& p, Real eps=EPS) const {
+    GeoContainment containment(const Vec& p) const {
         i64 n = SIZE(ps);
         ASSERT(n >= 3);
 
@@ -369,9 +369,9 @@ struct Polygon {
         REP(i, n) {
             Vec a = ps[i] - p;
             Vec b = ps[(i+1)%n] - p;
-            if(EQ_EPS(a.cross(b),0,eps) && !GT_EPS(a.dot(b),0,eps)) return GEO_CONT_ON;
+            if(EQ_EPS(a.cross(b),0) && !GT_EPS(a.dot(b),0)) return GEO_CONT_ON;
             if(a.y > b.y) swap(a, b);
-            if(!GT_EPS(a.y,0,eps) && GT_EPS(b.y,0,eps) && GT_EPS(a.cross(b),0,eps)) ++cnt;
+            if(!GT_EPS(a.y,0) && GT_EPS(b.y,0) && GT_EPS(a.cross(b),0)) ++cnt;
         }
         return cnt%2==0 ? GEO_CONT_OUT : GEO_CONT_IN;
     }
@@ -435,11 +435,11 @@ struct Circle {
     Real circum() const { return 2*PI*r; }
     Real area() const { return PI*r*r; }
 
-    GeoContainment containment(const Vec& p, Real eps=EPS) const {
+    GeoContainment containment(const Vec& p) const {
         auto d = (c-p).abs();
-        if(GT_EPS(d,r,eps))
+        if(GT_EPS(d,r))
             return GEO_CONT_OUT;
-        else if(LT_EPS(d,r,eps))
+        else if(LT_EPS(d,r))
             return GEO_CONT_IN;
         else
             return GEO_CONT_ON;
@@ -457,50 +457,50 @@ struct Dbg<Circle> {
     }
 };
 
-i64 geo_common_tangent_count(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
+i64 geo_common_tangent_count(const Circle& cir0, const Circle& cir1) {
     Real d = (cir1.c-cir0.c).abs();
     Real rsum = cir0.r + cir1.r;
     Real rdif = ABS(cir0.r - cir1.r);
-    if(EQ_EPS(d,rsum,eps)) return 3;    // 外接
+    if(EQ_EPS(d,rsum)) return 3;    // 外接
     if(rsum < d) return 4;              // 離れている
-    if(EQ_EPS(d,rdif,eps)) return 1;    // 内接
+    if(EQ_EPS(d,rdif)) return 1;    // 内接
     if(rdif < d && d < rsum) return 2;  // 交わる
     return 0;                           // 一方が他方を含む
 }
 
-bool geo_intersects(const Vec& p, const Circle& cir, Real eps=EPS) {
-    return EQ_EPS((p-cir.c).abs(), cir.r, eps);
+bool geo_intersects(const Vec& p, const Circle& cir) {
+    return EQ_EPS((p-cir.c).abs(), cir.r);
 }
-bool geo_intersects(const Circle& cir, const Vec& p, Real eps=EPS) { return geo_intersects(p,cir,eps); }
+bool geo_intersects(const Circle& cir, const Vec& p) { return geo_intersects(p,cir); }
 
-bool geo_intersects(const Line& l, const Circle& cir, Real=EPS) {
+bool geo_intersects(const Line& l, const Circle& cir) {
     return !GT_EPS(geo_distance(l,cir.c), cir.r);
 }
-bool geo_intersects(const Circle& cir, const Line& l, Real eps=EPS) { return geo_intersects(l,cir,eps); }
+bool geo_intersects(const Circle& cir, const Line& l) { return geo_intersects(l,cir); }
 
-bool geo_intersects(const Segment& s, const Circle& cir, Real eps=EPS) {
-    if(GT_EPS(geo_distance(cir.c,s,eps), cir.r, eps)) return false;
-    return !LT_EPS((cir.c-s[0]).abs(), cir.r, eps) || !LT_EPS((cir.c-s[1]).abs(), cir.r, eps);
+bool geo_intersects(const Segment& s, const Circle& cir) {
+    if(GT_EPS(geo_distance(cir.c,s), cir.r)) return false;
+    return !LT_EPS((cir.c-s[0]).abs(), cir.r) || !LT_EPS((cir.c-s[1]).abs(), cir.r);
 }
-bool geo_intersects(const Circle& cir, const Segment& s, Real eps=EPS) { return geo_intersects(s,cir,eps); }
+bool geo_intersects(const Circle& cir, const Segment& s) { return geo_intersects(s,cir); }
 
-bool geo_intersects(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
-    i64 k = geo_common_tangent_count(cir0, cir1, eps);
+bool geo_intersects(const Circle& cir0, const Circle& cir1) {
+    i64 k = geo_common_tangent_count(cir0, cir1);
     return 1 <= k && k <= 3;
 }
 
-auto geo_crosspoints(const Line& l, const Circle& cir, Real eps=EPS) {
-    ASSERT_LOCAL(geo_intersects(l,cir,eps));
+auto geo_crosspoints(const Line& l, const Circle& cir) {
+    ASSERT_LOCAL(geo_intersects(l,cir));
 
     auto pr = geo_project(l, cir.c);
     auto e  = l.vec().unit();
     auto t  = sqrt(cir.r*cir.r - (pr-cir.c).norm());
     return array<Vec,2> { pr+t*e, pr-t*e };
 }
-auto geo_crosspoints(const Circle& cir, const Line& l, Real eps=EPS) { return geo_crosspoints(l,cir,eps); }
+auto geo_crosspoints(const Circle& cir, const Line& l) { return geo_crosspoints(l,cir); }
 
-auto geo_crosspoints(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
-    ASSERT_LOCAL(geo_intersects(cir0,cir1,eps));
+auto geo_crosspoints(const Circle& cir0, const Circle& cir1) {
+    ASSERT_LOCAL(geo_intersects(cir0,cir1));
 
     auto v = cir1.c - cir0.c;
     auto d = v.abs();
@@ -513,11 +513,11 @@ auto geo_crosspoints(const Circle& cir0, const Circle& cir1, Real eps=EPS) {
     };
 }
 
-auto geo_tangent(const Circle& cir, const Vec& p, Real eps=EPS) {
+auto geo_tangent(const Circle& cir, const Vec& p) {
     ASSERT_LOCAL(cir.containment(p) == GEO_CONT_OUT);
 
     Circle cir1(p, sqrt((cir.c-p).norm() - cir.r*cir.r));
-    return geo_crosspoints(cir, cir1, eps);
+    return geo_crosspoints(cir, cir1);
 }
 
 // }}}
