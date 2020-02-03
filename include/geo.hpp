@@ -169,6 +169,17 @@ struct Segment {
     Real abs() const { return vec().abs(); }
 };
 
+template<>
+struct Dbg<Segment> {
+    static void dbg(ostream& out, const Segment& s) {
+        out << "(";
+        dbg_write(out, s[0]);
+        out << ",";
+        dbg_write(out, s[1]);
+        out << ")";
+    }
+};
+
 struct Line {
     array<Vec,2> p;
 
@@ -180,6 +191,17 @@ struct Line {
           Vec& operator[](i64 i)       { return p[i]; }
 
     Vec vec() const { return p[1]-p[0]; }
+};
+
+template<>
+struct Dbg<Line> {
+    static void dbg(ostream& out, const Line& l) {
+        out << "(";
+        dbg_write(out, l[0]);
+        out << ",";
+        dbg_write(out, l[1]);
+        out << ")";
+    }
 };
 
 Vec geo_project(const Line& l, const Vec& p) {
@@ -355,6 +377,13 @@ struct Polygon {
     }
 };
 
+template<>
+struct Dbg<Polygon> {
+    static void dbg(ostream& out, const Polygon& poly) {
+        dbg_write(out, poly.ps);
+    }
+};
+
 struct Circle {
     Vec c;
     Real r;
@@ -372,6 +401,17 @@ struct Circle {
             return GEO_CONT_IN;
         else
             return GEO_CONT_ON;
+    }
+};
+
+template<>
+struct Dbg<Circle> {
+    static void dbg(ostream& out, const Circle& cir) {
+        out << "(";
+        dbg_write(out, cir.c);
+        out << ",";
+        dbg_write(out, cir.r);
+        out << ")";
     }
 };
 
