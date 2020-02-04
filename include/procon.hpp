@@ -1280,7 +1280,7 @@ private:
     u64 state_[2];
 };
 
-ProconUrbg PROCON_URBG() {
+ProconUrbg& PROCON_URBG() {
     static u64 s0 = u64(chrono::high_resolution_clock::now().time_since_epoch().count());
     static u64 s1 = u64(&s0);
     static ProconUrbg urbg(s0, s1);
