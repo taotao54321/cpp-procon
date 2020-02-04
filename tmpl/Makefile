@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-CXX := g++
+CXX ?= g++
 CXXFLAGS := \
     -std=c++14 \
     -Wall -Wextra \
