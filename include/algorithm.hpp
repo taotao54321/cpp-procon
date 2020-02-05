@@ -1,5 +1,24 @@
 // algorithm {{{
 
+template<class ForwardIt, class OutputIt, class URBG>
+OutputIt SAMPLE(ForwardIt first, ForwardIt last, OutputIt out, i64 n, URBG&& g) {
+    using Dist  = uniform_int_distribution<i64>;
+    using Param = typename Dist::param_type;
+
+    i64 unsampled = distance(first, last);
+    chmin(n, unsampled);
+    Dist dist;
+
+    for(; n > 0; ++first) {
+        --unsampled;
+        if(dist(g, Param{0,unsampled}) < n) {
+            *out++ = *first;
+            --n;
+        }
+    }
+    return out;
+}
+
 // nPr
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2639.pdf
 template<class BidiIt>
