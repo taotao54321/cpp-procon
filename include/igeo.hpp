@@ -29,6 +29,16 @@ struct IVec {
         return *this;
     }
 
+    // [(x0,y0),(x1,y1))
+    bool is_in(i64 x0, i64 y0, i64 x1, i64 y1) const {
+        ASSERT_LOCAL(x0 <= x1 && y0 <= y1);
+        return x0 <= x && x < x1 && y0 <= y && y < y1;
+    }
+    bool is_in(const IVec& p0, const IVec& p1) const {
+        ASSERT_LOCAL(p0.x <= p1.x && p0.y <= p1.y);
+        return p0.x <= x && x < p1.x && p0.y <= y && y < p1.y;
+    }
+
     template<class C>
     constexpr const auto& operator[](const C& cont) const { return cont[y][x]; }
     template<class C>
