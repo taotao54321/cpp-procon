@@ -16,13 +16,25 @@ public:
 
     void update(Real r) {
         temp_ = ft_(temp_start_, temp_end_, r);
+#ifdef PROCON_LOCAL
+        ++n_update_;
+#endif
     }
 
     bool accepts(Real dscore) {
         if(dscore > 0) return true;
         Real p = fp_(temp_, dscore);
-        return dist_(PROCON_URBG()) < p;
+        bool ok = dist_(PROCON_URBG()) < p;
+#ifdef PROCON_LOCAL
+        if(ok) ++n_accept_;
+#endif
+        return ok;
     }
+
+#ifdef PROCON_LOCAL
+    i64 update_count() const { return n_update_; }
+    i64 accept_count() const { return n_accept_; }
+#endif
 
 private:
     TempF ft_;
@@ -31,6 +43,10 @@ private:
     Real temp_end_;
     Real temp_;
     uniform_real_distribution<Real> dist_{};
+#ifdef PROCON_LOCAL
+    i64 n_update_{};
+    i64 n_accept_{};
+#endif
 };
 
 template<class TempF, class ProbF>
