@@ -63,6 +63,7 @@ constexpr Int SIZE(const T (&)[N]) noexcept { return Int(N); }
 
 constexpr bool is_odd (Int x) { return x%2 != 0; }
 constexpr bool is_even(Int x) { return x%2 == 0; }
+constexpr Int PARITY(Int x) { return x%2==0 ? 0 : 1; }
 
 template<class T>
 constexpr Int CMP(T x, T y) noexcept { return (y<x) - (x<y); }
