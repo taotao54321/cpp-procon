@@ -351,7 +351,7 @@ template<class Monoid>
     return res;
 }
 
-constexpr Int ipow(Int x, Int e) {
+/*constexpr*/ Int ipow(Int x, Int e) {
     return fastpow<Int>(x,e,1);
 }
 
@@ -387,12 +387,12 @@ constexpr Int ipow(Int x, Int e) {
 }
 
 // x > 0
-constexpr Int pow2_ceil(Int x) {
+/*constexpr*/ Int pow2_ceil(Int x) {
     return BIT_I(log2_ceil(x));
 }
 
 // x > 0
-constexpr Int pow2_floor(Int x) {
+/*constexpr*/ Int pow2_floor(Int x) {
     return BIT_I(log2_floor(x));
 }
 
