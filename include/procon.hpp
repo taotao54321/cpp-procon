@@ -1,7 +1,7 @@
 // procon {{{
 
-static_assert(is_same<Int,i64>::value || is_same<Int,i32>::value);
-static_assert(is_same<Real,f80>::value || is_same<Real,f64>::value || is_same<Real,f32>::value);
+static_assert(is_same<Int,i64>::value || is_same<Int,i32>::value, "");
+static_assert(is_same<Real,f80>::value || is_same<Real,f64>::value || is_same<Real,f32>::value, "");
 
 #define CPP_STR(x) CPP_STR_I(x)
 #define CPP_CAT(x,y) CPP_CAT_I(x,y)
