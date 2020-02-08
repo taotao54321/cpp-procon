@@ -855,7 +855,7 @@ auto RD1() {
 
 template<class T=Int>
 auto RD_VEC(Int n) {
-    auto res = vec_reserve<T>(n);
+    auto res = vec_reserve<typename Scan<T>::R>(n);
     LOOP(n) {
         res.emplace_back(RD<T>());
     }
@@ -869,7 +869,7 @@ auto RD1_VEC(Int n) {
 
 template<class T=Int>
 auto RD_VEC2(Int h, Int w) {
-    auto res = vec_reserve<vector<T>>(h);
+    auto res = vec_reserve<vector<typename Scan<T>::R>>(h);
     LOOP(h) {
         res.emplace_back(RD_VEC<T>(w));
     }
