@@ -160,8 +160,8 @@ struct Segment {
     Segment(const Vec& p0, const Vec& p1) : p{p0,p1} {}
     Segment(Real x0, Real y0, Real x1, Real y1) : p{Vec{x0,y0},Vec{x1,y1}} {}
 
-    const Vec& operator[](i64 i) const { return p[i]; }
-          Vec& operator[](i64 i)       { return p[i]; }
+    const Vec& operator[](Int i) const { return p[i]; }
+          Vec& operator[](Int i)       { return p[i]; }
 
     Vec vec() const { return p[1]-p[0]; }
 
@@ -187,8 +187,8 @@ struct Line {
     Line(Real x0, Real y0, Real x1, Real y1) : p{Vec{x0,y0},Vec{x1,y1}} {}
     explicit Line(const Segment& seg) : p{seg.p} {}
 
-    const Vec& operator[](i64 i) const { return p[i]; }
-          Vec& operator[](i64 i)       { return p[i]; }
+    const Vec& operator[](Int i) const { return p[i]; }
+          Vec& operator[](Int i)       { return p[i]; }
 
     Vec vec() const { return p[1]-p[0]; }
 };
@@ -357,10 +357,10 @@ struct Polygon {
     template<class InputIt>
     Polygon(InputIt first, InputIt last) : ps(first,last) {}
 
-    i64 size() const { return SIZE(ps); }
+    Int size() const { return SIZE(ps); }
 
     Real area() const {
-        i64 n = SIZE(ps);
+        Int n = SIZE(ps);
         ASSERT(n >= 3);
 
         Real res = 0;
@@ -372,7 +372,7 @@ struct Polygon {
     }
 
     bool is_convex() const {
-        i64 n = SIZE(ps);
+        Int n = SIZE(ps);
         ASSERT(n >= 3);
 
         REP(i, n) {
@@ -382,10 +382,10 @@ struct Polygon {
     }
 
     GeoContainment containment(const Vec& p) const {
-        i64 n = SIZE(ps);
+        Int n = SIZE(ps);
         ASSERT(n >= 3);
 
-        i64 cnt = 0;
+        Int cnt = 0;
         REP(i, n) {
             Vec a = ps[i] - p;
             Vec b = ps[(i+1)%n] - p;
@@ -410,7 +410,7 @@ struct Dbg<Polygon> {
 // * 反時計回り
 // * 辺上の点を含む
 Polygon geo_convex_hull(vector<Vec> ps) {
-    i64 n = SIZE(ps);
+    Int n = SIZE(ps);
     ASSERT(n >= 3);
 
     ALL(sort, ps, LT_ON([](const Vec& p) { return make_pair(p.y,p.x); }));
@@ -418,7 +418,7 @@ Polygon geo_convex_hull(vector<Vec> ps) {
     auto res = vec_reserve<Vec>(n);
     auto step = [&res](const Vec& p) {
         while(SIZE(res) >= 2) {
-            i64 k = SIZE(res);
+            Int k = SIZE(res);
             // 辺上の点を含めたくなければ "!= GEO_CCW_CW" を "== GEO_CCW_CCW" に変える
             if(geo_ccw(res[k-2],res[k-1],p) != GEO_CCW_CW) break;
             res.pop_back();
@@ -427,11 +427,11 @@ Polygon geo_convex_hull(vector<Vec> ps) {
     };
 
     // lower hull
-    for(i64 i = 0; i < n; ++i) {
+    for(Int i = 0; i < n; ++i) {
         step(ps[i]);
     }
     // upper hull
-    for(i64 i = n-2; i >= 0; --i) {
+    for(Int i = n-2; i >= 0; --i) {
         step(ps[i]);
     }
     // 始点が重複するので削除
@@ -477,7 +477,7 @@ struct Dbg<Circle> {
     }
 };
 
-i64 geo_common_tangent_count(const Circle& cir0, const Circle& cir1) {
+Int geo_common_tangent_count(const Circle& cir0, const Circle& cir1) {
     Real d = (cir1.c-cir0.c).abs();
     Real rsum = cir0.r + cir1.r;
     Real rdif = ABS(cir0.r - cir1.r);
@@ -505,7 +505,7 @@ bool geo_intersects(const Segment& s, const Circle& cir) {
 bool geo_intersects(const Circle& cir, const Segment& s) { return geo_intersects(s,cir); }
 
 bool geo_intersects(const Circle& cir0, const Circle& cir1) {
-    i64 k = geo_common_tangent_count(cir0, cir1);
+    Int k = geo_common_tangent_count(cir0, cir1);
     return 1 <= k && k <= 3;
 }
 
@@ -541,7 +541,7 @@ auto geo_tangent(const Circle& cir, const Vec& p) {
 }
 
 Circle geo_min_ball(vector<Vec> ps) {
-    i64 n = SIZE(ps);
+    Int n = SIZE(ps);
     ASSERT(n >= 1);
     if(n == 1) return {ps[0],0};
 

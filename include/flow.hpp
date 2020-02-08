@@ -9,24 +9,24 @@
 // (f,flow) を返す
 // f: s-t フローの最大値
 // flow[from][to]: from から to への流量
-tuple<i64,vector<vector<i64>>> flow_fulkerson(vector<vector<i64>>& g, i64 s, i64 t) {
-    i64 n = SIZE(g);
-    vector<vector<i64>> flow(n, vector<i64>(n,0));
+tuple<Int,vector<vector<Int>>> flow_fulkerson(vector<vector<Int>>& g, Int s, Int t) {
+    Int n = SIZE(g);
+    vector<vector<Int>> flow(n, vector<Int>(n,0));
 
     BoolArray visited(n);
-    auto dfs = FIX([&g,t,n,&flow,&visited](auto&& self, i64 v, i64 f) -> i64 {
+    auto dfs = FIX([&g,t,n,&flow,&visited](auto&& self, Int v, Int f) -> Int {
         if(v == t) return f;
 
         visited[v] = true;
         REP(to, n) {
             if(visited[to]) continue;
             if(g[v][to] == 0) continue;
-            i64 f2 = self(to, min(f,g[v][to]));
+            Int f2 = self(to, min(f,g[v][to]));
             if(f2 > 0) {
-                i64 res = f2;
+                Int res = f2;
                 g[v][to] -= f2;
                 g[to][v] += f2;
-                i64 d = min(flow[to][v], f2);
+                Int d = min(flow[to][v], f2);
                 flow[to][v] -= d;
                 f2          -= d;
                 flow[v][to] += f2;
@@ -36,10 +36,10 @@ tuple<i64,vector<vector<i64>>> flow_fulkerson(vector<vector<i64>>& g, i64 s, i64
         return 0;
     });
 
-    i64 res = 0;
+    Int res = 0;
     for(;;) {
         ALL(fill, visited, false);
-        i64 f = dfs(s, INF);
+        Int f = dfs(s, INF);
         if(f == 0) break;
         res += f;
     }

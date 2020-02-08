@@ -31,7 +31,7 @@ ostream& DBG_CARRAYN_HELPER(ostream& out, const T& e) {
 }
 
 template<typename T>
-void DBG_CARRAYN_IMPL(i64 line, const char* expr, const T& ary) {
+void DBG_CARRAYN_IMPL(Int line, const char* expr, const T& ary) {
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
     DBG_CARRAYN_HELPER(cerr, ary);
@@ -49,8 +49,8 @@ template<typename T, typename... Offs, typename... Sizes,
 ostream& DBG_CARRAYN_SLICE_HELPER(ostream& out, const T& e, const tuple<Offs...>& offs, const tuple<Sizes...>& sizes) {
     static_assert(rank<T>::value == sizeof...(Offs), "");
     out << "[";
-    i64 l = tuple_head(offs);
-    i64 r = l + tuple_head(sizes);
+    Int l = tuple_head(offs);
+    Int r = l + tuple_head(sizes);
     FOR(i, l, r) {
         if(i != l)
             out << ", ";
@@ -61,7 +61,7 @@ ostream& DBG_CARRAYN_SLICE_HELPER(ostream& out, const T& e, const tuple<Offs...>
 }
 
 template<typename T, typename... Offs, typename... Sizes>
-void DBG_CARRAYN_SLICE_IMPL(i64 line, const char* expr, const T& ary, const tuple<Offs...>& offs, const tuple<Sizes...>& sizes) {
+void DBG_CARRAYN_SLICE_IMPL(Int line, const char* expr, const T& ary, const tuple<Offs...>& offs, const tuple<Sizes...>& sizes) {
     cerr << "[L " << line << "]: ";
     cerr << expr << "(";
     WRITE_REPR(cerr, offs);

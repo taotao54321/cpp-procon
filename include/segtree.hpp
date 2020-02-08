@@ -6,17 +6,17 @@ struct SegTreeRQ {
     FuncMonoid fm_;
     FuncAction fa_;
     Monoid unity_monoid_;
-    i64 n_;
+    Int n_;
     vector<Monoid> data_;
 
-    SegTreeRQ(FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid, i64 n) :
+    SegTreeRQ(FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid, Int n) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), unity_monoid_(unity_monoid),
         n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_)
     {
         init_merge();
     }
 
-    SegTreeRQ(FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid, i64 n, const Monoid& x) :
+    SegTreeRQ(FuncMonoid&& fm, FuncAction&& fa, const Monoid& unity_monoid, Int n, const Monoid& x) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), unity_monoid_(unity_monoid),
         n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_)
     {
@@ -33,8 +33,8 @@ struct SegTreeRQ {
         init_merge();
     }
 
-    void act(i64 i, const Action& a) {
-        i64 v = i + n_;
+    void act(Int i, const Action& a) {
+        Int v = i + n_;
         data_[v] = fa_(data_[v], a);
         while(v > 1) {
             v /= 2;
@@ -42,23 +42,23 @@ struct SegTreeRQ {
         }
     }
 
-    Monoid query(i64 l, i64 r) const {
+    Monoid query(Int l, Int r) const {
         ASSERT_LOCAL(l <= r);
         return query_impl(l, r, 1, 0, n_);
     }
 
 private:
     void init_merge() {
-        for(i64 v = n_-1; v >= 1; --v)
+        for(Int v = n_-1; v >= 1; --v)
             data_[v] = fm_(data_[2*v], data_[2*v+1]);
     }
 
-    Monoid query_impl(i64 lq, i64 rq, i64 v, i64 l, i64 r) const {
+    Monoid query_impl(Int lq, Int rq, Int v, Int l, Int r) const {
         if(rq <= l || r <= lq) return unity_monoid_;
 
         if(lq <= l && r <= rq) return data_[v];
 
-        i64 mid = (l+r) / 2;
+        Int mid = (l+r) / 2;
         Monoid ml = query_impl(lq, rq, 2*v,   l, mid);
         Monoid mr = query_impl(lq, rq, 2*v+1, mid, r);
         return fm_(ml, mr);
@@ -66,14 +66,14 @@ private:
 };
 
 template<class Monoid, class Action, class FuncMonoid, class FuncAction, class T>
-auto segtree_rq_make(FuncMonoid&& fm, FuncAction&& fa, const T& unity_monoid, i64 n) {
+auto segtree_rq_make(FuncMonoid&& fm, FuncAction&& fa, const T& unity_monoid, Int n) {
     return SegTreeRQ<Monoid,Action,FuncMonoid,FuncAction>(
         forward<FuncMonoid>(fm), forward<FuncAction>(fa), unity_monoid, n
     );
 }
 
 template<class Monoid, class Action, class FuncMonoid, class FuncAction, class T1, class T2>
-auto segtree_rq_make(FuncMonoid&& fm, FuncAction&& fa, const T1& unity_monoid, i64 n, const T2& x) {
+auto segtree_rq_make(FuncMonoid&& fm, FuncAction&& fa, const T1& unity_monoid, Int n, const T2& x) {
     return SegTreeRQ<Monoid,Action,FuncMonoid,FuncAction>(
         forward<FuncMonoid>(fm), forward<FuncAction>(fa), unity_monoid, n, x
     );
@@ -93,16 +93,16 @@ struct SegTreeRU {
     FuncAction fa_;
     FuncLazy fl_;
     Action unity_action_;
-    i64 n_;
+    Int n_;
     vector<T> data_;
     vector<Action> lazy_;
 
-    SegTreeRU(FuncAction&& fa, FuncLazy&& fl, const Action& unity_action, i64 n) :
+    SegTreeRU(FuncAction&& fa, FuncLazy&& fl, const Action& unity_action, Int n) :
         fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)), unity_action_(unity_action),
         n_(n==0?0:pow2_ceil(n)), data_(n_,T{}), lazy_(2*n_,unity_action_)
     {}
 
-    SegTreeRU(FuncAction&& fa, FuncLazy&& fl, const Action& unity_action, i64 n, const T& x) :
+    SegTreeRU(FuncAction&& fa, FuncLazy&& fl, const Action& unity_action, Int n, const T& x) :
         fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)), unity_action_(unity_action),
         n_(n==0?0:pow2_ceil(n)), data_(n_,T{}), lazy_(2*n_,unity_action_)
     {
@@ -117,18 +117,18 @@ struct SegTreeRU {
         copy(first, last, begin(data_));
     }
 
-    void act(i64 l, i64 r, const Action& a) {
+    void act(Int l, Int r, const Action& a) {
         ASSERT_LOCAL(l <= r);
         if(l == r) return;
         act_impl(l, r, a, 1, 0, n_);
     }
 
-    T query(i64 i) {
+    T query(Int i) {
         return query_impl(i, 1, 0, n_);
     }
 
 private:
-    void eval(i64 v) {
+    void eval(Int v) {
         if(lazy_[v] == unity_action_) return;
 
         if(v >= n_) {  // leaf
@@ -141,7 +141,7 @@ private:
         lazy_[v] = unity_action_;
     }
 
-    void act_impl(i64 la, i64 ra, i64 a, i64 v, i64 l, i64 r) {
+    void act_impl(Int la, Int ra, Int a, Int v, Int l, Int r) {
         if(ra <= l || r <= la) return;
 
         if(la <= l && r <= ra) {
@@ -151,19 +151,19 @@ private:
 
         eval(v);
 
-        i64 mid = (l+r) / 2;
+        Int mid = (l+r) / 2;
         act_impl(la, ra, a, 2*v,   l, mid);
         act_impl(la, ra, a, 2*v+1, mid, r);
     }
 
-    T query_impl(i64 qi, i64 v, i64 l, i64 r) {
+    T query_impl(Int qi, Int v, Int l, Int r) {
         ASSERT_LOCAL(l <= qi && qi < r);
 
         eval(v);
 
         if(v >= n_) return data_[v-n_];  // leaf
 
-        i64 mid = (l+r) / 2;
+        Int mid = (l+r) / 2;
         if(qi < mid)
             return query_impl(qi, 2*v, l, mid);
         else
@@ -172,14 +172,14 @@ private:
 };
 
 template<class T, class Action, class FuncAction, class FuncLazy, class U>
-auto segtree_ru_make(FuncAction&& fa, FuncLazy&& fl, const U& unity_action, i64 n) {
+auto segtree_ru_make(FuncAction&& fa, FuncLazy&& fl, const U& unity_action, Int n) {
     return SegTreeRU<T,Action,FuncAction,FuncLazy>(
         forward<FuncAction>(fa), forward<FuncLazy>(fl), unity_action, n
     );
 }
 
 template<class T, class Action, class FuncAction, class FuncLazy, class U1, class U2>
-auto segtree_ru_make(FuncAction&& fa, FuncLazy&& fl, const U1& unity_action, i64 n, const U2& x) {
+auto segtree_ru_make(FuncAction&& fa, FuncLazy&& fl, const U1& unity_action, Int n, const U2& x) {
     return SegTreeRU<T,Action,FuncAction,FuncLazy>(
         forward<FuncAction>(fa), forward<FuncLazy>(fl), unity_action, n, x
     );
@@ -201,12 +201,12 @@ struct SegTreeLazy {
     FuncLazy fl_;
     Monoid unity_monoid_;
     Action unity_action_;
-    i64 n_;
+    Int n_;
     vector<Monoid> data_;
     vector<Action> lazy_;
 
     SegTreeLazy(FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
-                const Monoid& unity_monoid, const Action& unity_action, i64 n) :
+                const Monoid& unity_monoid, const Action& unity_action, Int n) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)),
         unity_monoid_(unity_monoid), unity_action_(unity_action),
         n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
@@ -215,7 +215,7 @@ struct SegTreeLazy {
     }
 
     SegTreeLazy(FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
-                const Monoid& unity_monoid, const Action& unity_action, i64 n, const Monoid& x) :
+                const Monoid& unity_monoid, const Action& unity_action, Int n, const Monoid& x) :
         fm_(forward<FuncMonoid>(fm)), fa_(forward<FuncAction>(fa)), fl_(forward<FuncLazy>(fl)),
         unity_monoid_(unity_monoid), unity_action_(unity_action),
         n_(n==0?0:pow2_ceil(n)), data_(2*n_,unity_monoid_), lazy_(2*n_,unity_action_)
@@ -235,24 +235,24 @@ struct SegTreeLazy {
         init_merge();
     }
 
-    void act(i64 l, i64 r, const Action& a) {
+    void act(Int l, Int r, const Action& a) {
         ASSERT_LOCAL(l <= r);
         if(l == r) return;
         act_impl(l, r, a, 1, 0, n_);
     }
 
-    Monoid query(i64 l, i64 r) {
+    Monoid query(Int l, Int r) {
         ASSERT_LOCAL(l <= r);
         return query_impl(l, r, 1, 0, n_);
     }
 
 private:
     void init_merge() {
-        for(i64 v = n_-1; v >= 1; --v)
+        for(Int v = n_-1; v >= 1; --v)
             data_[v] = fm_(data_[2*v], data_[2*v+1]);
     }
 
-    void eval(i64 v) {
+    void eval(Int v) {
         if(lazy_[v] == unity_action_) return;
 
         data_[v] = fa_(data_[v], lazy_[v]);
@@ -263,7 +263,7 @@ private:
         lazy_[v] = unity_action_;
     }
 
-    void act_impl(i64 la, i64 ra, const Action& a, i64 v, i64 l, i64 r) {
+    void act_impl(Int la, Int ra, const Action& a, Int v, Int l, Int r) {
         eval(v);
 
         if(ra <= l || r <= la) return;
@@ -274,20 +274,20 @@ private:
             return;
         }
 
-        i64 mid = (l+r) / 2;
+        Int mid = (l+r) / 2;
         act_impl(la, ra, a, 2*v,   l, mid);
         act_impl(la, ra, a, 2*v+1, mid, r);
         data_[v] = fm_(data_[2*v], data_[2*v+1]);
     }
 
-    Monoid query_impl(i64 lq, i64 rq, i64 v, i64 l, i64 r) {
+    Monoid query_impl(Int lq, Int rq, Int v, Int l, Int r) {
         if(rq <= l || r <= lq) return unity_monoid_;
 
         eval(v);
 
         if(lq <= l && r <= rq) return data_[v];
 
-        i64 mid = (l+r) / 2;
+        Int mid = (l+r) / 2;
         Monoid ml = query_impl(lq, rq, 2*v,   l, mid);
         Monoid mr = query_impl(lq, rq, 2*v+1, mid, r);
         return fm_(ml, mr);
@@ -296,7 +296,7 @@ private:
 
 template<class Monoid, class Action, class FuncMonoid, class FuncAction, class FuncLazy, class T1, class T2>
 auto segtree_lazy_make(FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
-                       const T1& unity_monoid, const T2& unity_action, i64 n)
+                       const T1& unity_monoid, const T2& unity_action, Int n)
 {
     return SegTreeLazy<Monoid,Action,FuncMonoid,FuncAction,FuncLazy>(
         forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),
@@ -306,7 +306,7 @@ auto segtree_lazy_make(FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
 
 template<class Monoid, class Action, class FuncMonoid, class FuncAction, class FuncLazy, class T1, class T2, class T3>
 auto segtree_lazy_make(FuncMonoid&& fm, FuncAction&& fa, FuncLazy&& fl,
-                       const T1& unity_monoid, const T2& unity_action, i64 n, const T3& x)
+                       const T1& unity_monoid, const T2& unity_action, Int n, const T3& x)
 {
     return SegTreeLazy<Monoid,Action,FuncMonoid,FuncAction,FuncLazy>(
         forward<FuncMonoid>(fm), forward<FuncAction>(fa), forward<FuncLazy>(fl),

@@ -32,8 +32,8 @@ public:
     }
 
 #ifdef PROCON_LOCAL
-    i64 update_count() const { return n_update_; }
-    i64 accept_count() const { return n_accept_; }
+    Int update_count() const { return n_update_; }
+    Int accept_count() const { return n_accept_; }
 #endif
 
 private:
@@ -44,8 +44,8 @@ private:
     Real temp_;
     uniform_real_distribution<Real> dist_{};
 #ifdef PROCON_LOCAL
-    i64 n_update_{};
-    i64 n_accept_{};
+    Int n_update_{};
+    Int n_accept_{};
 #endif
 };
 

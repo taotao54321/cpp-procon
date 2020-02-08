@@ -1,19 +1,19 @@
 // graph {{{
 
 template<typename T>
-vector<vector<pair<i64,T>>> graph_make_weighted(i64 n) {
-    return vector<vector<pair<i64,T>>>(n);
+vector<vector<pair<Int,T>>> graph_make_weighted(Int n) {
+    return vector<vector<pair<Int,T>>>(n);
 }
 
-vector<vector<i64>> graph_make_unweighted(i64 n) {
-    return vector<vector<i64>>(n);
+vector<vector<Int>> graph_make_unweighted(Int n) {
+    return vector<vector<Int>>(n);
 }
 
 // n 頂点の初期化済み隣接行列 g を返す
 //
 // g[i][j]: i==j なら 0, i!=j なら INF
 template<typename T>
-vector<vector<T>> graph_make_matrix(i64 n) {
+vector<vector<T>> graph_make_matrix(Int n) {
     vector<vector<T>> g(n, vector<T>(n, PROCON_INF<T>()));
     REP(i, n) {
         g[i][i] = T(0);
@@ -22,10 +22,10 @@ vector<vector<T>> graph_make_matrix(i64 n) {
 }
 
 // 辺のリストから n 頂点無向グラフの隣接リスト表現を得る
-vector<vector<i64>> graph_from_edges(i64 n, const vector<pair<i64,i64>>& es) {
-    vector<vector<i64>> g(n);
+vector<vector<Int>> graph_from_edges(Int n, const vector<pair<Int,Int>>& es) {
+    vector<vector<Int>> g(n);
     for(const auto& e : es) {
-        i64 s,t; tie(s,t) = e;
+        Int s,t; tie(s,t) = e;
         g[s].emplace_back(t);
         g[t].emplace_back(s);
     }
@@ -35,15 +35,15 @@ vector<vector<i64>> graph_from_edges(i64 n, const vector<pair<i64,i64>>& es) {
 // 単純無向グラフが木かどうか判定する
 //
 // g: 隣接リスト表現(頂点数 n > 0)
-bool graph_is_tree(const vector<vector<i64>>& g) {
-    i64 n = SIZE(g);
+bool graph_is_tree(const vector<vector<Int>>& g) {
+    Int n = SIZE(g);
     ASSERT(n > 0);
 
-    i64 edge_cnt = 0;
+    Int edge_cnt = 0;
     vector<bool> visited(n, false);
-    auto dfs = FIX([&g,&edge_cnt,&visited](auto&& self, i64 v) -> void {
+    auto dfs = FIX([&g,&edge_cnt,&visited](auto&& self, Int v) -> void {
         visited[v] = true;
-        for(i64 to : g[v]) {
+        for(Int to : g[v]) {
             if(visited[to]) continue;
             ++edge_cnt;
             self(to);
@@ -61,19 +61,19 @@ bool graph_is_tree(const vector<vector<i64>>& g) {
 // (ds,ps) を返す
 // ds[i]: start から点 i への最短距離(到達不能な点は INF)
 // ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
-tuple<vector<i64>,vector<i64>> graph_bfs(const vector<vector<i64>>& g, i64 start) {
-    i64 n = SIZE(g);
-    vector<i64> ds(n, INF);
-    vector<i64> ps(n, -1);
+tuple<vector<Int>,vector<Int>> graph_bfs(const vector<vector<Int>>& g, Int start) {
+    Int n = SIZE(g);
+    vector<Int> ds(n, INF);
+    vector<Int> ps(n, -1);
 
-    queue<i64> que;
+    queue<Int> que;
     que.emplace(start);
     ds[start] = 0;
 
     while(!que.empty()) {
-        i64 v = POP(que);
+        Int v = POP(que);
 
-        for(i64 to : g[v]) {
+        for(Int to : g[v]) {
             if(ds[to] != INF) continue;
             que.emplace(to);
             ds[to] = ds[v] + 1;
@@ -90,25 +90,25 @@ tuple<vector<i64>,vector<i64>> graph_bfs(const vector<vector<i64>>& g, i64 start
 // ds[i]: start から点 i への最短距離(到達不能な点は PROCON_INF<T>())
 // ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
-tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g, i64 start) {
-    i64 n = SIZE(g);
+tuple<vector<T>,vector<Int>> graph_dijkstra(const vector<vector<pair<Int,T>>>& g, Int start) {
+    Int n = SIZE(g);
     vector<T> ds(n, PROCON_INF<T>());
-    vector<i64> ps(n, -1);
+    vector<Int> ps(n, -1);
 
-    auto que = priority_queue_make<pair<T,i64>>(greater<>{});
+    auto que = priority_queue_make<pair<T,Int>>(greater<>{});
 
     ds[start] = T{};
     que.emplace(T{}, start);
 
-    i64 n_remain = n;
+    Int n_remain = n;
     while(!que.empty()) {
-        T d; i64 v; tie(d,v) = POP(que);
+        T d; Int v; tie(d,v) = POP(que);
         if(ds[v] < d) continue;
 
         if(--n_remain == 0) break;
 
         for(const auto& p : g[v]) {
-            i64 to; T cost; tie(to,cost) = p;
+            Int to; T cost; tie(to,cost) = p;
 
             T d_new = d + cost;
             if(chmin(ds[to], d_new)) {
@@ -127,16 +127,16 @@ tuple<vector<T>,vector<i64>> graph_dijkstra(const vector<vector<pair<i64,T>>>& g
 // (ds,ps) を返す
 // ds[i]: start から点 i への最短距離(到達不能な点は INF)
 // ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
-tuple<vector<i64>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,i64>>>& g, i64 k, i64 start) {
-    i64 n = SIZE(g);
-    vector<i64> ds(n, INF);
-    vector<i64> ps(n, -1);
+tuple<vector<Int>,vector<Int>> graph_k_bfs(const vector<vector<pair<Int,Int>>>& g, Int k, Int start) {
+    Int n = SIZE(g);
+    vector<Int> ds(n, INF);
+    vector<Int> ps(n, -1);
 
-    vector<queue<i64>> ques(k+1);
-    auto enqueue = [&ques](i64 to, i64 cost) {
+    vector<queue<Int>> ques(k+1);
+    auto enqueue = [&ques](Int to, Int cost) {
         ques[cost].emplace(to);
     };
-    auto dequeue = [&ques]() -> i64 {
+    auto dequeue = [&ques]() -> Int {
         for(auto& que : ques)
             if(!que.empty())
                 return POP(que);
@@ -146,12 +146,12 @@ tuple<vector<i64>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,i64>>>& 
     enqueue(start, 0);
     ds[start] = 0;
 
-    i64 v;
+    Int v;
     while((v = dequeue()) != -1) {
         for(const auto& p : g[v]) {
-            i64 to,cost; tie(to,cost) = p;
+            Int to,cost; tie(to,cost) = p;
 
-            i64 d_new = ds[v] + cost;
+            Int d_new = ds[v] + cost;
             if(chmin(ds[to], d_new)) {
                 ps[to] = v;
                 enqueue(to, cost);
@@ -172,10 +172,10 @@ tuple<vector<i64>,vector<i64>> graph_k_bfs(const vector<vector<pair<i64,i64>>>& 
 // ds[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
 // ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
-tuple<vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g, i64 start) {
-    i64 n = SIZE(g);
+tuple<vector<T>,vector<Int>> graph_bellman(const vector<vector<pair<Int,T>>>& g, Int start) {
+    Int n = SIZE(g);
     vector<T> ds(n, PROCON_INF<T>());
-    vector<i64> ps(n, -1);
+    vector<Int> ps(n, -1);
 
     ds[start] = T{};
 
@@ -186,7 +186,7 @@ tuple<vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g,
 #pragma GCC diagnostic ignored "-Wfloat-equal"
             if(ds[from] == PROCON_INF<T>()) continue;
             for(const auto& p : g[from]) {
-                i64 to; T cost; tie(to,cost) = p;
+                Int to; T cost; tie(to,cost) = p;
                 T d_new = ds[from]==-PROCON_INF<T>() ? -PROCON_INF<T>() : ds[from]+cost;
                 if(d_new < ds[to]) {
                     update = true;
@@ -212,24 +212,24 @@ tuple<vector<T>,vector<i64>> graph_bellman(const vector<vector<pair<i64,T>>>& g,
 // ds[i]: start から点 i への最短距離(到達不能なら INF, 負の無限大なら -INF)
 // ps[i]: 最短経路木における点 i の親(start および到達不能な点は -1)
 template<typename T>
-tuple<vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i64 start) {
-    i64 n = SIZE(g);
+tuple<vector<T>,vector<Int>> graph_spfa(const vector<vector<pair<Int,T>>>& g, Int start) {
+    Int n = SIZE(g);
     vector<T> ds(n, PROCON_INF<T>());
-    vector<i64> ps(n, -1);
+    vector<Int> ps(n, -1);
 
-    queue<i64> que;
+    queue<Int> que;
     vector<bool> in_que(n, false);
-    const auto enqueue = [&que,&in_que](i64 v) { que.emplace(v); in_que[v] = true; };
-    const auto dequeue = [&que,&in_que]() { i64 v = POP(que); in_que[v] = false; return v; };
+    const auto enqueue = [&que,&in_que](Int v) { que.emplace(v); in_que[v] = true; };
+    const auto dequeue = [&que,&in_que]() { Int v = POP(que); in_que[v] = false; return v; };
 
     ds[start] = T{};
     enqueue(start);
 
     REP(i, 2*n) {
         REP(_, que.size()) {
-            i64 from = dequeue();
+            Int from = dequeue();
             for(const auto& p : g[from]) {
-                i64 to; T cost; tie(to,cost) = p;
+                Int to; T cost; tie(to,cost) = p;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
                 T d_new = ds[from]==-PROCON_INF<T>() ? -PROCON_INF<T>() : ds[from]+cost;
@@ -257,9 +257,9 @@ tuple<vector<T>,vector<i64>> graph_spfa(const vector<vector<pair<i64,T>>>& g, i6
 // ok: 負閉路が存在しない場合に限り true
 // nex[i][j]: i から j へ最短経路で行くとき、次に辿るべき点(到達不能なら -1)
 template<typename T>
-tuple<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
-    i64 n = SIZE(g);
-    vector<vector<i64>> nex(n, vector<i64>(n,-1));
+tuple<bool,vector<vector<Int>>> graph_floyd(vector<vector<T>>& g) {
+    Int n = SIZE(g);
+    vector<vector<Int>> nex(n, vector<Int>(n,-1));
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
@@ -292,24 +292,24 @@ tuple<bool,vector<vector<i64>>> graph_floyd(vector<vector<T>>& g) {
 // (ok,res) を返す
 // ok: DAGであったかどうか
 // res: 結果
-tuple<bool,vector<i64>> graph_tsort(const vector<vector<i64>>& g) {
-    i64 n = SIZE(g);
-    vector<i64> res;
+tuple<bool,vector<Int>> graph_tsort(const vector<vector<Int>>& g) {
+    Int n = SIZE(g);
+    vector<Int> res;
     res.reserve(n);
 
-    vector<i64> deg_in(n, 0);
+    vector<Int> deg_in(n, 0);
     for(const auto& tos : g)
         for(auto to : tos)
             ++deg_in[to];
 
-    queue<i64> que;
+    queue<Int> que;
     REP(v, n) {
         if(deg_in[v] == 0)
             que.emplace(v);
     }
 
     while(!que.empty()) {
-        i64 v = POP(que);
+        Int v = POP(que);
 
         res.emplace_back(v);
 
@@ -325,20 +325,20 @@ tuple<bool,vector<i64>> graph_tsort(const vector<vector<i64>>& g) {
 
 // TODO: 重みあり/なし両対応
 // (関節点リスト,橋リスト) を返す
-tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>& g) {
-    i64 n = SIZE(g);
-    vector<i64> ord(n, -1);
-    vector<i64> low(n, -1);
+tuple<vector<Int>,vector<pair<Int,Int>>> graph_lowlink(const vector<vector<Int>>& g) {
+    Int n = SIZE(g);
+    vector<Int> ord(n, -1);
+    vector<Int> low(n, -1);
 
-    vector<i64>           articulations;
-    vector<pair<i64,i64>> bridges;
+    vector<Int>           articulations;
+    vector<pair<Int,Int>> bridges;
 
-    auto dfs = FIX([&g,&ord,&low,&articulations,&bridges](auto&& self, i64 v, i64 parent, i64 k) -> void {
+    auto dfs = FIX([&g,&ord,&low,&articulations,&bridges](auto&& self, Int v, Int parent, Int k) -> void {
         low[v] = ord[v] = k;
 
         bool arti = false;
-        i64 n_child = 0;
-        for(i64 to : g[v]) {
+        Int n_child = 0;
+        for(Int to : g[v]) {
             // 親または後退辺
             if(ord[to] != -1) {
                 if(to != parent)
@@ -372,12 +372,12 @@ tuple<vector<i64>,vector<pair<i64,i64>>> graph_lowlink(const vector<vector<i64>>
 }
 
 // 各頂点の (indegree,outdegree) のリストを返す (隣接リスト版)
-vector<pair<i64,i64>> graph_degrees_list(const vector<vector<i64>>& g) {
-    i64 n = SIZE(g);
-    vector<pair<i64,i64>> res(n, {0,0});
+vector<pair<Int,Int>> graph_degrees_list(const vector<vector<Int>>& g) {
+    Int n = SIZE(g);
+    vector<pair<Int,Int>> res(n, {0,0});
 
     REP(from, n) {
-        for(i64 to : g[from]) {
+        for(Int to : g[from]) {
             ++res[from].second;
             ++res[to].first;
         }
@@ -387,12 +387,12 @@ vector<pair<i64,i64>> graph_degrees_list(const vector<vector<i64>>& g) {
 }
 
 // 各頂点の (indegree,outdegree) のリストを返す (隣接行列版)
-vector<pair<i64,i64>> graph_degrees_matrix(const vector<vector<i64>>& g) {
-    i64 n = SIZE(g);
-    vector<pair<i64,i64>> res(n, {0,0});
+vector<pair<Int,Int>> graph_degrees_matrix(const vector<vector<Int>>& g) {
+    Int n = SIZE(g);
+    vector<pair<Int,Int>> res(n, {0,0});
 
     REP(from, n) REP(to, n) {
-        i64 k = g[from][to];
+        Int k = g[from][to];
         res[from].second += k;
         res[to].first    += k;
     }
@@ -405,21 +405,21 @@ vector<pair<i64,i64>> graph_degrees_matrix(const vector<vector<i64>>& g) {
 // g は破壊される
 // start: 始点
 // digraph: 有向グラフか?
-vector<i64> graph_euler_trail_list(vector<vector<i64>>& g, i64 start, bool digraph) {
+vector<Int> graph_euler_trail_list(vector<vector<Int>>& g, Int start, bool digraph) {
     // スタックオーバーフロー回避のため再帰を使わず自前の stack で処理
     enum Action { CALL, RESUME };
 
-    vector<i64> res;
+    vector<Int> res;
 
-    stack<tuple<Action,i64>> stk;
+    stack<tuple<Action,Int>> stk;
     stk.emplace(CALL, start);
     while(!stk.empty()) {
-        Action act; i64 v; tie(act,v) = POP(stk);
+        Action act; Int v; tie(act,v) = POP(stk);
         switch(act) {
         case CALL:
             stk.emplace(RESUME, v);
             while(!g[v].empty()) {
-                i64 to = g[v].back(); g[v].pop_back();
+                Int to = g[v].back(); g[v].pop_back();
                 if(!digraph)
                     g[to].erase(ALL(find, g[to], v));
                 stk.emplace(CALL, to);
@@ -442,17 +442,17 @@ vector<i64> graph_euler_trail_list(vector<vector<i64>>& g, i64 start, bool digra
 // g[v][w]: v,w 間の辺の本数 (破壊される)
 // start: 始点
 // digraph: 有向グラフか?
-vector<i64> graph_euler_trail_matrix(vector<vector<i64>>& g, i64 start, bool digraph) {
+vector<Int> graph_euler_trail_matrix(vector<vector<Int>>& g, Int start, bool digraph) {
     // スタックオーバーフロー回避のため再帰を使わず自前の stack で処理
     enum Action { CALL, RESUME };
 
-    i64 n = SIZE(g);
-    vector<i64> res;
+    Int n = SIZE(g);
+    vector<Int> res;
 
-    stack<tuple<Action,i64>> stk;
+    stack<tuple<Action,Int>> stk;
     stk.emplace(CALL, start);
     while(!stk.empty()) {
-        Action act; i64 v; tie(act,v) = POP(stk);
+        Action act; Int v; tie(act,v) = POP(stk);
         switch(act) {
         case CALL:
             stk.emplace(RESUME, v);

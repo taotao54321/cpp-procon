@@ -2,7 +2,7 @@
 
 template<typename ForwardIt>
 struct SuffixArray {
-    using value_type      = i64;
+    using value_type      = Int;
     using const_reference = const value_type&;
     using const_iterator  = typename vector<value_type>::const_iterator;
     using difference_type = typename vector<value_type>::difference_type;
@@ -15,17 +15,17 @@ struct SuffixArray {
     SuffixArray(ForwardIt first, ForwardIt last) 
         : first_(first), last_(last), sa_(distance(first,last)+1)
     {
-        i64 n = distance(first_,last_);
-        vector<i64> rnk(n+1);
+        Int n = distance(first_,last_);
+        vector<Int> rnk(n+1);
 
         ALL(iota, sa_, 0);
         copy(first_, last_, std::begin(rnk));
         rnk[n] = -1;
 
-        vector<i64> rnk_nex(n+1);
-        for(i64 k = 1; k <= n; k *= 2) {  // TODO: 条件部の等号いらない気がするんだが…
-            auto comp = LT_ON([n,&rnk,k](i64 i) {
-                i64 snd = i+k <= n ? rnk[i+k] : -1;
+        vector<Int> rnk_nex(n+1);
+        for(Int k = 1; k <= n; k *= 2) {  // TODO: 条件部の等号いらない気がするんだが…
+            auto comp = LT_ON([n,&rnk,k](Int i) {
+                Int snd = i+k <= n ? rnk[i+k] : -1;
                 return make_pair(rnk[i], snd);
             });
 
@@ -67,16 +67,16 @@ struct SuffixArray {
 
         Compare(ForwardIt first, ForwardIt last) : first_(first), last_(last) {}
 
-        bool operator()(i64 i, const pair<ForwardIt2,ForwardIt2>& p) const {
+        bool operator()(Int i, const pair<ForwardIt2,ForwardIt2>& p) const {
             auto q = get_range(i, distance(FST(p),SND(p)));
             return lexicographical_compare(FST(q), SND(q), FST(p), SND(p));
         }
-        bool operator()(const pair<ForwardIt2,ForwardIt2>& p, i64 i) const {
+        bool operator()(const pair<ForwardIt2,ForwardIt2>& p, Int i) const {
             auto q = get_range(i, distance(FST(p),SND(p)));
             return lexicographical_compare(FST(p), SND(p), FST(q), SND(q));
         }
 
-        pair<ForwardIt,ForwardIt> get_range(i64 i, i64 n) const {
+        pair<ForwardIt,ForwardIt> get_range(Int i, Int n) const {
             auto first1 = first_+i;
             auto last1  = next(first1, MIN(n,distance(first1,last_)));
             return make_pair(first1, last1);

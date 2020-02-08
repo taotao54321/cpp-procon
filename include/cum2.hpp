@@ -9,20 +9,20 @@ struct Cum2 {
     vector<vector<Abel>> v_;
     bool built_{false};
 
-    Cum2(Op&& op, Inv&& inv, const Abel& unity, i64 h, i64 w) :
+    Cum2(Op&& op, Inv&& inv, const Abel& unity, Int h, Int w) :
         op_(forward<Op>(op)), inv_(forward<Inv>(inv)), unity_(unity),
         v_(h+1,vector<Abel>(w+1,unity_))
     {}
 
-    i64 h() const { return SIZE(v_)-1; }
-    i64 w() const { return SIZE(v_[0])-1; }
+    Int h() const { return SIZE(v_)-1; }
+    Int w() const { return SIZE(v_[0])-1; }
 
-    const Abel& at(i64 y, i64 x) const {
+    const Abel& at(Int y, Int x) const {
         ASSERT_LOCAL(!built_);
         return v_[y+1][x+1];
     }
 
-    Abel& at(i64 y, i64 x) {
+    Abel& at(Int y, Int x) {
         ASSERT_LOCAL(!built_);
         return v_[y+1][x+1];
     }
@@ -39,7 +39,7 @@ struct Cum2 {
         built_ = true;
     }
 
-    Abel query(i64 y1, i64 x1, i64 y2, i64 x2) const {
+    Abel query(Int y1, Int x1, Int y2, Int x2) const {
         ASSERT_LOCAL(built_);
         ASSERT_LOCAL(y1 <= y2 && x1 <= x2);
 
@@ -52,12 +52,12 @@ struct Cum2 {
 };
 
 template<class Abel, class Op, class Inv>
-auto cum2_make(Op&& op, Inv&& inv, const Abel& unity, i64 h, i64 w) {
+auto cum2_make(Op&& op, Inv&& inv, const Abel& unity, Int h, Int w) {
     return Cum2<Abel,Op,Inv>(forward<Op>(op), forward<Inv>(inv), unity, h, w);
 }
 
 template<class T>
-auto cum2_default(i64 h, i64 w) {
+auto cum2_default(Int h, Int w) {
     return cum2_make<T>(plus<>{}, negate<>{}, T{}, h, w);
 }
 

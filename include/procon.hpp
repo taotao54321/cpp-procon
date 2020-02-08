@@ -1,5 +1,8 @@
 // procon {{{
 
+static_assert(is_same<Int,i64>::value || is_same<Int,i32>::value);
+static_assert(is_same<Real,f80>::value || is_same<Real,f64>::value || is_same<Real,f32>::value);
+
 #define CPP_STR(x) CPP_STR_I(x)
 #define CPP_CAT(x,y) CPP_CAT_I(x,y)
 #define CPP_STR_I(args...) #args
@@ -14,10 +17,14 @@
 # define ASSERT_LOCAL(expr...)
 #endif
 
-constexpr i64  INF  = PROCON_INF<i64>();
+constexpr Int  INF  = PROCON_INF<Int>();
 constexpr Real FINF = PROCON_INF<Real>();
 
 constexpr Real PI = Real(3.141592653589793238462643383279502884197L);
+
+template<class T> constexpr T SQRT_MAX();
+template<> constexpr i32 SQRT_MAX<i32>() { return 46340; }
+template<> constexpr i64 SQRT_MAX<i64>() { return INT64_C(3037000499); }
 
 template<class T, SFINAE(is_signed<T>::value)>
 constexpr T ABS(T x) noexcept {
@@ -35,7 +42,7 @@ constexpr bool EQ_EXACT(Real lhs, Real rhs) {
 #pragma GCC diagnostic pop
 }
 
-#define FOR(i, start, end) for(i64 i = (start), CPP_CAT(i,xxxx_end)=(end); i < CPP_CAT(i,xxxx_end); ++i)
+#define FOR(i, start, end) for(Int i = (start), CPP_CAT(i,xxxx_end)=(end); i < CPP_CAT(i,xxxx_end); ++i)
 #define REP(i, n) FOR(i, 0, n)
 #define LOOP(n) REP(CPP_CAT(macro_loop_counter,__COUNTER__), n)
 
@@ -49,19 +56,19 @@ constexpr bool EQ_EXACT(Real lhs, Real rhs) {
 #define LIFT(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
 template<class C>
-constexpr i64 SIZE(const C& c) noexcept { return static_cast<i64>(c.size()); }
+constexpr Int SIZE(const C& c) noexcept { return Int(c.size()); }
 
 template<class T, size_t N>
-constexpr i64 SIZE(const T (&)[N]) noexcept { return static_cast<i64>(N); }
+constexpr Int SIZE(const T (&)[N]) noexcept { return Int(N); }
 
-constexpr bool is_odd (i64 x) { return x%2 != 0; }
-constexpr bool is_even(i64 x) { return x%2 == 0; }
-
-template<class T>
-constexpr i64 CMP(T x, T y) noexcept { return (y<x) - (x<y); }
+constexpr bool is_odd (Int x) { return x%2 != 0; }
+constexpr bool is_even(Int x) { return x%2 == 0; }
 
 template<class T>
-constexpr i64 SGN(T x) noexcept { return CMP(x,T(0)); }
+constexpr Int CMP(T x, T y) noexcept { return (y<x) - (x<y); }
+
+template<class T>
+constexpr Int SGN(T x) noexcept { return CMP(x,T(0)); }
 
 template<class T1, class T2, class Comp=less<>,
          SFINAE(
@@ -170,69 +177,83 @@ struct IDENTITY {
 
 // ビット演算 {{{
 // 引数は [-INF,INF] のみ想定
-constexpr i64 BIT_I(i64 i) {
-    return 1LL << i;
+constexpr Int BIT_I(Int i) {
+    return Int(1) << i;
 }
 
-constexpr i64 BIT_I_1(i64 i) {
+constexpr Int BIT_I_1(Int i) {
     return BIT_I(i) - 1;
 }
 
-constexpr i64 BIT_GET(i64 x, i64 i) {
+constexpr Int BIT_GET(Int x, Int i) {
     return x & BIT_I(i);
 }
 
-constexpr bool BIT_TEST(i64 x, i64 i) {
+constexpr bool BIT_TEST(Int x, Int i) {
     return BIT_GET(x,i) != 0;
 }
 
-constexpr i64 BIT_SET(i64 x, i64 i) {
+constexpr Int BIT_SET(Int x, Int i) {
     return x | BIT_I(i);
 }
 
-constexpr i64 BIT_CLEAR(i64 x, i64 i) {
+constexpr Int BIT_CLEAR(Int x, Int i) {
     return x & ~BIT_I(i);
 }
 
-constexpr i64 BIT_FLIP(i64 x, i64 i) {
+constexpr Int BIT_FLIP(Int x, Int i) {
     return x ^ BIT_I(i);
 }
 
-constexpr i64 BIT_ASSIGN(i64 x, i64 i, bool b) {
+constexpr Int BIT_ASSIGN(Int x, Int i, bool b) {
     return b ? BIT_SET(x,i) : BIT_CLEAR(x,i);
 }
 
-constexpr i64 BIT_COUNT_LEADING_ZEROS(i64 x) {
-    if(x == 0) return 64;
-    return __builtin_clzll(x);
+constexpr Int BIT_COUNT_LEADING_ZEROS(Int x) {
+    if(is_same<Int,i64>::value)
+        return x==0 ? 64 : __builtin_clzll(u64(x));
+    else if(is_same<Int,i32>::value)
+        return x==0 ? 32 : __builtin_clz(u32(x));
+    ASSERT(false);
 }
 
-constexpr i64 BIT_COUNT_TRAILING_ZEROS(i64 x) {
-    if(x == 0) return 64;
-    return __builtin_ctzll(x);
+constexpr Int BIT_COUNT_TRAILING_ZEROS(Int x) {
+    if(is_same<Int,i64>::value)
+        return x==0 ? 64 : __builtin_ctzll(u64(x));
+    else if(is_same<Int,i32>::value)
+        return x==0 ? 32 : __builtin_clz(u32(x));
+    ASSERT(false);
 }
 
-constexpr i64 BIT_COUNT_ONES(i64 x) {
-    return __builtin_popcountll(x);
+constexpr Int BIT_COUNT_ONES(Int x) {
+    if(is_same<Int,i64>::value)
+        return __builtin_popcountll(u64(x));
+    else if(is_same<Int,i32>::value)
+        return __builtin_popcount(u32(x));
+    ASSERT(false);
 }
 
 // 1の個数が奇数なら1, 偶数なら0を返す
-constexpr i64 BIT_PARITY(i64 x) {
-    return __builtin_parityll(x);
+constexpr Int BIT_PARITY(Int x) {
+    if(is_same<Int,i64>::value)
+        return __builtin_parityll(u64(x));
+    else if(is_same<Int,i32>::value)
+        return __builtin_parity(u32(x));
+    ASSERT(false);
 }
 
 // X ⊆ {0,1,...,n-1}, |X| = k なる部分集合 X を昇順に列挙する
 // comb(n,k) 個
 //
 // ```
-// i64 x = BIT_I_1(3);
+// Int x = BIT_I_1(3);
 // do {
 //     // ...
 // } while(BIT_NEXT_SET_SIZED(x, 10));
 // ```
-constexpr bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
+constexpr bool BIT_NEXT_SET_SIZED(Int& x, Int n) {
     if(x == 0) return false;
-    i64 t = (x|(x-1)) + 1;
+    Int t = (x|(x-1)) + 1;
     x = t | ((~t&(t-1)) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
     return x < BIT_I(n);
 }
@@ -241,13 +262,13 @@ constexpr bool BIT_NEXT_SET_SIZED(i64& x, i64 n) {
 // 2^|Y| 個
 //
 // ```
-// i64 y = 0b10101;
-// i64 x = 0;
+// Int y = 0b10101;
+// Int x = 0;
 // do {
 //     // ...
 // } while(BIT_NEXT_SUBSET(x, y));
 // ```
-constexpr bool BIT_NEXT_SUBSET(i64& x, i64 y) {
+constexpr bool BIT_NEXT_SUBSET(Int& x, Int y) {
     if(x == y) return false;
     x = (x-y) & y;
     return true;
@@ -257,13 +278,13 @@ constexpr bool BIT_NEXT_SUBSET(i64& x, i64 y) {
 // 2^|Y| 個
 //
 // ```
-// i64 y = 0b10101;
-// i64 x = y;
+// Int y = 0b10101;
+// Int x = y;
 // do {
 //     // ...
 // } while(BIT_PREV_SUBSET(x, y));
 // ```
-constexpr bool BIT_PREV_SUBSET(i64& x, i64 y) {
+constexpr bool BIT_PREV_SUBSET(Int& x, Int y) {
     if(x == 0) return false;
     x = (x-1) & y;
     return true;
@@ -273,13 +294,13 @@ constexpr bool BIT_PREV_SUBSET(i64& x, i64 y) {
 // 2^(n-|Y|) 個
 //
 // ```
-// i64 y = 0b00010101;
-// i64 x = y;
+// Int y = 0b00010101;
+// Int x = y;
 // do {
 //     // ...
 // } while(BIT_NEXT_SUPERSET(x, 8, y));
 // ```
-constexpr bool BIT_NEXT_SUPERSET(i64& x, i64 n, i64 y) {
+constexpr bool BIT_NEXT_SUPERSET(Int& x, Int n, Int y) {
     x = (x+1) | y;
     return x < BIT_I(n);
 }
@@ -287,11 +308,11 @@ constexpr bool BIT_NEXT_SUPERSET(i64& x, i64 n, i64 y) {
 
 // lo:OK, hi:NG
 template<class Pred>
-constexpr i64 bisect_integer(i64 lo, i64 hi, Pred pred) {
+constexpr Int bisect_integer(Int lo, Int hi, Pred pred) {
     ASSERT(lo < hi);
 
     while(lo+1 < hi) {
-        i64 mid = (lo+hi) / 2;
+        Int mid = (lo+hi) / 2;
         if(pred(mid))
             lo = mid;
         else
@@ -316,7 +337,7 @@ constexpr Real bisect_real(Real lo, Real hi, Pred pred, Real eps=EPS) {
 }
 
 template<class Monoid>
-constexpr Monoid fastpow(const Monoid& x, i64 e, const Monoid& unity) {
+constexpr Monoid fastpow(const Monoid& x, Int e, const Monoid& unity) {
     ASSERT(e >= 0);
 
     Monoid res = unity;
@@ -330,49 +351,55 @@ constexpr Monoid fastpow(const Monoid& x, i64 e, const Monoid& unity) {
     return res;
 }
 
-constexpr i64 ipow(i64 x, i64 e) {
-    return fastpow<i64>(x,e,1);
+constexpr Int ipow(Int x, Int e) {
+    return fastpow<Int>(x,e,1);
 }
 
-/*constexpr*/ i64 sqrt_floor(i64 x) {
+/*constexpr*/ Int sqrt_floor(Int x) {
     ASSERT(x >= 0);
 
-    i64 lo = 0;
-    i64 hi = MIN(x/2+2, 3037000500LL);
-    return bisect_integer(lo, hi, [x](i64 r) { return r*r <= x; });
+    Int lo = 0;
+    Int hi = MIN(x/2+2, SQRT_MAX<Int>()+1);
+    return bisect_integer(lo, hi, [x](Int r) { return r*r <= x; });
 }
 
-/*constexpr*/ i64 sqrt_ceil(i64 x) {
-    i64 r = sqrt_floor(x);
+/*constexpr*/ Int sqrt_ceil(Int x) {
+    Int r = sqrt_floor(x);
     return r*r == x ? r : r+1;
 }
 
-// 0 <= log2_ceil(x) <= 63
-constexpr i64 log2_ceil(i64 x) {
+constexpr Int log2_ceil(Int x) {
     ASSERT(x > 0);
-    return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
+    if(is_same<Int,i64>::value)
+        return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
+    else if(is_same<Int,i32>::value)
+        return 32 - BIT_COUNT_LEADING_ZEROS(x-1);
+    ASSERT(false);
 }
 
-// 0 <= log2_floor(x) <= 62
-constexpr i64 log2_floor(i64 x) {
+constexpr Int log2_floor(Int x) {
     ASSERT(x > 0);
-    return 63 - BIT_COUNT_LEADING_ZEROS(x);
+    if(is_same<Int,i64>::value)
+        return 63 - BIT_COUNT_LEADING_ZEROS(x);
+    else if(is_same<Int,i32>::value)
+        return 31 - BIT_COUNT_LEADING_ZEROS(x);
+    ASSERT(false);
 }
 
 // x > 0
-constexpr i64 pow2_ceil(i64 x) {
+constexpr Int pow2_ceil(Int x) {
     return BIT_I(log2_ceil(x));
 }
 
 // x > 0
-constexpr i64 pow2_floor(i64 x) {
+constexpr Int pow2_floor(Int x) {
     return BIT_I(log2_floor(x));
 }
 
 // Haskell の divMod と同じ
-constexpr pair<i64,i64> divmod(i64 a, i64 b) {
-    i64 q = a / b;
-    i64 r = a % b;
+constexpr pair<Int,Int> divmod(Int a, Int b) {
+    Int q = a / b;
+    Int r = a % b;
     if((b>0 && r<0) || (b<0 && r>0)) {
         --q;
         r += b;
@@ -380,28 +407,28 @@ constexpr pair<i64,i64> divmod(i64 a, i64 b) {
     return {q,r};
 }
 
-constexpr i64 div_ceil(i64 a, i64 b) {
-    i64 q = a / b;
-    i64 r = a % b;
+constexpr Int div_ceil(Int a, Int b) {
+    Int q = a / b;
+    Int r = a % b;
     if((b>0 && r>0) || (b<0 && r<0))
         ++q;
     return q;
 }
 
-constexpr i64 div_floor(i64 a, i64 b) {
+constexpr Int div_floor(Int a, Int b) {
     return divmod(a,b).first;
 }
 
-constexpr i64 modulo(i64 a, i64 b) {
+constexpr Int modulo(Int a, Int b) {
     return divmod(a,b).second;
 }
 
-constexpr i64 align_ceil(i64 x, i64 align) {
+constexpr Int align_ceil(Int x, Int align) {
     ASSERT(align > 0);
     return div_ceil(x,align) * align;
 }
 
-constexpr i64 align_floor(i64 x, i64 align) {
+constexpr Int align_floor(Int x, Int align) {
     ASSERT(align > 0);
     return div_floor(x,align) * align;
 }
@@ -449,19 +476,19 @@ void SORT_UNIQ(C& c) {
 }
 
 // tuple {{{
-template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
+template<Int I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(tuple<TS...>&, F&&) {}
 
-template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) > I)>
+template<Int I=0, class F, class... TS, SFINAE(sizeof...(TS) > I)>
 void tuple_enumerate(tuple<TS...>& t, F&& f) {
     f(I, get<I>(t));
     tuple_enumerate<I+1>(t, forward<F>(f));
 }
 
-template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
+template<Int I=0, class F, class... TS, SFINAE(sizeof...(TS) == I)>
 void tuple_enumerate(const tuple<TS...>&, F&&) {}
 
-template<i64 I=0, class F, class... TS, SFINAE(sizeof...(TS) > I)>
+template<Int I=0, class F, class... TS, SFINAE(sizeof...(TS) > I)>
 void tuple_enumerate(const tuple<TS...>& t, F&& f) {
     f(I, get<I>(t));
     tuple_enumerate<I+1>(t, forward<F>(f));
@@ -525,7 +552,7 @@ template<class... TS>
 struct ProconHash<tuple<TS...>> {
     size_t operator()(const tuple<TS...>& t) const noexcept {
         size_t h = 0;
-        tuple_enumerate(t, [&h](i64, const auto& e) {
+        tuple_enumerate(t, [&h](Int, const auto& e) {
             h = procon_hash_combine(h, procon_hash_value(e));
         });
         return h;
@@ -552,26 +579,26 @@ template<class K, class V, class Hash=ProconHash<K>, class Eq=equal_to<K>>
 using HashMultimap = unordered_multimap<K,V,Hash,Eq>;
 
 template<class T>
-auto vec_make(i64 n, T x) {
+auto vec_make(Int n, T x) {
     return vector<T>(n, x);
 }
 
 template<class T, class... Args, SFINAE(sizeof...(Args) >= 2)>
-auto vec_make(i64 n, Args... args) {
+auto vec_make(Int n, Args... args) {
     auto inner = vec_make<T>(args...);
     return vector<decltype(inner)>(n, inner);
 }
 
 template<class T>
-auto vec_reserve(i64 cap) {
+auto vec_reserve(Int cap) {
     vector<T> res;
     res.reserve(cap);
     return res;
 }
 
-template<class T=i64>
-auto vec_iota(i64 n, T init={}) {
-    vector<i64> res(n);
+template<class T=Int>
+auto vec_iota(Int n, T init={}) {
+    vector<Int> res(n);
     ALL(iota, res, init);
     return res;
 }
@@ -603,7 +630,7 @@ auto priority_queue_make(const Comp& comp, Cont&& cont={}) {
 }
 
 template<class T, class Comp>
-auto priority_queue_reserve(const Comp& comp, i64 cap) {
+auto priority_queue_reserve(const Comp& comp, Int cap) {
     return priority_queue<T,vector<T>,Comp>(comp, vec_reserve<T>(cap));
 }
 
@@ -621,22 +648,22 @@ template<class T, size_t... NS>
 using Array = typename ArrayType<T,NS...>::type;
 
 template<class T, size_t N>
-T& array_at(Array<T,N>& ary, i64 i) {
+T& array_at(Array<T,N>& ary, Int i) {
     return ary[i];
 }
 
 template<class T, size_t N, size_t... NS, class... Args>
-T& array_at(Array<T,N,NS...>& ary, i64 i, Args... args) {
+T& array_at(Array<T,N,NS...>& ary, Int i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
 }
 
 template<class T, size_t N>
-const T& array_at(const Array<T,N>& ary, i64 i) {
+const T& array_at(const Array<T,N>& ary, Int i) {
     return ary[i];
 }
 
 template<class T, size_t N, size_t... NS, class... Args>
-const T& array_at(const Array<T,N,NS...>& ary, i64 i, Args... args) {
+const T& array_at(const Array<T,N,NS...>& ary, Int i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
 }
 
@@ -708,17 +735,17 @@ decltype(auto) FIXMEMO(F&& f) {
 // }}}
 
 // math {{{
-/*constexpr*/ i64 GCD(i64 a, i64 b) noexcept {
-    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) -> i64 {
+/*constexpr*/ Int GCD(Int a, Int b) noexcept {
+    /*constexpr*/ auto f_gcd = FIX([](auto&& self, Int aa, Int bb) -> Int {
         if(bb == 0) return aa;
         return self(bb, aa%bb);
     });
     return f_gcd(ABS(a), ABS(b));
 }
 
-/*constexpr*/ i64 LCM(i64 a, i64 b) noexcept {
+/*constexpr*/ Int LCM(Int a, Int b) noexcept {
     ASSERT(a != 0 && b != 0);
-    /*constexpr*/ auto f_gcd = FIX([](auto&& self, i64 aa, i64 bb) -> i64 {
+    /*constexpr*/ auto f_gcd = FIX([](auto&& self, Int aa, Int bb) -> Int {
         if(bb == 0) return aa;
         return self(bb, aa%bb);
     });
@@ -727,18 +754,18 @@ decltype(auto) FIXMEMO(F&& f) {
     return a / f_gcd(a,b) * b;
 }
 
-/*constexpr*/ tuple<i64,i64,i64> EXTGCD(i64 a, i64 b) noexcept {
-    /*constexpr*/ auto impl = FIX([](auto&& self, i64 aa, i64 bb, i64& x, i64& y) -> i64 {
+/*constexpr*/ tuple<Int,Int,Int> EXTGCD(Int a, Int b) noexcept {
+    /*constexpr*/ auto impl = FIX([](auto&& self, Int aa, Int bb, Int& x, Int& y) -> Int {
         if(bb == 0) {
             x = 1; y = 0;
             return aa;
         }
-        i64 g = self(bb, aa%bb, y, x);
+        Int g = self(bb, aa%bb, y, x);
         y -= (aa/bb)*x;
         return g;
     });
-    i64 x{},y{};
-    i64 g = impl(ABS(a), ABS(b), x, y);
+    Int x{},y{};
+    Int g = impl(ABS(a), ABS(b), x, y);
     x *= SGN(a);
     y *= SGN(b);
     return make_tuple(g, x, y);
@@ -746,14 +773,14 @@ decltype(auto) FIXMEMO(F&& f) {
 // }}}
 
 // string {{{
-char chr_digit(i64 n)  { return char('0'+n); }
-i64  ord_digit(char c) { return c-'0'; }
-char chr_lower(i64 n)  { return char('a'+n); }
-i64  ord_lower(char c) { return c-'a'; }
-char chr_upper(i64 n)  { return char('A'+n); }
-i64  ord_upper(char c) { return c-'A'; }
+char chr_digit(Int n)  { return char('0'+n); }
+Int  ord_digit(char c) { return c-'0'; }
+char chr_lower(Int n)  { return char('a'+n); }
+Int  ord_lower(char c) { return c-'a'; }
+char chr_upper(Int n)  { return char('A'+n); }
+Int  ord_upper(char c) { return c-'A'; }
 
-auto str_reserve(i64 cap) {
+auto str_reserve(Int cap) {
     string res;
     res.reserve(cap);
     return res;
@@ -834,18 +861,18 @@ struct Scan1<tuple<TS...>> {
     }
 };
 
-template<class T=i64>
+template<class T=Int>
 T RD() {
     return Scan<T>::scan(cin);
 }
 
-template<class T=i64>
+template<class T=Int>
 T RD1() {
     return Scan1<T>::scan1(cin);
 }
 
-template<class T=i64>
-auto RD_VEC(i64 n) {
+template<class T=Int>
+auto RD_VEC(Int n) {
     auto res = vec_reserve<T>(n);
     LOOP(n) {
         res.emplace_back(RD<T>());
@@ -853,8 +880,8 @@ auto RD_VEC(i64 n) {
     return res;
 }
 
-template<class T=i64>
-auto RD1_VEC(i64 n) {
+template<class T=Int>
+auto RD1_VEC(Int n) {
     auto res = vec_reserve<T>(n);
     LOOP(n) {
         res.emplace_back(RD1<T>());
@@ -862,8 +889,8 @@ auto RD1_VEC(i64 n) {
     return res;
 }
 
-template<class T=i64>
-auto RD_VEC2(i64 h, i64 w) {
+template<class T=Int>
+auto RD_VEC2(Int h, Int w) {
     auto res = vec_reserve<vector<T>>(h);
     LOOP(h) {
         res.emplace_back(RD_VEC<T>(w));
@@ -871,8 +898,8 @@ auto RD_VEC2(i64 h, i64 w) {
     return res;
 }
 
-template<class T=i64>
-auto RD1_VEC2(i64 h, i64 w) {
+template<class T=Int>
+auto RD1_VEC2(Int h, Int w) {
     auto res = vec_reserve<vector<T>>(h);
     LOOP(h) {
         res.emplace_back(RD1_VEC<T>(w));
@@ -902,7 +929,7 @@ string FMT_STR(const T& x) {
 template<class... TS>
 struct Fmt<tuple<TS...>> {
     static void fmt(ostream& out, const tuple<TS...>& t) {
-        tuple_enumerate(t, [&out](i64 i, const auto& e) {
+        tuple_enumerate(t, [&out](Int i, const auto& e) {
             if(i != 0) out << ' ';
             fmt_write(out, e);
         });
@@ -963,8 +990,8 @@ string DBG_STR(const T& x) {
 }
 
 template<>
-struct Dbg<i64> {
-    static void dbg(ostream& out, i64 x) {
+struct Dbg<Int> {
+    static void dbg(ostream& out, Int x) {
         if(x == INF)
             out << "INF";
         else if(x == -INF)
@@ -1009,7 +1036,7 @@ template<class... TS>
 struct Dbg<tuple<TS...>> {
     static void dbg(ostream& out, const tuple<TS...>& t) {
         out << "(";
-        tuple_enumerate(t, [&out](i64 i, const auto& e) {
+        tuple_enumerate(t, [&out](Int i, const auto& e) {
             if(i != 0) out << ",";
             dbg_write(out, e);
         });
@@ -1073,7 +1100,7 @@ struct Dbg<priority_queue<T,C,Comp>> {
 };
 
 template<class T>
-void DBG_IMPL(i64 line, const char* expr, const T& value) {
+void DBG_IMPL(Int line, const char* expr, const T& value) {
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
     dbg_write(cerr, value);
@@ -1092,7 +1119,7 @@ void DBG_IMPL_HELPER(const T& x, const TS&... args) {
 }
 
 template<class... TS>
-void DBG_IMPL(i64 line, const char* expr, const TS&... value) {
+void DBG_IMPL(Int line, const char* expr, const TS&... value) {
     cerr << "[L " << line << "]: ";
     cerr << "(" << expr << ") = (";
     DBG_IMPL_HELPER(value...);
@@ -1100,15 +1127,15 @@ void DBG_IMPL(i64 line, const char* expr, const TS&... value) {
 }
 
 template<size_t N, class T, SFINAE(rank<T>::value == 0)>
-void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<i64,N>&, const array<i64,N>&) {
+void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<Int,N>&, const array<Int,N>&) {
     dbg_write(out, x);
 }
 
 template<size_t N, class T, SFINAE(rank<T>::value > 0)>
-void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<i64,N>& sizes, const array<i64,N>& offs) {
-    i64 k   = N - rank<T>::value;
-    i64 off = offs[k];
-    i64 siz = sizes[k];
+void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<Int,N>& sizes, const array<Int,N>& offs) {
+    Int k   = N - rank<T>::value;
+    Int off = offs[k];
+    Int siz = sizes[k];
     if(siz == 0) siz = extent<T>::value - off;
 
     out << "[";
@@ -1120,9 +1147,9 @@ void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<i64,N>& sizes, con
 }
 
 template<class T, SFINAE(rank<T>::value > 0)>
-void DBG_DP_IMPL(i64 line, const char* expr, const T& dp,
-                 const array<i64,rank<T>::value>& sizes={},
-                 const array<i64,rank<T>::value>& offs={})
+void DBG_DP_IMPL(Int line, const char* expr, const T& dp,
+                 const array<Int,rank<T>::value>& sizes={},
+                 const array<Int,rank<T>::value>& offs={})
 {
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
@@ -1131,7 +1158,7 @@ void DBG_DP_IMPL(i64 line, const char* expr, const T& dp,
 }
 
 template<class T>
-void DBG_GRID_IMPL(i64 line, const char* expr, const vector<T>& grid) {
+void DBG_GRID_IMPL(Int line, const char* expr, const vector<T>& grid) {
     cerr << "[L " << line << "]: ";
     cerr << expr << ":\n";
     for(const auto& row : grid) {
@@ -1156,21 +1183,21 @@ void DBG_GRID_IMPL(i64 line, const char* expr, const vector<T>& grid) {
 template<class Mod>
 class ModIntT {
 private:
-    i64 v_;  // [0,Mod::value)
+    Int v_;  // [0,Mod::value)
 
-    static i64 mod() { return Mod::value; }
+    static Int mod() { return Mod::value; }
 
-    static i64 normalize(i64 x) {
-        i64 res = x % mod();
+    static Int normalize(Int x) {
+        Int res = x % mod();
         if(res < 0) res += mod();
         return res;
     }
 
 public:
     ModIntT() : v_(0) {}
-    ModIntT(i64 v) : v_(normalize(v)) {}
+    ModIntT(Int v) : v_(normalize(v)) {}
 
-    explicit operator i64() const { return v_; }
+    explicit operator Int() const { return v_; }
 
     ModIntT operator-() const { return ModIntT(-v_); }
 
@@ -1192,45 +1219,45 @@ public:
     ModIntT operator++(int) { return exchange(*this, *this+1); }
     ModIntT operator--(int) { return exchange(*this, *this-1); }
 
-    ModIntT pow(i64 e) const {
+    ModIntT pow(Int e) const {
         return fastpow(*this, e, ModIntT(1));
     }
 
     ModIntT inv() const {
-        i64 g,x; tie(g,x,ignore) = EXTGCD(v_, mod());
+        Int g,x; tie(g,x,ignore) = EXTGCD(v_, mod());
         ASSERT(g == 1);
         return ModIntT(x);
     }
 
     friend ModIntT operator+(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) += rhs; }
-    friend ModIntT operator+(ModIntT lhs, i64 rhs)     { return ModIntT(lhs) += rhs; }
-    friend ModIntT operator+(i64 lhs, ModIntT rhs)     { return ModIntT(rhs) += lhs; }
+    friend ModIntT operator+(ModIntT lhs, Int rhs)     { return ModIntT(lhs) += rhs; }
+    friend ModIntT operator+(Int lhs, ModIntT rhs)     { return ModIntT(rhs) += lhs; }
     friend ModIntT operator-(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) -= rhs; }
-    friend ModIntT operator-(ModIntT lhs, i64 rhs)     { return ModIntT(lhs) -= rhs; }
-    friend ModIntT operator-(i64 lhs, ModIntT rhs)     { return ModIntT(rhs) -= lhs; }
+    friend ModIntT operator-(ModIntT lhs, Int rhs)     { return ModIntT(lhs) -= rhs; }
+    friend ModIntT operator-(Int lhs, ModIntT rhs)     { return ModIntT(rhs) -= lhs; }
     friend ModIntT operator*(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) *= rhs; }
-    friend ModIntT operator*(ModIntT lhs, i64 rhs)     { return ModIntT(lhs) *= rhs; }
-    friend ModIntT operator*(i64 lhs, ModIntT rhs)     { return ModIntT(rhs) *= lhs; }
+    friend ModIntT operator*(ModIntT lhs, Int rhs)     { return ModIntT(lhs) *= rhs; }
+    friend ModIntT operator*(Int lhs, ModIntT rhs)     { return ModIntT(rhs) *= lhs; }
 
-    friend bool operator==(ModIntT lhs, ModIntT rhs) { return i64(lhs) == i64(rhs); }
-    friend bool operator==(ModIntT lhs, i64 rhs)     { return lhs == ModIntT(rhs); }
-    friend bool operator==(i64 lhs, ModIntT rhs)     { return ModIntT(lhs) == rhs; }
+    friend bool operator==(ModIntT lhs, ModIntT rhs) { return Int(lhs) == Int(rhs); }
+    friend bool operator==(ModIntT lhs, Int rhs)     { return lhs == ModIntT(rhs); }
+    friend bool operator==(Int lhs, ModIntT rhs)     { return ModIntT(lhs) == rhs; }
     friend bool operator!=(ModIntT lhs, ModIntT rhs) { return !(lhs == rhs); }
-    friend bool operator!=(ModIntT lhs, i64 rhs)     { return !(lhs == rhs); }
-    friend bool operator!=(i64 lhs, ModIntT rhs)     { return !(lhs == rhs); }
+    friend bool operator!=(ModIntT lhs, Int rhs)     { return !(lhs == rhs); }
+    friend bool operator!=(Int lhs, ModIntT rhs)     { return !(lhs == rhs); }
 };
 
 template<class Mod>
 struct ProconHash<ModIntT<Mod>> {
     size_t operator()(ModIntT<Mod> x) const noexcept {
-        return procon_hash_value(i64(x));
+        return procon_hash_value(Int(x));
     }
 };
 
 template<class Mod>
 struct Scan<ModIntT<Mod>> {
     static ModIntT<Mod> scan(istream& in) {
-        i64 v = Scan<i64>::scan(in);
+        Int v = Scan<Int>::scan(in);
         return ModIntT<Mod>(v);
     }
 };
@@ -1238,19 +1265,19 @@ struct Scan<ModIntT<Mod>> {
 template<class Mod>
 struct Fmt<ModIntT<Mod>> {
     static void fmt(ostream& out, ModIntT<Mod> x) {
-        fmt_write(out, i64(x));
+        fmt_write(out, Int(x));
     }
 };
 
 template<class Mod>
 struct Dbg<ModIntT<Mod>> {
     static void dbg(ostream& out, ModIntT<Mod> x) {
-        dbg_write(out, i64(x));
+        dbg_write(out, Int(x));
     }
 };
 
-template<i64 M>
-using ModIntC = ModIntT<integral_constant<i64,M>>;
+template<Int M>
+using ModIntC = ModIntT<integral_constant<Int,M>>;
 
 using ModInt = ModIntC<MOD>;
 // }}}

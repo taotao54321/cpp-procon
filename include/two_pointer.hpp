@@ -5,25 +5,25 @@
 // f(空区間) は常に真とする
 class TwoPointer {
 private:
-    i64 n_;
-    i64 l_, r_;
+    Int n_;
+    Int l_, r_;
 
     virtual void init() {}
 
     // 0 <= l < r <= n が保証される
-    virtual void forward_l(i64 /*l*/, i64 /*r*/) {}
+    virtual void forward_l(Int /*l*/, Int /*r*/) {}
 
     // [l,r+1) が条件を満たさないなら false を返す(この場合 r は変化しない)
     // 0 <= l <= r < n が保証される
-    virtual bool forward_r(i64 /*l*/, i64 /*r*/) = 0;
+    virtual bool forward_r(Int /*l*/, Int /*r*/) = 0;
 
     // 各 l についてちょうど 1 回だけ呼ばれる
     // false を返すことで処理を中断できる
     // 0 <= l <= r <= n が保証される
-    virtual bool on_found(i64 l, i64 r) = 0;
+    virtual bool on_found(Int l, Int r) = 0;
 
 protected:
-    explicit TwoPointer(i64 n) : n_(n) {}
+    explicit TwoPointer(Int n) : n_(n) {}
 
 public:
     void run() {
@@ -46,26 +46,26 @@ public:
         }
     }
 
-    i64 size() const { return n_; }
+    Int size() const { return n_; }
 };
 
 // 継承用テンプレ(差分計算なし)
 #if 0
 struct TP : TwoPointer {
-    const vector<i64>& A_;
-    i64 ans_;
+    const vector<Int>& A_;
+    Int ans_;
 
-    TP(const vector<i64>& A) : TwoPointer(SIZE(A)), A_(A) {}
+    TP(const vector<Int>& A) : TwoPointer(SIZE(A)), A_(A) {}
 
     void init() override {
         
     }
 
-    bool forward_r(i64 l, i64 r) override {
+    bool forward_r(Int l, Int r) override {
         
     }
 
-    bool on_found(i64 l, i64 r) override {
+    bool on_found(Int l, Int r) override {
         
         return true;
     }
@@ -75,24 +75,24 @@ struct TP : TwoPointer {
 // 継承用テンプレ(差分計算あり)
 #if 0
 struct TP : TwoPointer {
-    const vector<i64>& A_;
-    i64 ans_;
+    const vector<Int>& A_;
+    Int ans_;
 
-    TP(const vector<i64>& A) : TwoPointer(SIZE(A)), A_(A) {}
+    TP(const vector<Int>& A) : TwoPointer(SIZE(A)), A_(A) {}
 
     void init() override {
         
     }
 
-    void forward_l(i64 l, i64) override {
+    void forward_l(Int l, Int) override {
         
     }
 
-    bool forward_r(i64, i64 r) override {
+    bool forward_r(Int, Int r) override {
         
     }
 
-    bool on_found(i64 l, i64 r) override {
+    bool on_found(Int l, Int r) override {
         
         return true;
     }

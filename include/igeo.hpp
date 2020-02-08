@@ -1,10 +1,10 @@
 // igeo {{{
 
 struct IVec {
-    i64 x{}, y{};
+    Int x{}, y{};
 
     constexpr IVec() = default;
-    constexpr IVec(i64 xx, i64 yy) : x(xx), y(yy) {}
+    constexpr IVec(Int xx, Int yy) : x(xx), y(yy) {}
 
     constexpr IVec operator-() const { return {-x,-y}; }
 
@@ -18,19 +18,19 @@ struct IVec {
         y -= rhs.y;
         return *this;
     }
-    constexpr IVec& operator*=(i64 rhs) {
+    constexpr IVec& operator*=(Int rhs) {
         x *= rhs;
         y *= rhs;
         return *this;
     }
-    constexpr IVec& operator/=(i64 rhs) {
+    constexpr IVec& operator/=(Int rhs) {
         x /= rhs;
         y /= rhs;
         return *this;
     }
 
     // [(x0,y0),(x1,y1))
-    bool is_in(i64 x0, i64 y0, i64 x1, i64 y1) const {
+    bool is_in(Int x0, Int y0, Int x1, Int y1) const {
         ASSERT_LOCAL(x0 <= x1 && y0 <= y1);
         return x0 <= x && x < x1 && y0 <= y && y < y1;
     }
@@ -44,13 +44,13 @@ struct IVec {
     template<class C>
     constexpr       auto& operator[](C& cont) const { return cont[y][x]; }
 
-    constexpr i64 norm() const { return x*x + y*y; }
+    constexpr Int norm() const { return x*x + y*y; }
 
-    constexpr i64 dot(const IVec& rhs) const {
+    constexpr Int dot(const IVec& rhs) const {
         return x*rhs.x + y*rhs.y;
     }
 
-    constexpr i64 cross(const IVec& rhs) const {
+    constexpr Int cross(const IVec& rhs) const {
         return x*rhs.y - y*rhs.x;
     }
 
@@ -79,9 +79,9 @@ struct IVec {
 
     friend constexpr IVec operator+(const IVec& lhs, const IVec& rhs) { return IVec(lhs) += rhs; }
     friend constexpr IVec operator-(const IVec& lhs, const IVec& rhs) { return IVec(lhs) -= rhs; }
-    friend constexpr IVec operator*(const IVec& lhs, i64 rhs) { return IVec(lhs) *= rhs; }
-    friend constexpr IVec operator*(i64 lhs, const IVec& rhs) { return IVec(rhs) *= lhs; }
-    friend constexpr IVec operator/(const IVec& lhs, i64 rhs) { return IVec(lhs) /= rhs; }
+    friend constexpr IVec operator*(const IVec& lhs, Int rhs) { return IVec(lhs) *= rhs; }
+    friend constexpr IVec operator*(Int lhs, const IVec& rhs) { return IVec(rhs) *= lhs; }
+    friend constexpr IVec operator/(const IVec& lhs, Int rhs) { return IVec(lhs) /= rhs; }
 
     friend constexpr bool operator==(const IVec& lhs, const IVec& rhs) {
         return lhs.x==rhs.x && lhs.y==rhs.y;
@@ -92,8 +92,8 @@ struct IVec {
 template<>
 struct Scan<IVec> {
     static IVec scan(istream& in) {
-        i64 x = Scan<i64>::scan(in);
-        i64 y = Scan<i64>::scan(in);
+        Int x = Scan<Int>::scan(in);
+        Int y = Scan<Int>::scan(in);
         return {x,y};
     }
 };

@@ -6,13 +6,13 @@
 //
 // g: 隣接リスト表現(頂点数 n >= 2)
 // 長さ n-2 の prufer code を返す
-vector<i64> prufer_from_tree(const vector<vector<i64>>& g) {
-    i64 n = SIZE(g);
+vector<Int> prufer_from_tree(const vector<vector<Int>>& g) {
+    Int n = SIZE(g);
     ASSERT(n >= 2);
 
-    vector<i64> parent(n, -1);
-    auto dfs = FIX([&g,&parent](auto&& self, i64 v) -> void {
-        for(i64 to : g[v]) {
+    vector<Int> parent(n, -1);
+    auto dfs = FIX([&g,&parent](auto&& self, Int v) -> void {
+        for(Int to : g[v]) {
             if(to == parent[v]) continue;
             parent[to] = v;
             self(to);
@@ -20,18 +20,18 @@ vector<i64> prufer_from_tree(const vector<vector<i64>>& g) {
     });
     dfs(n-1);
 
-    vector<i64> deg(n);
-    i64 ptr = -1;
+    vector<Int> deg(n);
+    Int ptr = -1;
     REP(v, n) {
         deg[v] = SIZE(g[v]);
         if(deg[v] == 1 && ptr == -1)
             ptr = v;
     }
 
-    vector<i64> prufer(n-2);
-    i64 leaf = ptr;
+    vector<Int> prufer(n-2);
+    Int leaf = ptr;
     REP(i, n-2) {
-        i64 p = parent[leaf];
+        Int p = parent[leaf];
         prufer[i] = p;
         --deg[p];
 
@@ -55,22 +55,22 @@ vector<i64> prufer_from_tree(const vector<vector<i64>>& g) {
 //
 // prufer: 長さ n-2 の prufer code (n:頂点数、n >= 2)
 // n-1 個の辺を返す
-vector<pair<i64,i64>> prufer_to_tree(const vector<i64>& prufer) {
-    i64 n = SIZE(prufer) + 2;
+vector<pair<Int,Int>> prufer_to_tree(const vector<Int>& prufer) {
+    Int n = SIZE(prufer) + 2;
     ASSERT(n >= 2);
 
-    vector<i64> deg(n, 1);
-    for(i64 v : prufer)
+    vector<Int> deg(n, 1);
+    for(Int v : prufer)
         ++deg[v];
 
-    i64 ptr = 0;
+    Int ptr = 0;
     while(deg[ptr] != 1)
         ++ptr;
 
-    vector<pair<i64,i64>> es;
+    vector<pair<Int,Int>> es;
     es.reserve(n-1);
-    i64 leaf = ptr;
-    for(i64 v : prufer) {
+    Int leaf = ptr;
+    for(Int v : prufer) {
         es.emplace_back(leaf, v);
         --deg[v];
 

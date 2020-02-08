@@ -9,16 +9,16 @@ struct Imos2 {
     vector<vector<Abel>> v_;
     bool built_{false};
 
-    Imos2(Op&& op, Inv&& inv, const Abel& unity, i64 h, i64 w) :
+    Imos2(Op&& op, Inv&& inv, const Abel& unity, Int h, Int w) :
         op_(forward<Op>(op)), inv_(forward<Inv>(inv)), unity_(unity),
         v_(h+1,vector<Abel>(w+1,unity_))
     {}
 
-    i64 h() const { return SIZE(v_)-1; }
-    i64 w() const { return SIZE(v_[0])-1; }
+    Int h() const { return SIZE(v_)-1; }
+    Int w() const { return SIZE(v_[0])-1; }
 
     // [(y1,x1),(y2,x2))
-    void add(i64 y1, i64 x1, i64 y2, i64 x2, const Abel& val) {
+    void add(Int y1, Int x1, Int y2, Int x2, const Abel& val) {
         ASSERT_LOCAL(!built_);
 
         v_[y1][x1] = op_(v_[y1][x1], val);
@@ -43,19 +43,19 @@ struct Imos2 {
         built_ = true;
     }
 
-    const Abel& at(i64 y, i64 x) const {
+    const Abel& at(Int y, Int x) const {
         ASSERT_LOCAL(built_);
         return v_[y][x];
     }
 };
 
 template<class Abel, class Op, class Inv>
-auto imos2_make(Op&& op, Inv&& inv, const Abel& unity, i64 h, i64 w) {
+auto imos2_make(Op&& op, Inv&& inv, const Abel& unity, Int h, Int w) {
     return Imos2<Abel,Op,Inv>(forward<Op>(op), forward<Inv>(inv), unity, h, w);
 }
 
 template<class T>
-auto imos2_default(i64 h, i64 w) {
+auto imos2_default(Int h, Int w) {
     return imos2_make<T>(plus<>{}, negate<>{}, T{}, h, w);
 }
 

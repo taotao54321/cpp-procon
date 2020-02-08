@@ -13,7 +13,7 @@ public:
     FoldQueue(F&& f, const Monoid& unity) : f_(forward<F>(f)), unity_(unity) {}
 
     bool empty() const { return stk_front_.empty() && stk_back_.empty(); }
-    i64 size() const { return stk_front_.size() + stk_back_.size(); }
+    Int size() const { return stk_front_.size() + stk_back_.size(); }
 
     Monoid fold() const {
         if(empty())

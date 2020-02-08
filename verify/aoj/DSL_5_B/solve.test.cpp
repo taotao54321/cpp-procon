@@ -6,33 +6,14 @@
 #include "../../../include/stdc++.hpp"
 using namespace std;
 
-using i8  = int8_t;
-using u8  = uint8_t;
-using i16 = int16_t;
-using u16 = uint16_t;
-using i32 = int32_t;
-using u32 = uint32_t;
-using i64 = int64_t;
-using u64 = uint64_t;
-#ifdef __SIZEOF_INT128__
-using i128 = __int128;
-using u128 = unsigned __int128;
-#endif
-
-using f32 = float;
-using f64 = double;
-using f80 = long double;
-
-template<class T> constexpr T PROCON_INF();
+#include "../../../include/types.hpp"
 // }}}
 
+using Int  = i64;
 using Real = f80;
 
-template<> constexpr i64  PROCON_INF<i64>()  { return INT64_C(1'010'000'000'000'000'017); }
-template<> constexpr Real PROCON_INF<Real>() { return Real(1e100L); }
-
-constexpr i64 MOD = INT64_C(1'000'000'007);
-//constexpr i64 MOD = INT64_C(998'244'353);
+constexpr Int MOD = 1'000'000'007;
+//constexpr Int MOD = 998'244'353;
 
 constexpr Real EPS = Real(1e-10L);
 
@@ -46,24 +27,24 @@ constexpr bool COUT_AUTOFLUSH = false;
 //--------------------------------------------------------------------
 
 void solve() {
-    i64 N = RD();
-    auto A = RD_VEC<tuple<i64,i64,i64,i64>>(N);
+    Int N = RD();
+    auto A = RD_VEC<tuple<Int,Int,Int,Int>>(N);
 
     CoordCompress ccy(1001);
     CoordCompress ccx(1001);
     for(const auto& a : A) {
-        i64 x1,y1,x2,y2; tie(x1,y1,x2,y2) = a;
+        Int x1,y1,x2,y2; tie(x1,y1,x2,y2) = a;
         ccy.insert({y1,y2});
         ccx.insert({x1,x2});
     }
     ccy.build();
     ccx.build();
-    i64 h = SIZE(ccy);
-    i64 w = SIZE(ccx);
+    Int h = SIZE(ccy);
+    Int w = SIZE(ccx);
 
-    auto imos = imos2_default<i64>(h,w);
+    auto imos = imos2_default<Int>(h,w);
     for(const auto& a : A) {
-        i64 x1,y1,x2,y2; tie(x1,y1,x2,y2) = a;
+        Int x1,y1,x2,y2; tie(x1,y1,x2,y2) = a;
         y1 = ccy.comp(y1);
         x1 = ccx.comp(x1);
         y2 = ccy.comp(y2);
@@ -72,7 +53,7 @@ void solve() {
     }
     imos.build();
 
-    i64 ans = 0;
+    Int ans = 0;
     REP(y, h) REP(x, w) {
         chmax(ans, imos.at(y,x));
     }

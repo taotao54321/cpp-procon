@@ -244,7 +244,7 @@ struct Polygon {
     explicit Polygon(const vector<Vector>& ps_arg) : ps(ps_arg) {}
 
     f64 area_2x() const {
-        i64 n = SIZE(ps);
+        Int n = SIZE(ps);
         if(n < 3) return 0;
         f64 sum = 0;
         REP(i, n) {
@@ -258,9 +258,9 @@ struct Polygon {
     // 3点が同一直線上にあるケースは許容する(この辺ちょっと怪しい)
     // 2角形以下の場合 false を返す
     bool is_convex() const {
-        i64 n = SIZE(ps);
+        Int n = SIZE(ps);
         if(n < 3) return false;
-        i64 abc = 0;
+        Int abc = 0;
         REP(i, n) {
             ABC abc_cur = geo_abc(pre(i), cur(i), nex(i));
             if(abc_cur != ABC_CCW && abc_cur != ABC_CW) continue;
@@ -273,9 +273,9 @@ struct Polygon {
     // 点の包含判定
     // 2角形以下の場合 CONT_OUT を返す
     Containment containment(const Vector& p) const {
-        i64 n = SIZE(ps);
+        Int n = SIZE(ps);
         if(n < 3) return CONT_OUT;
-        i64 cnt = 0;
+        Int cnt = 0;
         REP(i, n) {
             Vector a = cur(i) - p;
             Vector b = nex(i) - p;
@@ -286,15 +286,15 @@ struct Polygon {
         return is_odd(cnt) ? CONT_IN : CONT_OUT;
     }
 
-    Vector cur(i64 i) const { return ps[i]; }
-    Vector pre(i64 i) const { return ps[modulo(i-1,SIZE(ps))]; }
-    Vector nex(i64 i) const { return ps[modulo(i+1,SIZE(ps))]; }
+    Vector cur(Int i) const { return ps[i]; }
+    Vector pre(Int i) const { return ps[modulo(i-1,SIZE(ps))]; }
+    Vector nex(Int i) const { return ps[modulo(i+1,SIZE(ps))]; }
 };
 
 template<>
 struct Formatter<Polygon> {
     static ostream& write_str(ostream& out, const Polygon& poly) {
-        i64 n = SIZE(poly.ps);
+        Int n = SIZE(poly.ps);
         REP(i, n) {
             const Vector& p = poly.ps[i];
             WRITE_STR(out, p.x);
@@ -307,7 +307,7 @@ struct Formatter<Polygon> {
     }
     static ostream& write_repr(ostream& out, const Polygon& poly) {
         out << "Polygon(";
-        i64 n = SIZE(poly.ps);
+        Int n = SIZE(poly.ps);
         REP(i, n) {
             const Vector& p = poly.ps[i];
             out << "(";
@@ -413,7 +413,7 @@ vector<Vector> geo_crosspoints(const Circle& cir1, const Circle& cir2) {
 // * 反時計回り
 // * 辺上の点を含む
 Polygon geo_convex_hull(vector<Vector> ps) {
-    i64 n = SIZE(ps);
+    Int n = SIZE(ps);
     ASSERT(n >= 3);
 
     vector<Vector> res;
@@ -423,7 +423,7 @@ Polygon geo_convex_hull(vector<Vector> ps) {
 
     auto step = [&res](const Vector& p) {
         while(SIZE(res) >= 2) {
-            i64 k = SIZE(res);
+            Int k = SIZE(res);
             // 辺上の点を含めたくなければ "!= ABC_CW" を "== ABC_CCW" に変える
             if(geo_abc(res[k-2],res[k-1],p) != ABC_CW) break;
             res.pop_back();
@@ -432,11 +432,11 @@ Polygon geo_convex_hull(vector<Vector> ps) {
     };
 
     // lower hull
-    for(i64 i = 0; i < n; ++i) {
+    for(Int i = 0; i < n; ++i) {
         step(ps[i]);
     }
     // upper hull
-    for(i64 i = n-2; i >= 0; --i) {
+    for(Int i = n-2; i >= 0; --i) {
         step(ps[i]);
     }
     // 始点が重複するので削除
@@ -449,18 +449,18 @@ Polygon geo_convex_hull(vector<Vector> ps) {
 //
 // (直径の2乗, index_端点1, index_端点2) を返す
 // convex は凸多角形でなければならない
-tuple<f64,i64,i64> geo_convex_diameter_sq(const Polygon& convex) {
+tuple<f64,Int,Int> geo_convex_diameter_sq(const Polygon& convex) {
     const auto& ps = convex.ps;
-    i64 n = SIZE(ps);
+    Int n = SIZE(ps);
 
     auto cmp_y = ON(less<>(), [](const Vector& p) { return p.y; });
-    i64 istart = ALL(max_element, ps, cmp_y) - begin(ps);
-    i64 jstart = ALL(min_element, ps, cmp_y) - begin(ps);
+    Int istart = ALL(max_element, ps, cmp_y) - begin(ps);
+    Int jstart = ALL(min_element, ps, cmp_y) - begin(ps);
 
-    auto nex = [n](i64 i) { return modulo(i+1,n); };
+    auto nex = [n](Int i) { return modulo(i+1,n); };
 
     f64 d2max = (ps[istart]-ps[jstart]).norm();
-    i64 i, imax, j, jmax;
+    Int i, imax, j, jmax;
     i = imax = istart;
     j = jmax = jstart;
     do {
@@ -484,8 +484,8 @@ tuple<f64,i64,i64> geo_convex_diameter_sq(const Polygon& convex) {
 // convex は凸多角形でなければならない
 Polygon geo_convex_cut(const Polygon& convex, const Line& line) {
     const vector<Vector>& ps = convex.ps;
-    i64 n = SIZE(ps);
-    auto nex = [n](i64 i) { return modulo(i+1,n); };
+    Int n = SIZE(ps);
+    auto nex = [n](Int i) { return modulo(i+1,n); };
 
     vector<Vector> res;
     REP(i, n) {
@@ -505,7 +505,7 @@ Polygon geo_convex_cut(const Polygon& convex, const Line& line) {
 // [first,last) はx座標に関してソート済であること
 template<typename RandomIt>
 tuple<f64,RandomIt,RandomIt> geo_closest_pair_sq_impl(RandomIt first, RandomIt last) {
-    i64 n = last - first;
+    Int n = last - first;
     if(n <= 1)
         return make_tuple(DBL_MAX, last, last);
 
@@ -537,7 +537,7 @@ tuple<f64,RandomIt,RandomIt> geo_closest_pair_sq_impl(RandomIt first, RandomIt l
 // (距離の2乗, index_端点1, index_端点2) を返す
 // SIZE(ps) < 2 ならエラー
 // O(nlogn)
-tuple<f64,i64,i64> geo_closest_pair_sq(vector<Vector> ps) {
+tuple<f64,Int,Int> geo_closest_pair_sq(vector<Vector> ps) {
     ASSERT(SIZE(ps) >= 2);
 
     ALL(sort, ps, LT_ON([](const Vector& p) { return p.x; }));

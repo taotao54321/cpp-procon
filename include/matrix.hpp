@@ -6,11 +6,11 @@ private:
     vector<vector<T>> mat_;
 
 public:
-    static Matrix zeros(i64 n) {
+    static Matrix zeros(Int n) {
         return Matrix(n,n);
     }
 
-    static Matrix eye(i64 n) {
+    static Matrix eye(Int n) {
         Matrix res(n,n);
         REP(i, n) {
             res.at(i,i) = T(1);
@@ -18,13 +18,13 @@ public:
         return res;
     }
 
-    Matrix(i64 nr, i64 nc) : mat_(nr,vector<T>(nc,T(0))) {}
+    Matrix(Int nr, Int nc) : mat_(nr,vector<T>(nc,T(0))) {}
 
-    i64 nrow() const { return SIZE(mat_);    }
-    i64 ncol() const { return SIZE(mat_[0]); }
+    Int nrow() const { return SIZE(mat_);    }
+    Int ncol() const { return SIZE(mat_[0]); }
 
-    T&       at(i64 r, i64 c)       { return mat_[r][c]; }
-    const T& at(i64 r, i64 c) const { return mat_[r][c]; }
+    T&       at(Int r, Int c)       { return mat_[r][c]; }
+    const T& at(Int r, Int c) const { return mat_[r][c]; }
 
     Matrix operator-() const {
         Matrix res(*this);
@@ -60,7 +60,7 @@ public:
     }
 
     // 正方行列であること
-    Matrix pow(i64 e) const {
+    Matrix pow(Int e) const {
         return fastpow(*this, e, eye(nrow()));
     }
 
@@ -80,9 +80,9 @@ public:
         return Matrix(lhs) /= rhs;
     }
     friend Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
-        i64 nr = lhs.nrow();
-        i64 nc = rhs.ncol();
-        i64 m  = lhs.ncol();
+        Int nr = lhs.nrow();
+        Int nc = rhs.ncol();
+        Int m  = lhs.ncol();
         Matrix res(nr,nc);
         REP(r, nr) REP(c, nc) {
             REP(i, m) {
@@ -92,8 +92,8 @@ public:
         return res;
     }
     friend vector<T> operator*(const Matrix& lhs, const vector<T>& rhs) {
-        i64 nr = lhs.nrow();
-        i64 m  = lhs.ncol();
+        Int nr = lhs.nrow();
+        Int m  = lhs.ncol();
         vector<T> res(m, T{});
         REP(r, nr) {
             REP(i, m) {
@@ -131,9 +131,9 @@ Matrix<T> operator/(const Matrix<T>& lhs, T rhs) {
 
 template<typename T>
 Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs) {
-    i64 nr = lhs.nrow();
-    i64 nc = rhs.ncol();
-    i64 m  = lhs.ncol();
+    Int nr = lhs.nrow();
+    Int nc = rhs.ncol();
+    Int m  = lhs.ncol();
     Matrix<T> res(nr,nc);
     REP(r, nr) REP(c, nc) {
         REP(i, m) {
@@ -145,8 +145,8 @@ Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs) {
 
 template<typename T>
 vector<T> operator*(const Matrix<T>& lhs, const vector<T>& rhs) {
-    i64 nr = lhs.nrow();
-    i64 m  = lhs.ncol();
+    Int nr = lhs.nrow();
+    Int m  = lhs.ncol();
     vector<T> res(m, T(0));
     REP(r, nr) {
         REP(i, m) {

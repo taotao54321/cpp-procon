@@ -2,12 +2,12 @@
 
 // [lo,hi) におけるunimodalな関数 f のargmaxを返す
 template<class F>
-i64 trisect_max_integer(i64 lo, i64 hi, F&& f) {
+Int trisect_max_integer(Int lo, Int hi, F&& f) {
     ASSERT(lo < hi);
 
     while(lo+2 < hi) {
-        i64 x1 = lo + 1*(hi-lo)/3;
-        i64 x2 = lo + 2*(hi-lo)/3;
+        Int x1 = lo + 1*(hi-lo)/3;
+        Int x2 = lo + 2*(hi-lo)/3;
         if(f(x1) > f(x2))
             hi = x2;
         else
@@ -21,12 +21,12 @@ i64 trisect_max_integer(i64 lo, i64 hi, F&& f) {
 }
 
 template<class F>
-i64 trisect_min_integer(i64 lo, i64 hi, F&& f) {
+Int trisect_min_integer(Int lo, Int hi, F&& f) {
     ASSERT(lo < hi);
 
     while(lo+2 < hi) {
-        i64 x1 = lo + 1*(hi-lo)/3;
-        i64 x2 = lo + 2*(hi-lo)/3;
+        Int x1 = lo + 1*(hi-lo)/3;
+        Int x2 = lo + 2*(hi-lo)/3;
         if(f(x1) < f(x2))
             hi = x2;
         else

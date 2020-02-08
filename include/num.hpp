@@ -1,10 +1,10 @@
 // num {{{
 
-vector<i64> divisors_proper(i64 n) {
+vector<Int> divisors_proper(Int n) {
     if(n == 1) return {};
-    vector<i64> res(1, 1);
+    vector<Int> res(1, 1);
 
-    i64 d = 2;
+    Int d = 2;
     for(; d*d < n; ++d) {
         if(n % d == 0) {
             res.emplace_back(d);
@@ -17,8 +17,8 @@ vector<i64> divisors_proper(i64 n) {
     return res;
 }
 
-vector<i64> divisors(i64 n) {
-    vector<i64> res = divisors_proper(n);
+vector<Int> divisors(Int n) {
+    vector<Int> res = divisors_proper(n);
     res.emplace_back(n);
     return res;
 }
@@ -27,13 +27,13 @@ vector<i64> divisors(i64 n) {
 // (素因数,指数) のリストを返す
 // n >= 1 でなければならない
 // n == 1 の場合、空リストを返す
-vector<pair<i64,i64>> factorize(i64 n) {
+vector<pair<Int,Int>> factorize(Int n) {
     ASSERT(n >= 1);
 
-    vector<pair<i64,i64>> res;
+    vector<pair<Int,Int>> res;
 
-    for(i64 p = 2; p*p <= n; ++p) {
-        i64 e = 0;
+    for(Int p = 2; p*p <= n; ++p) {
+        Int e = 0;
         while(n % p == 0) {
             ++e;
             n /= p;
@@ -45,8 +45,8 @@ vector<pair<i64,i64>> factorize(i64 n) {
     return res;
 }
 
-bool is_square(i64 x) {
-    i64 r = sqrt_floor(x);
+bool is_square(Int x) {
+    Int r = sqrt_floor(x);
     return r*r == x;
 }
 
@@ -160,22 +160,26 @@ bool is_prime_u64(u64 n) {
     return true;
 }
 
-bool is_prime(i64 n) {
+bool is_prime(Int n) {
     ASSERT(n >= 0);
-    return is_prime_u64(static_cast<u64>(n));
+    if(is_same<Int,i64>::value)
+        return is_prime_u64(u64(n));
+    else if(is_same<Int,i32>::value)
+        return is_prime_u32(u32(n));
+    ASSERT(false);
 }
 
 // エラトステネスのふるい
-template<i64 N>
+template<Int N>
 bool (&is_prime_table())[N] {
     static_assert(N >= 3, "");
     static bool prime[N] {};
 
     if(!prime[2]) {
         fill(begin(prime)+2, end(prime), true);
-        for(i64 i = 2; i*i <= N-1; ++i) {
+        for(Int i = 2; i*i <= N-1; ++i) {
             if(!prime[i]) continue;
-            for(i64 j = i+i; j < N; j += i)
+            for(Int j = i+i; j < N; j += i)
                 prime[j] = false;
         }
     }
@@ -188,7 +192,7 @@ bool (&is_prime_table())[N] {
 //
 // // decltype(auto) で受けると SIZE() が使える (auto だとポインタになってしまう)
 // decltype(auto) fib = fibonacci_table<1000>();
-template<i64 N>
+template<Int N>
 ModInt (&fibonacci_table())[N] {
     static_assert(N >= 2, "");
     static ModInt fib[N] {};
@@ -203,7 +207,7 @@ ModInt (&fibonacci_table())[N] {
     return fib;
 }
 
-template<i64 N>
+template<Int N>
 ModInt (&factorial_table())[N] {
     static_assert(N >= 1, "");
     static ModInt fac[N] {};
@@ -217,7 +221,7 @@ ModInt (&factorial_table())[N] {
     return fac;
 }
 
-template<i64 N>
+template<Int N>
 ModInt (&ifactorial_table())[N] {
     static_assert(N >= 1, "");
     static ModInt ifac[N] {};
@@ -225,19 +229,19 @@ ModInt (&ifactorial_table())[N] {
     if(ifac[0] != 1) {
         decltype(auto) fac = factorial_table<N>();
         ifac[N-1] = fac[N-1].inv();
-        for(i64 i = N-2; i >= 0; --i) {
+        for(Int i = N-2; i >= 0; --i) {
             ifac[i] = (i+1) * ifac[i+1];
         }
     }
     return ifac;
 }
 
-ModInt permutation_count_fac(i64 n, i64 r, const ModInt* fac, const ModInt* ifac) {
+ModInt permutation_count_fac(Int n, Int r, const ModInt* fac, const ModInt* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[n-r];
 }
 
-template<i64 H, i64 W>
+template<Int H, Int W>
 ModInt (&combination_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
     static ModInt dp[H][W] {};
@@ -254,10 +258,10 @@ ModInt (&combination_count_table())[H][W] {
     return dp;
 }
 
-template<i64 H, i64 W>
+template<Int H, Int W>
 auto combination_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    return FIXMEMO<H,W>([](auto&& self, i64 n, i64 r) -> ModInt {
+    return FIXMEMO<H,W>([](auto&& self, Int n, Int r) -> ModInt {
         if(n <  r) return 0;
         if(r == 0) return 1;
         if(n == r) return 1;
@@ -265,7 +269,7 @@ auto combination_count_func() {
     });
 }
 
-ModInt combination_count_fac(i64 n, i64 r, const ModInt* fac, const ModInt* ifac) {
+ModInt combination_count_fac(Int n, Int r, const ModInt* fac, const ModInt* ifac) {
     if(n < r) return 0;
     return fac[n] * ifac[r] * ifac[n-r];
 }
@@ -287,7 +291,7 @@ ModInt combination_count_fac(i64 n, i64 r, const ModInt* fac, const ModInt* ifac
 // 「n を k 個の順序つき正整数列の和で表す場合の数」は Q(n,k) = comb(n-1,k-1)
 // 「n を k 個の順序つき『非負整数』列の和で表す場合の数」は Q(n+k,k) = comb(n+k-1,k-1) = comb(n+k-1,n)
 // 「n を順序つき正整数列の和で表す場合の数」は 2^(n-1)
-template<i64 H, i64 W>
+template<Int H, Int W>
 ModInt (&partition_count_table())[H][W] {
     static_assert(W >= 1 && H >= W, "");
     static ModInt dp[H][W] {};
@@ -309,10 +313,10 @@ ModInt (&partition_count_table())[H][W] {
 }
 
 // 分割数 メモ化再帰版
-template<i64 H, i64 W>
+template<Int H, Int W>
 auto partition_count_func() {
     static_assert(W >= 1 && H >= W, "");
-    return FIXMEMO<H,W>([](auto&& self, i64 n, i64 k) -> ModInt {
+    return FIXMEMO<H,W>([](auto&& self, Int n, Int k) -> ModInt {
         if(n <  k) return 0;
         if(n == k) return 1;
         if(k == 1) return 1;

@@ -11,7 +11,7 @@ struct StreamingMedian {
 
     explicit StreamingMedian(const T& med) : med_(med), sum_lo_(), sum_hi_() {}
 
-    i64 size() const { return 1 + SIZE(los_) + SIZE(his_); }
+    Int size() const { return 1 + SIZE(los_) + SIZE(his_); }
 
     T med_lo() const {
         return SIZE(los_) > SIZE(his_) ? los_.top() : med_;

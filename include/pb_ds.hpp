@@ -28,7 +28,7 @@ template<
     typename ResizePolicy=pbds::hash_standard_resize_policy<>,
     bool StoreHash=false
 >
-auto make_cc_hash_set(i64 cap, f32 load_max=0.25) {
+auto make_cc_hash_set(Int cap, f32 load_max=0.25) {
     using SizePolicy    = typename ResizePolicy::size_policy;
     using TriggerPolicy = typename ResizePolicy::trigger_policy;
 
@@ -43,7 +43,7 @@ template<
     typename ResizePolicy=pbds::hash_standard_resize_policy<>,
     bool StoreHash=false
 >
-auto make_cc_hash_map(i64 cap, f32 load_max=0.25) {
+auto make_cc_hash_map(Int cap, f32 load_max=0.25) {
     using SizePolicy    = typename ResizePolicy::size_policy;
     using TriggerPolicy = typename ResizePolicy::trigger_policy;
 
@@ -77,7 +77,7 @@ template<
     typename ResizePolicy=pbds::hash_standard_resize_policy<>,
     bool StoreHash=false
 >
-auto make_gp_hash_set(i64 cap, f32 load_max=0.25) {
+auto make_gp_hash_set(Int cap, f32 load_max=0.25) {
     using SizePolicy    = typename ResizePolicy::size_policy;
     using TriggerPolicy = typename ResizePolicy::trigger_policy;
 
@@ -93,7 +93,7 @@ template<
     typename ResizePolicy=pbds::hash_standard_resize_policy<>,
     bool StoreHash=false
 >
-auto make_gp_hash_map(i64 cap, f32 load_max=0.25) {
+auto make_gp_hash_map(Int cap, f32 load_max=0.25) {
     using SizePolicy    = typename ResizePolicy::size_policy;
     using TriggerPolicy = typename ResizePolicy::trigger_policy;
 

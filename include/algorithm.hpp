@@ -1,11 +1,11 @@
 // algorithm {{{
 
 template<class ForwardIt, class OutputIt, class URBG>
-OutputIt SAMPLE(ForwardIt first, ForwardIt last, OutputIt out, i64 n, URBG&& g) {
-    using Dist  = uniform_int_distribution<i64>;
+OutputIt SAMPLE(ForwardIt first, ForwardIt last, OutputIt out, Int n, URBG&& g) {
+    using Dist  = uniform_int_distribution<Int>;
     using Param = typename Dist::param_type;
 
-    i64 unsampled = distance(first, last);
+    Int unsampled = distance(first, last);
     chmin(n, unsampled);
     Dist dist;
 
@@ -86,7 +86,7 @@ bool prev_combination(BidiIt first, BidiIt middle, BidiIt last) {
 }
 
 template<class InputIt>
-auto nth_value(InputIt first, InputIt last, i64 n) {
+auto nth_value(InputIt first, InputIt last, Int n) {
     using T = typename iterator_traits<InputIt>::value_type;
     vector<T> v(first, last);
     nth_element(begin(v), begin(v)+n, end(v));
@@ -94,12 +94,12 @@ auto nth_value(InputIt first, InputIt last, i64 n) {
 }
 
 template<class ForwardIt>
-void rotate_left(ForwardIt first, ForwardIt last, i64 n) {
+void rotate_left(ForwardIt first, ForwardIt last, Int n) {
     rotate(first, first+n, last);
 }
 
 template<class ForwardIt>
-void rotate_right(ForwardIt first, ForwardIt last, i64 n) {
+void rotate_right(ForwardIt first, ForwardIt last, Int n) {
     auto rfirst = make_reverse_iterator(last);
     auto rlast  = make_reverse_iterator(first);
     rotate(rfirst, rfirst+n, rlast);
@@ -115,13 +115,13 @@ void rotate_right(ForwardIt first, ForwardIt last, i64 n) {
 // lambda: 循環の長さ (循環しない場合 -1)
 // mu: 循環の開始位置 (0-based, 循環しない場合 -1)
 template<class T, class F>
-pair<i64,i64> cycle_detect(const T& x0, F f, i64 lam_max=INF) {
-    i64 lam;
+pair<Int,Int> cycle_detect(const T& x0, F f, Int lam_max=INF) {
+    Int lam;
     {
         lam = 1;
         T tort = x0;
         T hare = f(x0);
-        for(i64 p = 1; tort != hare; ) {
+        for(Int p = 1; tort != hare; ) {
             if(p == lam) {
                 tort = hare;
                 p *= 2;
@@ -133,7 +133,7 @@ pair<i64,i64> cycle_detect(const T& x0, F f, i64 lam_max=INF) {
         }
     }
 
-    i64 mu;
+    Int mu;
     {
         mu = 0;
         T tort = x0;
@@ -180,7 +180,7 @@ vector<pair<ForwardIt,ForwardIt>> group_by(ForwardIt first, ForwardIt last, Bina
 // f が true を返した時点でイテレーション終了
 // 返り値は f が true を返していれば true, さもなくば false
 template<class ForwardIt, class F>
-bool cartesian_product_repeat(ForwardIt first, ForwardIt last, i64 n, F f) {
+bool cartesian_product_repeat(ForwardIt first, ForwardIt last, Int n, F f) {
     using T = typename iterator_traits<ForwardIt>::value_type;
 
     auto rec = FIX([first,last,n,f](auto&& self, vector<T>& v) -> bool {

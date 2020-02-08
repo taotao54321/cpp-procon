@@ -1,12 +1,12 @@
 // fft {{{
 
-complex64 root_of_unity(i64 n, i64 k) {
+complex64 root_of_unity(Int n, Int k) {
     return polar(1.0, 2*PI*f64(k) / f64(n));
 }
 
 // SIZE(a) は2ベキであること
 vector<complex64> dft(const vector<complex64>& a) {
-    i64 n = SIZE(a);
+    Int n = SIZE(a);
     if(n == 1) return a;
 
     vector<complex64> a0(n/2);
@@ -21,7 +21,7 @@ vector<complex64> dft(const vector<complex64>& a) {
 
     vector<complex64> inv_a(n);
     REP(i, n) {
-        i64 j = i & (n/2-1);
+        Int j = i & (n/2-1);
         complex64 z = root_of_unity(n, i);
         inv_a[i] = inv_a0[j] + z*inv_a1[j];
     }
@@ -30,7 +30,7 @@ vector<complex64> dft(const vector<complex64>& a) {
 
 // SIZE(a) は2ベキであること
 vector<complex64> idft(const vector<complex64>& inv_a) {
-    i64 n = SIZE(inv_a);
+    Int n = SIZE(inv_a);
 
     vector<complex64> a = dft(inv_a);
     reverse(begin(a)+1, end(a));
@@ -40,7 +40,7 @@ vector<complex64> idft(const vector<complex64>& inv_a) {
 }
 
 vector<complex64> convolute(vector<complex64>& a, vector<complex64>& b) {
-    i64 n = pow2_ceil(SIZE(a) + SIZE(b) - 1);
+    Int n = pow2_ceil(SIZE(a) + SIZE(b) - 1);
     a.resize(n);
     b.resize(n);
 

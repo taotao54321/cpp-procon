@@ -1,12 +1,12 @@
 // z_function {{{
 
 template<class RandomIt>
-vector<i64> z_function(RandomIt first, RandomIt last) {
-    i64 n = last - first;
-    vector<i64> z(n, 0);
+vector<Int> z_function(RandomIt first, RandomIt last) {
+    Int n = last - first;
+    vector<Int> z(n, 0);
 
-    i64 l = 0;
-    i64 r = 0;
+    Int l = 0;
+    Int r = 0;
     FOR(i, 1, n) {
         if(i < r)
             z[i] = min(r-i, z[i-l]);
