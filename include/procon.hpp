@@ -209,7 +209,7 @@ constexpr Int BIT_ASSIGN(Int x, Int i, bool b) {
     return b ? BIT_SET(x,i) : BIT_CLEAR(x,i);
 }
 
-constexpr Int BIT_COUNT_LEADING_ZEROS(Int x) {
+/*constexpr*/ Int BIT_COUNT_LEADING_ZEROS(Int x) {
     if(is_same<Int,i64>::value)
         return x==0 ? 64 : __builtin_clzll(u64(x));
     else if(is_same<Int,i32>::value)
@@ -217,7 +217,7 @@ constexpr Int BIT_COUNT_LEADING_ZEROS(Int x) {
     ASSERT(false);
 }
 
-constexpr Int BIT_COUNT_TRAILING_ZEROS(Int x) {
+/*constexpr*/ Int BIT_COUNT_TRAILING_ZEROS(Int x) {
     if(is_same<Int,i64>::value)
         return x==0 ? 64 : __builtin_ctzll(u64(x));
     else if(is_same<Int,i32>::value)
@@ -225,7 +225,7 @@ constexpr Int BIT_COUNT_TRAILING_ZEROS(Int x) {
     ASSERT(false);
 }
 
-constexpr Int BIT_COUNT_ONES(Int x) {
+/*constexpr*/ Int BIT_COUNT_ONES(Int x) {
     if(is_same<Int,i64>::value)
         return __builtin_popcountll(u64(x));
     else if(is_same<Int,i32>::value)
@@ -234,7 +234,7 @@ constexpr Int BIT_COUNT_ONES(Int x) {
 }
 
 // 1の個数が奇数なら1, 偶数なら0を返す
-constexpr Int BIT_PARITY(Int x) {
+/*constexpr*/ Int BIT_PARITY(Int x) {
     if(is_same<Int,i64>::value)
         return __builtin_parityll(u64(x));
     else if(is_same<Int,i32>::value)
@@ -308,7 +308,7 @@ constexpr bool BIT_NEXT_SUPERSET(Int& x, Int n, Int y) {
 
 // lo:OK, hi:NG
 template<class Pred>
-constexpr Int bisect_integer(Int lo, Int hi, Pred pred) {
+/*constexpr*/ Int bisect_integer(Int lo, Int hi, Pred pred) {
     ASSERT(lo < hi);
 
     while(lo+1 < hi) {
@@ -322,7 +322,7 @@ constexpr Int bisect_integer(Int lo, Int hi, Pred pred) {
 }
 
 template<class Pred>
-constexpr Real bisect_real(Real lo, Real hi, Pred pred, Real eps=EPS) {
+/*constexpr*/ Real bisect_real(Real lo, Real hi, Pred pred, Real eps=EPS) {
     ASSERT_LOCAL(!GT_EPS(lo,hi,eps));
     if(lo > hi) swap(lo, hi);
 
@@ -337,7 +337,7 @@ constexpr Real bisect_real(Real lo, Real hi, Pred pred, Real eps=EPS) {
 }
 
 template<class Monoid>
-constexpr Monoid fastpow(const Monoid& x, Int e, const Monoid& unity) {
+/*constexpr*/ Monoid fastpow(const Monoid& x, Int e, const Monoid& unity) {
     ASSERT(e >= 0);
 
     Monoid res = unity;
@@ -368,7 +368,7 @@ constexpr Int ipow(Int x, Int e) {
     return r*r == x ? r : r+1;
 }
 
-constexpr Int log2_ceil(Int x) {
+/*constexpr*/ Int log2_ceil(Int x) {
     ASSERT(x > 0);
     if(is_same<Int,i64>::value)
         return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
@@ -377,7 +377,7 @@ constexpr Int log2_ceil(Int x) {
     ASSERT(false);
 }
 
-constexpr Int log2_floor(Int x) {
+/*constexpr*/ Int log2_floor(Int x) {
     ASSERT(x > 0);
     if(is_same<Int,i64>::value)
         return 63 - BIT_COUNT_LEADING_ZEROS(x);
@@ -423,12 +423,12 @@ constexpr Int modulo(Int a, Int b) {
     return divmod(a,b).second;
 }
 
-constexpr Int align_ceil(Int x, Int align) {
+/*constexpr*/ Int align_ceil(Int x, Int align) {
     ASSERT(align > 0);
     return div_ceil(x,align) * align;
 }
 
-constexpr Int align_floor(Int x, Int align) {
+/*constexpr*/ Int align_floor(Int x, Int align) {
     ASSERT(align > 0);
     return div_floor(x,align) * align;
 }

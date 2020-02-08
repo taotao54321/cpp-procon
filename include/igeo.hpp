@@ -30,11 +30,11 @@ struct IVec {
     }
 
     // [(x0,y0),(x1,y1))
-    bool is_in(Int x0, Int y0, Int x1, Int y1) const {
+    /*constexpr*/ bool is_in(Int x0, Int y0, Int x1, Int y1) const {
         ASSERT_LOCAL(x0 <= x1 && y0 <= y1);
         return x0 <= x && x < x1 && y0 <= y && y < y1;
     }
-    bool is_in(const IVec& p0, const IVec& p1) const {
+    /*constexpr*/ bool is_in(const IVec& p0, const IVec& p1) const {
         ASSERT_LOCAL(p0.x <= p1.x && p0.y <= p1.y);
         return p0.x <= x && x < p1.x && p0.y <= y && y < p1.y;
     }
