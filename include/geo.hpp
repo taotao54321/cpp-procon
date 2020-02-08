@@ -99,7 +99,8 @@ constexpr bool EQ_EPS(const Vec& lhs, const Vec& rhs, Real eps=EPS) {
 
 template<>
 struct Scan<Vec> {
-    static Vec scan(istream& in) {
+    using R = Vec;
+    static R scan(istream& in) {
         Real x = Scan<Real>::scan(in);
         Real y = Scan<Real>::scan(in);
         return {x,y};

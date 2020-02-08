@@ -788,87 +788,69 @@ auto str_reserve(Int cap) {
 // }}}
 
 // input {{{
+template<class T>
+struct Integral1 {
+    static_assert(is_integral<T>::value && !is_same<T,bool>::value, "");
+};
+using Int1 = Integral1<Int>;
+
 template<class T, class Enable=void>
 struct Scan {
-    static T scan(istream& in) {
-        T res;
+    using R = T;
+    static R scan(istream& in) {
+        R res;
         in >> res;
         return res;
     }
 };
 
-template<class T, class Enable=void>
-struct Scan1;
-
 template<class T>
-struct Scan1<T,enable_if_t<is_integral<T>::value && !is_same<T,bool>::value>> {
-    static T scan1(istream& in) {
-        return Scan<T>::scan(in) - 1;
+struct Scan<Integral1<T>> {
+    using R = T;
+    static R scan(istream& in) {
+        return Scan<R>::scan(in) - 1;
     }
 };
 
 template<class T1, class T2>
 struct Scan<pair<T1,T2>> {
-    static pair<T1,T2> scan(istream& in) {
-        T1 x = Scan<T1>::scan(in);
-        T2 y = Scan<T2>::scan(in);
-        return {x,y};
-    }
-};
-
-template<class T1, class T2>
-struct Scan1<pair<T1,T2>> {
-    static pair<T1,T2> scan1(istream& in) {
-        T1 x = Scan1<T1>::scan1(in);
-        T2 y = Scan1<T2>::scan1(in);
+    using R1 = typename Scan<T1>::R;
+    using R2 = typename Scan<T2>::R;
+    using R = pair<R1,R2>;
+    static R scan(istream& in) {
+        R1 x = Scan<T1>::scan(in);
+        R2 y = Scan<T2>::scan(in);
         return {x,y};
     }
 };
 
 template<class T>
-tuple<T> tuple_scan_impl(istream& in) {
+auto tuple_scan_impl(istream& in) {
     return make_tuple(Scan<T>::scan(in));
 }
 
 template<class T, class... TS, SFINAE(sizeof...(TS) > 0)>
-tuple<T,TS...> tuple_scan_impl(istream& in) {
+auto tuple_scan_impl(istream& in) {
     auto head = make_tuple(Scan<T>::scan(in));
     return tuple_cat(head, tuple_scan_impl<TS...>(in));
 }
 
 template<class... TS>
 struct Scan<tuple<TS...>> {
-    static tuple<TS...> scan(istream& in) {
+    using R = decltype(tuple_scan_impl<TS...>(cin));
+    static R scan(istream& in) {
         return tuple_scan_impl<TS...>(in);
     }
 };
 
-template<class T>
-tuple<T> tuple_scan1_impl(istream& in) {
-    return make_tuple(Scan1<T>::scan1(in));
-}
-
-template<class T, class... TS, SFINAE(sizeof...(TS) > 0)>
-tuple<T,TS...> tuple_scan1_impl(istream& in) {
-    auto head = make_tuple(Scan1<T>::scan1(in));
-    return tuple_cat(head, tuple_scan1_impl<TS...>(in));
-}
-
-template<class... TS>
-struct Scan1<tuple<TS...>> {
-    static tuple<TS...> scan1(istream& in) {
-        return tuple_scan1_impl<TS...>(in);
-    }
-};
-
 template<class T=Int>
-T RD() {
+auto RD() {
     return Scan<T>::scan(cin);
 }
 
 template<class T=Int>
-T RD1() {
-    return Scan1<T>::scan1(cin);
+auto RD1() {
+    return RD<Integral1<T>>();
 }
 
 template<class T=Int>
@@ -882,11 +864,7 @@ auto RD_VEC(Int n) {
 
 template<class T=Int>
 auto RD1_VEC(Int n) {
-    auto res = vec_reserve<T>(n);
-    LOOP(n) {
-        res.emplace_back(RD1<T>());
-    }
-    return res;
+    return RD_VEC<Integral1<T>>(n);
 }
 
 template<class T=Int>
@@ -900,11 +878,7 @@ auto RD_VEC2(Int h, Int w) {
 
 template<class T=Int>
 auto RD1_VEC2(Int h, Int w) {
-    auto res = vec_reserve<vector<T>>(h);
-    LOOP(h) {
-        res.emplace_back(RD1_VEC<T>(w));
-    }
-    return res;
+    return RD_VEC2<Integral1<T>>(h, w);
 }
 // }}}
 
@@ -1256,7 +1230,8 @@ struct ProconHash<ModIntT<Mod>> {
 
 template<class Mod>
 struct Scan<ModIntT<Mod>> {
-    static ModIntT<Mod> scan(istream& in) {
+    using R = ModIntT<Mod>;
+    static R scan(istream& in) {
         Int v = Scan<Int>::scan(in);
         return ModIntT<Mod>(v);
     }

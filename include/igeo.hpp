@@ -91,7 +91,8 @@ struct IVec {
 
 template<>
 struct Scan<IVec> {
-    static IVec scan(istream& in) {
+    using R = IVec;
+    static R scan(istream& in) {
         Int x = Scan<Int>::scan(in);
         Int y = Scan<Int>::scan(in);
         return {x,y};
