@@ -251,7 +251,7 @@ constexpr Int BIT_ASSIGN(Int x, Int i, bool b) {
 //     // ...
 // } while(BIT_NEXT_SET_SIZED(x, 10));
 // ```
-constexpr bool BIT_NEXT_SET_SIZED(Int& x, Int n) {
+/*constexpr*/ bool BIT_NEXT_SET_SIZED(Int& x, Int n) {
     if(x == 0) return false;
     Int t = (x|(x-1)) + 1;
     x = t | ((~t&(t-1)) >> (BIT_COUNT_TRAILING_ZEROS(x)+1));
