@@ -1,33 +1,83 @@
 // graph {{{
 
-template<typename T>
-vector<vector<pair<Int,T>>> graph_make_weighted(Int n) {
-    return vector<vector<pair<Int,T>>>(n);
-}
-
-vector<vector<Int>> graph_make_unweighted(Int n) {
-    return vector<vector<Int>>(n);
-}
-
-// n 頂点の初期化済み隣接行列 g を返す
-//
-// g[i][j]: i==j なら 0, i!=j なら INF
-template<typename T>
-vector<vector<T>> graph_make_matrix(Int n) {
-    vector<vector<T>> g(n, vector<T>(n, PROCON_INF<T>()));
-    REP(i, n) {
-        g[i][i] = T(0);
+auto udgraph_list(Int n, const vector<pair<Int,Int>>& es) {
+    vector<vector<Int>> g(n);
+    for(const auto& e : es) {
+        Int a,b; tie(a,b) = e;
+        g[a].emplace_back(b);
+        g[b].emplace_back(a);
     }
     return g;
 }
 
-// 辺のリストから n 頂点無向グラフの隣接リスト表現を得る
-vector<vector<Int>> graph_from_edges(Int n, const vector<pair<Int,Int>>& es) {
+auto digraph_list(Int n, const vector<pair<Int,Int>>& es) {
     vector<vector<Int>> g(n);
     for(const auto& e : es) {
-        Int s,t; tie(s,t) = e;
-        g[s].emplace_back(t);
-        g[t].emplace_back(s);
+        Int a,b; tie(a,b) = e;
+        g[a].emplace_back(b);
+    }
+    return g;
+}
+
+auto udgraph_matrix(Int n, const vector<pair<Int,Int>>& es) {
+    vector<vector<Int>> g(n, vector<Int>(n,INF));
+    REP(i, n) { g[i][i] = 0; }
+    for(const auto& e : es) {
+        Int a,b; tie(a,b) = e;
+        g[a][b] = g[b][a] = 1;
+    }
+    return g;
+}
+
+auto digraph_matrix(Int n, const vector<pair<Int,Int>>& es) {
+    vector<vector<Int>> g(n, vector<Int>(n,INF));
+    REP(i, n) { g[i][i] = 0; }
+    for(const auto& e : es) {
+        Int a,b; tie(a,b) = e;
+        g[a][b] = 1;
+    }
+    return g;
+}
+
+template<class T>
+auto wudgraph_list(Int n, const vector<tuple<Int,Int,T>>& es) {
+    vector<vector<pair<Int,T>>> g(n);
+    for(const auto& e : es) {
+        Int a,b; T c; tie(a,b,c) = e;
+        g[a].emplace_back(b, c);
+        g[b].emplace_back(a, c);
+    }
+    return g;
+}
+
+template<class T>
+auto wdigraph_list(Int n, const vector<tuple<Int,Int,T>>& es) {
+    vector<vector<pair<Int,T>>> g(n);
+    for(const auto& e : es) {
+        Int a,b; T c; tie(a,b,c) = e;
+        g[a].emplace_back(b, c);
+    }
+    return g;
+}
+
+template<class T>
+auto wudgraph_matrix(Int n, const vector<tuple<Int,Int,T>>& es) {
+    vector<vector<T>> g(n, vector<T>(n,PROCON_INF<T>()));;
+    REP(i, n) { g[i][i] = T{}; }
+    for(const auto& e : es) {
+        Int a,b; T c; tie(a,b,c) = e;
+        g[a][b] = g[b][a] = c;
+    }
+    return g;
+}
+
+template<class T>
+auto wdigraph_matrix(Int n, const vector<tuple<Int,Int,T>>& es) {
+    vector<vector<T>> g(n, vector<T>(n,PROCON_INF<T>()));;
+    REP(i, n) { g[i][i] = T{}; }
+    for(const auto& e : es) {
+        Int a,b; T c; tie(a,b,c) = e;
+        g[a][b] = c;
     }
     return g;
 }
