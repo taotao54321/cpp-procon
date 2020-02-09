@@ -5,7 +5,7 @@ syntax keyword cppType i8 i16 i32 i64 i128
 syntax keyword cppType u8 u16 u32 u64 u128
 
 syntax keyword cppType f32 f64 f80
-syntax keyword cppType Real
+syntax keyword cppType Int Real
 
 syntax keyword cppType Array
 
