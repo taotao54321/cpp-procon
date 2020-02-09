@@ -1174,18 +1174,25 @@ public:
 
     explicit operator Int() const { return v_; }
 
-    ModIntT operator-() const { return ModIntT(-v_); }
+    ModIntT operator-() const {
+        ModIntT res;
+        res.v_ = v_==0 ? 0 : mod()-v_;
+        return res;
+    }
 
     ModIntT& operator+=(ModIntT rhs) {
-        v_ = normalize(v_ + rhs.v_);
+        v_ += rhs.v_;
+        if(v_ >= mod()) v_ -= mod();
         return *this;
     }
     ModIntT& operator-=(ModIntT rhs) {
-        v_ = normalize(v_ - rhs.v_);
+        v_ -= rhs.v_;
+        if(v_ < 0) v_ += mod();
         return *this;
     }
     ModIntT& operator*=(ModIntT rhs) {
-        v_ = normalize(v_ * rhs.v_);
+        v_ *= rhs.v_;
+        v_ %= mod();
         return *this;
     }
 
