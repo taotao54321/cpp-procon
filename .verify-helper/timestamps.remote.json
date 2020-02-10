@@ -55,6 +55,7 @@
 "verify/aoj/NTL_1_B/solve.test.cpp": "2020-02-10 08:34:28 +0900",
 "verify/aoj/NTL_1_C/solve.test.cpp": "2020-02-10 08:34:28 +0900",
 "verify/aoj/NTL_1_E/solve.test.cpp": "2020-02-10 08:34:28 +0900",
+"verify/yosupo/lca/solve.test.cpp": "2020-02-10 23:46:38 +0900",
 "verify/yosupo/point_add_range_sum/segtree_rq.test.cpp": "2020-02-10 08:34:28 +0900",
 "verify/yosupo/point_set_range_composite/segtree_rq.test.cpp": "2020-02-10 08:34:28 +0900",
 "verify/yosupo/range_affine_range_sum/solve.test.cpp": "2020-02-10 08:34:28 +0900",
