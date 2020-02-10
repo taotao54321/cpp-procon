@@ -208,38 +208,57 @@ ModInt (&fibonacci_table())[N] {
 }
 
 template<Int N>
-ModInt (&factorial_table())[N] {
+struct Factorial {
     static_assert(N >= 1, "");
-    static ModInt fac[N] {};
 
-    if(fac[0] != 1) {
-        fac[0] = 1;
+    static ModInt fac(Int n) {
+        static decltype(auto) table = fac_table();
+        return table[n];
+    }
+
+    static ModInt ifac(Int n) {
+        static decltype(auto) table = ifac_table();
+        return table[n];
+    }
+
+    static ModInt perm(Int n, Int r) {
+        if(n < 0 || r < 0 || n < r) return 0;
+        return fac(n) * ifac(n-r);
+    }
+
+    static ModInt comb(Int n, Int r) {
+        if(n < 0 || r < 0 || n < r) return 0;
+        return fac(n) * ifac(n-r) * ifac(r);
+    }
+
+    // nHr
+    static ModInt comb_rep(Int n, Int r) {
+        if(n < 0 || r < 0) return 0;
+        if(n == 0 && r == 0) return 1;
+        return comb(n+r-1, r);
+    }
+
+private:
+    static const ModInt (&fac_table())[N] {
+        static ModInt table[N] {};
+        ASSERT(table[0] == 0);  // CALL ONLY ONCE
+        table[0] = 1;
         FOR(i, 1, N) {
-            fac[i] = i * fac[i-1];
+            table[i] = i * table[i-1];
         }
+        return table;
     }
-    return fac;
-}
 
-template<Int N>
-ModInt (&ifactorial_table())[N] {
-    static_assert(N >= 1, "");
-    static ModInt ifac[N] {};
-
-    if(ifac[0] != 1) {
-        decltype(auto) fac = factorial_table<N>();
-        ifac[N-1] = fac[N-1].inv();
+    static const ModInt (&ifac_table())[N] {
+        static ModInt table[N] {};
+        ASSERT(table[0] == 0);  // CALL ONLY ONCE
+        table[N-1] = fac(N-1).inv();
         for(Int i = N-2; i >= 0; --i) {
-            ifac[i] = (i+1) * ifac[i+1];
+            table[i] = (i+1) * table[i+1];
         }
+        return table;
     }
-    return ifac;
-}
-
-ModInt permutation_count_fac(Int n, Int r, const ModInt* fac, const ModInt* ifac) {
-    if(n < r) return 0;
-    return fac[n] * ifac[n-r];
-}
+};
 
 template<Int H, Int W>
 ModInt (&combination_count_table())[H][W] {
@@ -267,11 +286,6 @@ auto combination_count_func() {
         if(n == r) return 1;
         return self(n-1,r-1) + self(n-1,r);
     });
-}
-
-ModInt combination_count_fac(Int n, Int r, const ModInt* fac, const ModInt* ifac) {
-    if(n < r) return 0;
-    return fac[n] * ifac[r] * ifac[n-r];
 }
 
 // 分割数 P(n,k) (n を k 個の正整数の和で表す場合の数)
