@@ -60,6 +60,7 @@
 "verify/yosupo/point_set_range_composite/segtree_rq.test.cpp": "2020-02-10 08:34:28 +0900",
 "verify/yosupo/range_affine_range_sum/solve.test.cpp": "2020-02-10 08:34:28 +0900",
 "verify/yosupo/staticrmq/segtree_rq.test.cpp": "2020-02-10 08:34:28 +0900",
+"verify/yosupo/staticrmq/sparse_table.test.cpp": "2020-02-11 15:17:56 +0900",
 "verify/yosupo/unionfind/solve.test.cpp": "2020-02-10 08:34:28 +0900",
 "verify/yosupo/zalgorithm/solve.test.cpp": "2020-02-10 08:34:28 +0900"
 }
