@@ -1,7 +1,7 @@
 // lca {{{
 
 struct Lca {
-    explicit Lca(const vector<vector<Int>>& g, Int root) :
+    Lca(const vector<vector<Int>>& g, Int root) :
         n_(SIZE(g)), m_(log2_floor(n_)), depths_(n_),
         pss_(m_+1,vector<Int>(n_,-1))
     {
