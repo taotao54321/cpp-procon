@@ -340,14 +340,16 @@ template<class Pred>
 template<class Monoid>
 /*constexpr*/ Monoid fastpow(const Monoid& x, Int e, const Monoid& unity) {
     ASSERT(e >= 0);
+    if(e == 0) return unity;
 
     Monoid res = unity;
     Monoid cur = x;
-    while(e > 0) {
+    for(;;) {
         if(e & 1)
             res *= cur;
-        cur *= cur;
         e >>= 1;
+        if(e == 0) break;
+        cur *= cur;
     }
     return res;
 }
