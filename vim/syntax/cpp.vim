@@ -61,7 +61,7 @@ syntax keyword Function GCD LCM EXTGCD
 
 syntax keyword Function FOLD FOLD1
 syntax keyword Function SUM
-syntax keyword Function UNIQ SORT_UNIQ
+syntax keyword Function ERASE_IF UNIQ SORT_UNIQ
 
 syntax keyword Function ON LT_ON GT_ON
 

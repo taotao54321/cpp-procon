@@ -455,6 +455,11 @@ auto SUM(InputIt first, InputIt last) {
     return FOLD1(first, last, plus<>{});
 }
 
+template<class C, class Pred>
+void ERASE_IF(C& c, Pred pred) {
+    c.erase(ALL(remove_if,c,pred), end(c));
+}
+
 template<class C>
 void UNIQ(C& c) {
     c.erase(ALL(unique,c), end(c));
