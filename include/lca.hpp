@@ -16,6 +16,22 @@ struct Lca {
         }
     }
 
+    template<class T>
+    Lca(const vector<vector<pair<Int,T>>>& g, Int root) :
+        n_(SIZE(g)), m_(log2_floor(n_)), depths_(n_),
+        pss_(m_+1,vector<Int>(n_,-1))
+    {
+        init_dfs_w(g, root, -1, 0);
+
+        FOR(i, 1, m_+1) {
+            REP(v, n_) {
+                Int p = pss_[i-1][v];
+                if(p == -1) continue;
+                pss_[i][v] = pss_[i-1][p];
+            }
+        }
+    }
+
     Int query(Int v, Int w) const {
         if(depths_[v] > depths_[w]) swap(v, w);
 
@@ -47,6 +63,17 @@ private:
         for(Int to : g[v]) {
             if(to == p) continue;
             init_dfs(g, to, v, d+1);
+        }
+    }
+
+    template<class T>
+    void init_dfs_w(const vector<vector<pair<Int,T>>>& g, Int v, Int p, Int d) {
+        depths_[v] = d;
+        pss_[0][v] = p;
+        for(const auto& e : g[v]) {
+            Int to = e.first;
+            if(to == p) continue;
+            init_dfs_w(g, to, v, d+1);
         }
     }
 

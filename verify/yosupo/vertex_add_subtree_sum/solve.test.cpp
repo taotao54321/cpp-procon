@@ -38,7 +38,7 @@ void solve() {
         G[p].emplace_back(v);
     }
 
-    vector<Int> ls,rs; tie(ls,rs) = euler_tour(G, 0);
+    vector<Int> ls,rs; tie(ls,rs) = euler_tour_vertex(G, 0);
 
     vector<Int> data(N);
     REP(v, N) {
