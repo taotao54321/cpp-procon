@@ -77,16 +77,18 @@ struct IVec {
         return lhs.cross(rhs) > 0;
     }
 
+    constexpr auto tied() const { return tie(x,y); }
+
     friend constexpr IVec operator+(const IVec& lhs, const IVec& rhs) { return IVec(lhs) += rhs; }
     friend constexpr IVec operator-(const IVec& lhs, const IVec& rhs) { return IVec(lhs) -= rhs; }
     friend constexpr IVec operator*(const IVec& lhs, Int rhs) { return IVec(lhs) *= rhs; }
     friend constexpr IVec operator*(Int lhs, const IVec& rhs) { return IVec(rhs) *= lhs; }
     friend constexpr IVec operator/(const IVec& lhs, Int rhs) { return IVec(lhs) /= rhs; }
 
-    friend constexpr bool operator==(const IVec& lhs, const IVec& rhs) {
-        return lhs.x==rhs.x && lhs.y==rhs.y;
-    }
+    friend constexpr bool operator==(const IVec& lhs, const IVec& rhs) { return lhs.tied() == rhs.tied(); }
     friend constexpr bool operator!=(const IVec& lhs, const IVec& rhs) { return !(lhs == rhs); }
+
+    friend constexpr bool operator<(const IVec& lhs, const IVec& rhs) { return lhs.tied() < rhs.tied(); }
 };
 
 template<>

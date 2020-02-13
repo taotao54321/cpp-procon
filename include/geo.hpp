@@ -77,20 +77,18 @@ struct Vec {
         return lhs.cross(rhs) > 0;
     }
 
+    constexpr auto tied() const { return tie(x,y); }
+
     friend constexpr Vec operator+(const Vec& lhs, const Vec& rhs) { return Vec(lhs) += rhs; }
     friend constexpr Vec operator-(const Vec& lhs, const Vec& rhs) { return Vec(lhs) -= rhs; }
     friend constexpr Vec operator*(const Vec& lhs, Real rhs) { return Vec(lhs) *= rhs; }
     friend constexpr Vec operator*(Real lhs, const Vec& rhs) { return Vec(rhs) *= lhs; }
     friend constexpr Vec operator/(const Vec& lhs, Real rhs) { return Vec(lhs) /= rhs; }
 
-    friend constexpr bool operator==(const Vec& lhs, const Vec& rhs) {
-        return EQ_EXACT(lhs.x,rhs.x) && EQ_EXACT(lhs.y,rhs.y);
-    }
+    friend constexpr bool operator==(const Vec& lhs, const Vec& rhs) { return lhs.tied() == rhs.tied(); }
     friend constexpr bool operator!=(const Vec& lhs, const Vec& rhs) { return !(lhs == rhs); }
 
-    friend constexpr bool operator<(const Vec& lhs, const Vec& rhs) {
-        return make_pair(lhs.x,lhs.y) < make_pair(rhs.x,rhs.y);
-    }
+    friend constexpr bool operator<(const Vec& lhs, const Vec& rhs) { return lhs.tied() < rhs.tied(); }
 };
 
 constexpr bool EQ_EPS(const Vec& lhs, const Vec& rhs, Real eps=EPS) {
