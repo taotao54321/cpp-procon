@@ -307,10 +307,12 @@ constexpr bool BIT_NEXT_SUPERSET(Int& x, Int n, Int y) {
 }
 // }}}
 
-// lo:OK, hi:NG
+// [lo,hi) 内で pred が真になる最大値を返す
+// 全部NGの場合 lo-1 を返す
 template<class Pred>
 /*constexpr*/ Int bisect_integer(Int lo, Int hi, Pred pred) {
     ASSERT(lo < hi);
+    if(!pred(lo)) return lo-1;
 
     while(lo+1 < hi) {
         Int mid = (lo+hi) / 2;
