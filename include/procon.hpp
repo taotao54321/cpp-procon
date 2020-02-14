@@ -1218,15 +1218,15 @@ public:
         return ModIntT(x);
     }
 
-    friend ModIntT operator+(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) += rhs; }
-    friend ModIntT operator+(ModIntT lhs, Int rhs)     { return ModIntT(lhs) += rhs; }
-    friend ModIntT operator+(Int lhs, ModIntT rhs)     { return ModIntT(rhs) += lhs; }
-    friend ModIntT operator-(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) -= rhs; }
-    friend ModIntT operator-(ModIntT lhs, Int rhs)     { return ModIntT(lhs) -= rhs; }
-    friend ModIntT operator-(Int lhs, ModIntT rhs)     { return ModIntT(rhs) -= lhs; }
-    friend ModIntT operator*(ModIntT lhs, ModIntT rhs) { return ModIntT(lhs) *= rhs; }
-    friend ModIntT operator*(ModIntT lhs, Int rhs)     { return ModIntT(lhs) *= rhs; }
-    friend ModIntT operator*(Int lhs, ModIntT rhs)     { return ModIntT(rhs) *= lhs; }
+    friend ModIntT operator+(ModIntT lhs, ModIntT rhs) { return lhs += rhs; }
+    friend ModIntT operator+(ModIntT lhs, Int rhs)     { return lhs += rhs; }
+    friend ModIntT operator+(Int lhs, ModIntT rhs)     { return ModIntT(lhs) += rhs; }
+    friend ModIntT operator-(ModIntT lhs, ModIntT rhs) { return lhs -= rhs; }
+    friend ModIntT operator-(ModIntT lhs, Int rhs)     { return lhs -= rhs; }
+    friend ModIntT operator-(Int lhs, ModIntT rhs)     { return ModIntT(lhs) -= rhs; }
+    friend ModIntT operator*(ModIntT lhs, ModIntT rhs) { return lhs *= rhs; }
+    friend ModIntT operator*(ModIntT lhs, Int rhs)     { return lhs *= rhs; }
+    friend ModIntT operator*(Int lhs, ModIntT rhs)     { return ModIntT(lhs) *= rhs; }
 
     friend bool operator==(ModIntT lhs, ModIntT rhs) { return Int(lhs) == Int(rhs); }
     friend bool operator==(ModIntT lhs, Int rhs)     { return lhs == ModIntT(rhs); }
