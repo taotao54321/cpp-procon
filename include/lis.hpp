@@ -1,4 +1,4 @@
-// lis_dp {{{
+// lis {{{
 
 // longest increasing subsequence のDP配列を返す
 // decreasing にしたければ comp=greater<>{} とする
