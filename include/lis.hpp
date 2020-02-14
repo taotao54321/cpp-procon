@@ -33,7 +33,6 @@ auto lis_dp(RandomIt first, RandomIt last, Comp comp={}) {
 // longest STRICTLY increasing subsequence のDP配列を返す
 // decreasing にしたければ comp=greater<>{} とする
 // 戻り値 dp[i]: 位置 i を末尾とする部分列の最大長
-
 template<class RandomIt, class Comp=less<>>
 auto lis_strict_dp(RandomIt first, RandomIt last, Comp comp={}) {
     Int n = last - first;
