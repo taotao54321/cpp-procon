@@ -1272,6 +1272,11 @@ template<Int M>
 using ModIntC = ModIntT<integral_constant<Int,M>>;
 
 using ModInt = ModIntC<MOD>;
+
+#define MODINT_DEFINE(alias, mod) \
+    struct mod { static Int value; }; \
+    Int mod::value; \
+    using alias = ModIntT<mod>;
 // }}}
 
 // rng {{{
