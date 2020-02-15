@@ -211,35 +211,27 @@ constexpr Int BIT_ASSIGN(Int x, Int i, bool b) {
 }
 
 /*constexpr*/ Int BIT_COUNT_LEADING_ZEROS(Int x) {
-    if(is_same<Int,i64>::value)
-        return x==0 ? 64 : __builtin_clzll(u64(x));
-    else if(is_same<Int,i32>::value)
-        return x==0 ? 32 : __builtin_clz(u32(x));
+    if(is_same<Int,i64>::value) return x==0 ? 64 : __builtin_clzll(u64(x));
+    if(is_same<Int,i32>::value) return x==0 ? 32 : __builtin_clz(u32(x));
     ASSERT(false);
 }
 
 /*constexpr*/ Int BIT_COUNT_TRAILING_ZEROS(Int x) {
-    if(is_same<Int,i64>::value)
-        return x==0 ? 64 : __builtin_ctzll(u64(x));
-    else if(is_same<Int,i32>::value)
-        return x==0 ? 32 : __builtin_clz(u32(x));
+    if(is_same<Int,i64>::value) return x==0 ? 64 : __builtin_ctzll(u64(x));
+    if(is_same<Int,i32>::value) return x==0 ? 32 : __builtin_clz(u32(x));
     ASSERT(false);
 }
 
 /*constexpr*/ Int BIT_COUNT_ONES(Int x) {
-    if(is_same<Int,i64>::value)
-        return __builtin_popcountll(u64(x));
-    else if(is_same<Int,i32>::value)
-        return __builtin_popcount(u32(x));
+    if(is_same<Int,i64>::value) return __builtin_popcountll(u64(x));
+    if(is_same<Int,i32>::value) return __builtin_popcount(u32(x));
     ASSERT(false);
 }
 
 // 1の個数が奇数なら1, 偶数なら0を返す
 /*constexpr*/ Int BIT_PARITY(Int x) {
-    if(is_same<Int,i64>::value)
-        return __builtin_parityll(u64(x));
-    else if(is_same<Int,i32>::value)
-        return __builtin_parity(u32(x));
+    if(is_same<Int,i64>::value) return __builtin_parityll(u64(x));
+    if(is_same<Int,i32>::value) return __builtin_parity(u32(x));
     ASSERT(false);
 }
 
@@ -375,19 +367,15 @@ template<class Monoid>
 
 /*constexpr*/ Int log2_ceil(Int x) {
     ASSERT(x > 0);
-    if(is_same<Int,i64>::value)
-        return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
-    else if(is_same<Int,i32>::value)
-        return 32 - BIT_COUNT_LEADING_ZEROS(x-1);
+    if(is_same<Int,i64>::value) return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
+    if(is_same<Int,i32>::value) return 32 - BIT_COUNT_LEADING_ZEROS(x-1);
     ASSERT(false);
 }
 
 /*constexpr*/ Int log2_floor(Int x) {
     ASSERT(x > 0);
-    if(is_same<Int,i64>::value)
-        return 63 - BIT_COUNT_LEADING_ZEROS(x);
-    else if(is_same<Int,i32>::value)
-        return 31 - BIT_COUNT_LEADING_ZEROS(x);
+    if(is_same<Int,i64>::value) return 63 - BIT_COUNT_LEADING_ZEROS(x);
+    if(is_same<Int,i32>::value) return 31 - BIT_COUNT_LEADING_ZEROS(x);
     ASSERT(false);
 }
 
