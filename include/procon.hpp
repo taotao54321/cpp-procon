@@ -634,7 +634,7 @@ auto priority_queue_reserve(const Comp& comp, Int cap) {
 
 template<class T, size_t N, size_t... NS>
 struct ArrayType {
-    using type = array<class ArrayType<T,NS...>::type,N>;
+    using type = array<typename ArrayType<T,NS...>::type,N>;
 };
 
 template<class T, size_t N>
@@ -650,7 +650,7 @@ T& array_at(Array<T,N>& ary, Int i) {
     return ary[i];
 }
 
-template<class T, size_t N, size_t... NS, class... Args>
+template<class T, size_t N, size_t... NS, class... Args, SFINAE(sizeof...(NS) > 0 && sizeof...(Args) > 0)>
 T& array_at(Array<T,N,NS...>& ary, Int i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
 }
@@ -660,7 +660,7 @@ const T& array_at(const Array<T,N>& ary, Int i) {
     return ary[i];
 }
 
-template<class T, size_t N, size_t... NS, class... Args>
+template<class T, size_t N, size_t... NS, class... Args, SFINAE(sizeof...(NS) > 0 && sizeof...(Args) > 0)>
 const T& array_at(const Array<T,N,NS...>& ary, Int i, Args... args) {
     return array_at<T,NS...>(ary[i], args...);
 }
