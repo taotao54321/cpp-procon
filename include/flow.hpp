@@ -1,36 +1,88 @@
 // flow {{{
 
-// Ford-Fulkerson 法
-//
-// g は辺の容量を表す行列 (g[from][to])
-// s は始点、t は終点
-//
-// g は残余グラフで上書きされる
-// (f,flow) を返す
-// f: s-t フローの最大値
-// flow[from][to]: from から to への流量
-tuple<Int,vector<vector<Int>>> flow_fulkerson(vector<vector<Int>>& g, Int s, Int t) {
+struct FlowEdge {
+    Int to;
+    Int cap;
+    Int rev;
+    FlowEdge(Int t, Int c, Int r) : to(t), cap(c), rev(r) {}
+};
+
+void flow_add_edge(vector<vector<FlowEdge>>& g, Int from, Int to, Int cap) {
+    g[from].emplace_back(to, cap, SIZE(g[to]));
+    g[to].emplace_back(from, 0, SIZE(g[from])-1);
+}
+
+Int flow_ford_fulkerson(vector<vector<FlowEdge>>& g, Int s, Int t) {
     Int n = SIZE(g);
-    vector<vector<Int>> flow(n, vector<Int>(n,0));
 
-    BoolArray visited(n);
-    auto dfs = FIX([&g,t,n,&flow,&visited](auto&& self, Int v, Int f) -> Int {
-        if(v == t) return f;
+    Int ts = 0;
+    vector<Int> tss(n, ts);  // timestamp
+    auto dfs = FIX([&](auto&& self, Int v, Int flmax) -> Int {
+        if(v == t) return flmax;
+        tss[v] = ts;
 
-        visited[v] = true;
-        REP(to, n) {
-            if(visited[to]) continue;
-            if(g[v][to] == 0) continue;
-            Int f2 = self(to, min(f,g[v][to]));
-            if(f2 > 0) {
-                Int res = f2;
-                g[v][to] -= f2;
-                g[to][v] += f2;
-                Int d = min(flow[to][v], f2);
-                flow[to][v] -= d;
-                f2          -= d;
-                flow[v][to] += f2;
-                return res;
+        Int res = 0;
+        for(auto& e : g[v]) {
+            if(tss[e.to] == ts) continue;
+            Int flmax_nex = MIN(e.cap, flmax);
+            if(flmax_nex == 0) continue;
+            Int fl = self(e.to, flmax_nex);
+            flmax -= fl;
+
+            auto& e_rev = g[e.to][e.rev];
+            e.cap     -= fl;
+            e_rev.cap += fl;
+            res += fl;
+        }
+        return res;
+    });
+
+    Int res = 0;
+    for(;;) {
+        ++ts;
+        Int fl = dfs(s, INF);
+        if(fl == 0) break;
+        res += fl;
+    }
+
+    return res;
+}
+
+Int flow_dinic(vector<vector<FlowEdge>>& g, Int s, Int t) {
+    Int n = SIZE(g);
+
+    vector<Int> ds(n);
+    auto bfs = [&]() {
+        queue<Int> que;
+        ALL(fill, ds, -1);
+        que.emplace(s);
+        ds[s] = 0;
+
+        while(!que.empty()) {
+            Int v = POP(que);
+            for(const auto& e : g[v]) {
+                if(ds[e.to] >= 0) continue;
+                if(e.cap == 0) continue;
+                que.emplace(e.to);
+                ds[e.to] = ds[v] + 1;
+            }
+        }
+    };
+
+    vector<Int> idxs(n);
+    auto dfs = FIX([&](auto&& self, Int v, Int flmax) -> Int {
+        if(v == t) return flmax;
+
+        for(Int& i = idxs[v]; i < SIZE(g[v]); ++i) {
+            auto& e = g[v][i];
+            if(ds[v] >= ds[e.to]) continue;
+            if(e.cap == 0) continue;
+            Int fl = self(e.to, MIN(e.cap, flmax));
+            if(fl > 0) {
+                auto& e_rev = g[e.to][e.rev];
+                e.cap     -= fl;
+                e_rev.cap += fl;
+                return fl;
             }
         }
         return 0;
@@ -38,13 +90,18 @@ tuple<Int,vector<vector<Int>>> flow_fulkerson(vector<vector<Int>>& g, Int s, Int
 
     Int res = 0;
     for(;;) {
-        ALL(fill, visited, false);
-        Int f = dfs(s, INF);
-        if(f == 0) break;
-        res += f;
+        bfs();
+        if(ds[t] < 0) break;
+
+        ALL(fill, idxs, 0);
+        for(;;) {
+            Int fl = dfs(s, INF);
+            if(fl == 0) break;
+            res += fl;
+        }
     }
 
-    return make_tuple(res, flow);
+    return res;
 }
 
 // }}}
