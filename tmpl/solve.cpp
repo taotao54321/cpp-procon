@@ -39,8 +39,8 @@ void solve() {
 }
 
 signed main() {
-    Int T = 1; //RD();
-    LOOP(T) {
+    Int t = 1; //RD();
+    LOOP(t) {
         solve();
     }
 

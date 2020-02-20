@@ -37,9 +37,9 @@ void gen() {
 }
 
 signed main() {
-    Int T = 1;
-    // PRINTLN(T);
-    REP(_, T) {
+    Int t = 1;
+    // PRINTLN(t);
+    REP(_, t) {
         gen();
     }
 
