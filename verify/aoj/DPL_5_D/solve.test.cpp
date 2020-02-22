@@ -31,7 +31,7 @@ void solve() {
 
     using Fac = Factorial<2000>;
 
-    auto ans = Fac::comb_rep(K, N);
+    auto ans = Fac::repcomb(K, N);
     PRINTLN(ans);
 }
 

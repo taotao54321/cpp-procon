@@ -231,8 +231,19 @@ struct Factorial {
         return fac(n) * ifac(n-r) * ifac(r);
     }
 
+    // O(r)
+    // n が大きい場合に使う
+    static ModInt comb_linear(Int n, Int r) {
+        ModInt res = 1;
+        REP(i, r) {
+            res *= n-i;
+        }
+        res *= ifac(r);
+        return res;
+    }
+
     // nHr
-    static ModInt comb_rep(Int n, Int r) {
+    static ModInt repcomb(Int n, Int r) {
         if(n < 0 || r < 0) return 0;
         if(n == 0 && r == 0) return 1;
         return comb(n+r-1, r);

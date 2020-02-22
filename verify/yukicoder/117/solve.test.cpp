@@ -49,7 +49,7 @@ void solve() {
         else if(F == 'C')
             ans = Fac::comb(N, K);
         else if(F == 'H')
-            ans = Fac::comb_rep(N, K);
+            ans = Fac::repcomb(N, K);
         else
             ASSERT(false);
 
