@@ -264,15 +264,14 @@ private:
     }
 
     void act_impl(Int la, Int ra, const Action& a, Int v, Int l, Int r) {
-        eval(v);
-
-        if(ra <= l || r <= la) return;
-
         if(la <= l && r <= ra) {
             lazy_[v] = fl_(lazy_[v], a);
             eval(v);
             return;
         }
+
+        eval(v);
+        if(ra <= l || r <= la) return;
 
         Int mid = (l+r) / 2;
         act_impl(la, ra, a, 2*v,   l, mid);
