@@ -1,3 +1,7 @@
+#ifdef NDEBUG
+# undef NDEBUG
+#endif
+
 #ifndef ASSERT_LV
 # define ASSERT_LV 1
 #endif
@@ -95,7 +99,7 @@
 #endif
 #if __cplusplus >= 201703L
 #include <any>
-//#include <charconv>
+#include <charconv>
 //#include <execution>
 //#include <filesystem>
 #include <optional>
