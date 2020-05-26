@@ -2,7 +2,7 @@
 
 CXX ?= g++
 CXXFLAGS := \
-    -std=c++14 \
+    -std=c++17 \
     -Wall -Wextra \
     -Wconditionally-supported \
     -Wconversion \
@@ -27,7 +27,7 @@ LDFLAGS :=
 ifdef OPTIMIZE
     CXXFLAGS += -O2
 else
-    CXXFLAGS += -g -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG
+    CXXFLAGS += -g3 -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG
 endif
 
 SRC_SOLVE := solve.cpp
