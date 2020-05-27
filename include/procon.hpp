@@ -1,7 +1,7 @@
 // procon {{{
 
-static_assert(is_same<Int,i64>::value || is_same<Int,i32>::value, "");
-static_assert(is_same<Real,f80>::value || is_same<Real,f64>::value || is_same<Real,f32>::value, "");
+static_assert(is_same_v<Int,i64> || is_same_v<Int,i32>);
+static_assert(is_same_v<Real,f80> || is_same_v<Real,f64> || is_same_v<Real,f32>);
 
 #define CPP_STR(x) CPP_STR_I(x)
 #define CPP_CAT(x,y) CPP_CAT_I(x,y)
@@ -20,13 +20,13 @@ static_assert(is_same<Real,f80>::value || is_same<Real,f64>::value || is_same<Re
 constexpr Int  INF  = PROCON_INF<Int>();
 constexpr Real FINF = PROCON_INF<Real>();
 
-constexpr Real PI = Real(3.141592653589793238462643383279502884197L);
+[[maybe_unused]] constexpr Real PI = Real(3.141592653589793238462643383279502884197L);
 
 template<class T> constexpr T SQRT_MAX();
 template<> constexpr i32 SQRT_MAX<i32>() { return 46340; }
 template<> constexpr i64 SQRT_MAX<i64>() { return INT64_C(3037000499); }
 
-template<class T, SFINAE(is_signed<T>::value)>
+template<class T, SFINAE(is_signed_v<T>)>
 constexpr T ABS(T x) noexcept {
     return x < 0 ? -x : x;
 }
@@ -73,9 +73,9 @@ constexpr Int SGN(T x) noexcept { return CMP(x,T(0)); }
 
 template<class T1, class T2, class Comp=less<>,
          SFINAE(
-             is_integral<T1>::value &&
-             is_integral<T2>::value &&
-             is_signed<T1>::value != is_unsigned<T2>::value
+             is_integral_v<T1> &&
+             is_integral_v<T2> &&
+             is_signed_v<T1> != is_unsigned_v<T2>
          )>
 constexpr auto MAX(T1 x, T2 y, Comp comp={}) {
     return max<common_type_t<T1,T2>>({x,y}, comp);
@@ -83,8 +83,8 @@ constexpr auto MAX(T1 x, T2 y, Comp comp={}) {
 
 template<class T1, class T2, class Comp=less<>,
          SFINAE(
-             is_floating_point<T1>::value &&
-             is_floating_point<T2>::value
+             is_floating_point_v<T1> &&
+             is_floating_point_v<T2>
          )>
 constexpr auto MAX(T1 x, T2 y, Comp comp={}) {
     return max<common_type_t<T1,T2>>({x,y}, comp);
@@ -102,9 +102,9 @@ constexpr T MAX(initializer_list<T> ilist, Comp comp={}) {
 
 template<class T1, class T2, class Comp=less<>,
          SFINAE(
-             is_integral<T1>::value &&
-             is_integral<T2>::value &&
-             is_signed<T1>::value != is_unsigned<T2>::value
+             is_integral_v<T1> &&
+             is_integral_v<T2> &&
+             is_signed_v<T1> != is_unsigned_v<T2>
          )>
 constexpr auto MIN(T1 x, T2 y, Comp comp={}) {
     return min<common_type_t<T1,T2>>({x,y}, comp);
@@ -112,8 +112,8 @@ constexpr auto MIN(T1 x, T2 y, Comp comp={}) {
 
 template<class T1, class T2, class Comp=less<>,
          SFINAE(
-             is_floating_point<T1>::value &&
-             is_floating_point<T2>::value
+             is_floating_point_v<T1> &&
+             is_floating_point_v<T2>
          )>
 constexpr auto MIN(T1 x, T2 y, Comp comp={}) {
     return min<common_type_t<T1,T2>>({x,y}, comp);
@@ -164,11 +164,6 @@ auto GT_ON(F&& f) {
     return ON(greater<>{}, forward<F>(f));
 }
 
-template<class F>
-auto NOT_FN(F&& f) {
-    return [f=forward<F>(f)](auto&&... args) -> bool { return !f(forward<decltype(args)>(args)...); };
-}
-
 struct IDENTITY {
     using is_transparent = void;
 
@@ -211,27 +206,27 @@ constexpr Int BIT_ASSIGN(Int x, Int i, bool b) {
 }
 
 /*constexpr*/ Int BIT_COUNT_LEADING_ZEROS(Int x) {
-    if(is_same<Int,i64>::value) return x==0 ? 64 : __builtin_clzll(u64(x));
-    if(is_same<Int,i32>::value) return x==0 ? 32 : __builtin_clz(u32(x));
+    if(is_same_v<Int,i64>) return x==0 ? 64 : __builtin_clzll(u64(x));
+    if(is_same_v<Int,i32>) return x==0 ? 32 : __builtin_clz(u32(x));
     ASSERT(false);
 }
 
 /*constexpr*/ Int BIT_COUNT_TRAILING_ZEROS(Int x) {
-    if(is_same<Int,i64>::value) return x==0 ? 64 : __builtin_ctzll(u64(x));
-    if(is_same<Int,i32>::value) return x==0 ? 32 : __builtin_clz(u32(x));
+    if(is_same_v<Int,i64>) return x==0 ? 64 : __builtin_ctzll(u64(x));
+    if(is_same_v<Int,i32>) return x==0 ? 32 : __builtin_clz(u32(x));
     ASSERT(false);
 }
 
 /*constexpr*/ Int BIT_COUNT_ONES(Int x) {
-    if(is_same<Int,i64>::value) return __builtin_popcountll(u64(x));
-    if(is_same<Int,i32>::value) return __builtin_popcount(u32(x));
+    if(is_same_v<Int,i64>) return __builtin_popcountll(u64(x));
+    if(is_same_v<Int,i32>) return __builtin_popcount(u32(x));
     ASSERT(false);
 }
 
 // 1の個数が奇数なら1, 偶数なら0を返す
 /*constexpr*/ Int BIT_PARITY(Int x) {
-    if(is_same<Int,i64>::value) return __builtin_parityll(u64(x));
-    if(is_same<Int,i32>::value) return __builtin_parity(u32(x));
+    if(is_same_v<Int,i64>) return __builtin_parityll(u64(x));
+    if(is_same_v<Int,i32>) return __builtin_parity(u32(x));
     ASSERT(false);
 }
 
@@ -367,15 +362,15 @@ template<class Monoid>
 
 /*constexpr*/ Int log2_ceil(Int x) {
     ASSERT(x > 0);
-    if(is_same<Int,i64>::value) return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
-    if(is_same<Int,i32>::value) return 32 - BIT_COUNT_LEADING_ZEROS(x-1);
+    if(is_same_v<Int,i64>) return 64 - BIT_COUNT_LEADING_ZEROS(x-1);
+    if(is_same_v<Int,i32>) return 32 - BIT_COUNT_LEADING_ZEROS(x-1);
     ASSERT(false);
 }
 
 /*constexpr*/ Int log2_floor(Int x) {
     ASSERT(x > 0);
-    if(is_same<Int,i64>::value) return 63 - BIT_COUNT_LEADING_ZEROS(x);
-    if(is_same<Int,i32>::value) return 31 - BIT_COUNT_LEADING_ZEROS(x);
+    if(is_same_v<Int,i64>) return 63 - BIT_COUNT_LEADING_ZEROS(x);
+    if(is_same_v<Int,i32>) return 31 - BIT_COUNT_LEADING_ZEROS(x);
     ASSERT(false);
 }
 
@@ -495,6 +490,8 @@ void tuple_enumerate(const tuple<TS...>& t, F&& f) {
 
 // container {{{
 template<class T> struct is_container : false_type {};
+template<class T> inline constexpr bool is_container_v = is_container<T>::value;
+
 template<class T, size_t N> struct is_container<array<T,N>> : true_type {};
 template<class... Args> struct is_container<vector<Args...>> : true_type {};
 template<class... Args> struct is_container<deque<Args...>> : true_type {};
@@ -558,7 +555,7 @@ struct ProconHash<tuple<TS...>> {
 };
 
 template<class C>
-struct ProconHash<C,enable_if_t<is_container<C>::value>> {
+struct ProconHash<C,enable_if_t<is_container_v<C>>> {
     size_t operator()(const C& c) const noexcept {
         size_t h = 0;
         for(const auto& e : c)
@@ -788,7 +785,7 @@ auto str_reserve(Int cap) {
 // input {{{
 template<class T>
 struct Integral1 {
-    static_assert(is_integral<T>::value && !is_same<T,bool>::value, "");
+    static_assert(is_integral_v<T> && !is_same_v<T,bool>);
 };
 using Int1 = Integral1<Int>;
 
@@ -916,7 +913,7 @@ struct Fmt<pair<T1,T2>> {
 };
 
 template<class C>
-struct Fmt<C,enable_if_t<is_container<C>::value>> {
+struct Fmt<C,enable_if_t<is_container_v<C>>> {
     static void fmt(ostream& out, const C& c) {
         for(auto it = begin(c); it != end(c); ++it) {
             if(it != begin(c)) out << ' ';
@@ -1024,7 +1021,7 @@ struct Dbg<pair<T1,T2>> {
 };
 
 template<class C>
-struct Dbg<C,enable_if_t<is_container<C>::value>> {
+struct Dbg<C,enable_if_t<is_container_v<C>>> {
     static void dbg(ostream& out, const C& c) {
         out << "[";
         for(auto it = begin(c); it != end(c); ++it) {
@@ -1098,17 +1095,17 @@ void DBG_IMPL(Int line, const char* expr, const TS&... value) {
     cerr << ")\n";
 }
 
-template<size_t N, class T, SFINAE(rank<T>::value == 0)>
+template<size_t N, class T, SFINAE(rank_v<T> == 0)>
 void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<Int,N>&, const array<Int,N>&) {
     dbg_write(out, x);
 }
 
-template<size_t N, class T, SFINAE(rank<T>::value > 0)>
+template<size_t N, class T, SFINAE(rank_v<T> > 0)>
 void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<Int,N>& sizes, const array<Int,N>& offs) {
-    Int k   = N - rank<T>::value;
+    Int k   = N - rank_v<T>;
     Int off = offs[k];
     Int siz = sizes[k];
-    if(siz == 0) siz = extent<T>::value - off;
+    if(siz == 0) siz = extent_v<T> - off;
 
     out << "[";
     FOR(i, off, off+siz) {
@@ -1118,14 +1115,14 @@ void DBG_DP_IMPL_HELPER(ostream& out, const T& x, const array<Int,N>& sizes, con
     out << "]";
 }
 
-template<class T, SFINAE(rank<T>::value > 0)>
+template<class T, SFINAE(rank_v<T> > 0)>
 void DBG_DP_IMPL(Int line, const char* expr, const T& dp,
-                 const array<Int,rank<T>::value>& sizes={},
-                 const array<Int,rank<T>::value>& offs={})
+                 const array<Int,rank_v<T>>& sizes={},
+                 const array<Int,rank_v<T>>& offs={})
 {
     cerr << "[L " << line << "]: ";
     cerr << expr << " = ";
-    DBG_DP_IMPL_HELPER<rank<T>::value>(cerr, dp, sizes, offs);
+    DBG_DP_IMPL_HELPER<rank_v<T>>(cerr, dp, sizes, offs);
     cerr << "\n";
 }
 
@@ -1155,7 +1152,7 @@ void DBG_GRID_IMPL(Int line, const char* expr, const vector<T>& grid) {
 template<class Mod>
 class ModIntT {
 private:
-    Int v_;  // [0,Mod::value)
+    Int v_{0};  // [0,Mod::value)
 
     static Int mod() { return Mod::value; }
 
@@ -1166,8 +1163,8 @@ private:
     }
 
 public:
-    ModIntT() : v_(0) {}
-    ModIntT(Int v) : v_(normalize(v)) {}
+    ModIntT() = default;
+    ModIntT(Int v) : v_(normalize(v)) {}  // NOLINT(google-explicit-constructor)
 
     explicit operator Int() const { return v_; }
 
