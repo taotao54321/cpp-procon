@@ -1,33 +1,58 @@
 .PHONY: all clean
 
 CXX ?= g++
-CXXFLAGS := \
-    -std=c++17 \
-    -Wall -Wextra \
-    -Wconditionally-supported \
-    -Wconversion \
-    -Wduplicated-cond \
-    -Wduplicated-branches \
-    -Wextra-semi \
-    -Wfloat-equal \
-    -Wformat=2 \
-    -Wlogical-op \
-    -Wnull-dereference \
-    -Wold-style-cast \
-    -Wshadow \
-    -Wswitch-default \
-    -Wswitch-enum \
-    -Wundef \
-    -Wvla \
-    -Wzero-as-null-pointer-constant \
-    -pg \
-    -DPROCON_LOCAL
-LDFLAGS :=
 
-ifdef OPTIMIZE
-    CXXFLAGS += -O2
-else
-    CXXFLAGS += -g3 -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG
+ifeq ($(CXX),g++)
+    CXXFLAGS := \
+        -std=c++17 \
+        -Wall -Wextra \
+        -Wconditionally-supported \
+        -Wconversion \
+        -Wduplicated-cond \
+        -Wduplicated-branches \
+        -Wextra-semi \
+        -Wfloat-equal \
+        -Wformat=2 \
+        -Wlogical-op \
+        -Wnull-dereference \
+        -Wold-style-cast \
+        -Wshadow \
+        -Wswitch-default \
+        -Wswitch-enum \
+        -Wundef \
+        -Wvla \
+        -Wzero-as-null-pointer-constant \
+        -pg \
+        -DPROCON_LOCAL
+    ifdef OPTIMIZE
+        CXXFLAGS += -O2
+    else
+        CXXFLAGS += -g3 -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG
+    endif
+else ifeq ($(CXX),clang++)
+    CXXFLAGS := \
+        -std=c++17 \
+        -Wall -Wextra \
+        -Wconversion \
+        -Wextra-semi \
+        -Wfloat-equal \
+        -Wformat=2 \
+        -Wno-sign-conversion \
+        -Wnull-dereference \
+        -Wold-style-cast \
+        -Wshadow \
+        -Wswitch-default \
+        -Wswitch-enum \
+        -Wundef \
+        -Wvla \
+        -Wzero-as-null-pointer-constant \
+        -pg \
+        -DPROCON_LOCAL
+    ifdef OPTIMIZE
+        CXXFLAGS += -O2
+    else
+        CXXFLAGS += -g3 -fsanitize=undefined -fno-sanitize-recover=all -D_GLIBCXX_DEBUG
+    endif
 endif
 
 SRC_SOLVE := solve.cpp
