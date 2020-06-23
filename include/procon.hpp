@@ -1195,11 +1195,11 @@ public:
     ModIntT operator++(int) { return exchange(*this, *this+1); }
     ModIntT operator--(int) { return exchange(*this, *this-1); }
 
-    ModIntT pow(Int e) const {
+    [[nodiscard]] ModIntT pow(Int e) const {
         return fastpow(*this, e, ModIntT(1));
     }
 
-    ModIntT inv() const {
+    [[nodiscard]] ModIntT inv() const {
         Int g,x; tie(g,x,ignore) = EXTGCD(v_, mod());
         ASSERT(g == 1);
         return ModIntT(x);

@@ -38,7 +38,7 @@ vector<pair<Int,Int>> factorize(Int n) {
             ++e;
             n /= p;
         }
-        if(e) res.emplace_back(p, e);
+        if(e > 0) res.emplace_back(p, e);
     }
     if(n > 1) res.emplace_back(n, 1);
 
@@ -70,7 +70,7 @@ bool is_prime_u32(u32 n) {
     static const auto powmod32 = [](u32 a, u32 b, u32 m) -> u32 {
         u32 res = 1;
         while(b > 0) {
-            if(b & 1)
+            if((b&1) != 0)
                 res = mulmod32(res, a, m);
             a = mulmod32(a, a, m);
             b >>= 1;
@@ -126,7 +126,7 @@ bool is_prime_u64(u64 n) {
     static const auto powmod64 = [](u64 a, u64 b, u64 m) -> u64 {
         u64 res = 1;
         while(b > 0) {
-            if(b & 1)
+            if((b&1) != 0)
                 res = mulmod64(res, a, m);
             a = mulmod64(a, a, m);
             b >>= 1;
@@ -164,7 +164,7 @@ bool is_prime(Int n) {
     ASSERT(n >= 0);
     if(is_same<Int,i64>::value)
         return is_prime_u64(u64(n));
-    else if(is_same<Int,i32>::value)
+    if(is_same<Int,i32>::value)
         return is_prime_u32(u32(n));
     ASSERT(false);
 }
@@ -172,7 +172,7 @@ bool is_prime(Int n) {
 // エラトステネスのふるい
 template<Int N>
 bool (&is_prime_table())[N] {
-    static_assert(N >= 3, "");
+    static_assert(N >= 3);
     static bool prime[N] {};
 
     if(!prime[2]) {
@@ -194,7 +194,7 @@ bool (&is_prime_table())[N] {
 // decltype(auto) fib = fibonacci_table<1000>();
 template<Int N>
 ModInt (&fibonacci_table())[N] {
-    static_assert(N >= 2, "");
+    static_assert(N >= 2);
     static ModInt fib[N] {};
 
     if(fib[1] != 1) {
@@ -209,7 +209,7 @@ ModInt (&fibonacci_table())[N] {
 
 template<Int N>
 struct Factorial {
-    static_assert(N >= 1, "");
+    static_assert(N >= 1);
 
     static ModInt fac(Int n) {
         static decltype(auto) table = fac_table();
@@ -273,7 +273,7 @@ private:
 
 template<Int H, Int W>
 ModInt (&combination_count_table())[H][W] {
-    static_assert(W >= 1 && H >= W, "");
+    static_assert(W >= 1 && H >= W);
     static ModInt dp[H][W] {};
 
     if(dp[0][0] != 1) {
@@ -290,7 +290,7 @@ ModInt (&combination_count_table())[H][W] {
 
 template<Int H, Int W>
 auto combination_count_func() {
-    static_assert(W >= 1 && H >= W, "");
+    static_assert(W >= 1 && H >= W);
     return FIXMEMO<H,W>([](auto&& self, Int n, Int r) -> ModInt {
         if(n <  r) return 0;
         if(r == 0) return 1;
@@ -318,7 +318,7 @@ auto combination_count_func() {
 // 「n を順序つき正整数列の和で表す場合の数」は 2^(n-1)
 template<Int H, Int W>
 ModInt (&partition_count_table())[H][W] {
-    static_assert(W >= 1 && H >= W, "");
+    static_assert(W >= 1 && H >= W);
     static ModInt dp[H][W] {};
 
     if(dp[0][0] != 1) {
@@ -340,7 +340,7 @@ ModInt (&partition_count_table())[H][W] {
 // 分割数 メモ化再帰版
 template<Int H, Int W>
 auto partition_count_func() {
-    static_assert(W >= 1 && H >= W, "");
+    static_assert(W >= 1 && H >= W);
     return FIXMEMO<H,W>([](auto&& self, Int n, Int k) -> ModInt {
         if(n <  k) return 0;
         if(n == k) return 1;
