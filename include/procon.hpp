@@ -56,10 +56,10 @@ constexpr bool EQ_EXACT(Real lhs, Real rhs) {
 #define LIFT(f) ([](auto&&... args) -> decltype(auto) { return (f)(std::forward<decltype(args)>(args)...); })
 
 template<class C>
-constexpr Int SIZE(const C& c) noexcept { return Int(c.size()); }
-
-template<class T, size_t N>
-constexpr Int SIZE(const T (&)[N]) noexcept { return Int(N); }
+constexpr Int SIZE(const C& c) noexcept {
+    using std::size;
+    return Int(size(c));
+}
 
 constexpr bool is_odd (Int x) { return x%2 != 0; }
 constexpr bool is_even(Int x) { return x%2 == 0; }
