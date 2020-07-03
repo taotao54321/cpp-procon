@@ -51,7 +51,7 @@ bool next_combination_impl(BidiIt first1, BidiIt last1, BidiIt first2, BidiIt la
         while(first2 != m2 && !(*m1 < *first2))
             ++first2;
         first1 = m1;
-        iter_swap(first1 ,first2);
+        iter_swap(first1, first2);
         ++first1;
         ++first2;
     }
@@ -61,7 +61,7 @@ bool next_combination_impl(BidiIt first1, BidiIt last1, BidiIt first2, BidiIt la
         m2 = first2;
         while(m1 != first1 && m2 != last2) {
             --m1;
-            iter_swap(m1 ,m2);
+            iter_swap(m1, m2);
             ++m2;
         }
 
